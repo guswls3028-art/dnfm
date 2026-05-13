@@ -52,8 +52,11 @@
 ## D. Reference System
 
 - **Rules**: `.claude/rules/` — 원칙 + 품질 기준. 자동 로딩.
-- **Context (on-demand)**: `.claude/context/` — 필요 시에만. 항상 로드 금지. (도메인 결정 후 채움)
-- **Domains**: `.claude/domains/` — 도메인별 비즈니스 규칙. (도메인 결정 후 채움)
+- **Context (on-demand)**: `.claude/context/` — 필요 시에만. 항상 로드 금지. (현재 비어 있음)
+- **Domains**: `.claude/domains/` — 사이트별 비즈니스 mental model. 해당 사이트 작업 시 읽기.
+  - `newb.md` — 뉴비 훈련소 (사용자 본인 공식 웹, 봇/이벤트 뿌리, 운영자=개발자)
+  - `allow.md` — 허락 페이지 (허락님 self-service, 콘테스트/투표/경품, B급 감성)
+  - `shared.md` — 두 사이트 공유 모델 (회원 통합, 권한 분리, cross-link 중간, R2 업로드, TM 회피)
 - Ignore: `node_modules/`, `dist/`, `build/`, `__pycache__/`, `.next/`, `.cache/`
 
 ## E. 도메인 정책
