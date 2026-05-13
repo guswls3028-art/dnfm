@@ -16,7 +16,7 @@ Cloudflare (proxy, orange-cloud)
   ▼
 EC2 (Nginx host 분기)
   ├─ :3000  dnfm-newb  (이 사이트, Next.js standalone)
-  ├─ :3001  dnfm-allow (자매 사이트, 별도 deploy)
+  ├─ :3001  dnfm-allow (친구들, 별도 deploy)
   └─ :4000  api        (Stage 2)
 ```
 
