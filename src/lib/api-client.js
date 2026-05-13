@@ -231,6 +231,24 @@ export const uploads = {
     apiFetch(`/uploads/${id}/confirm`, { method: "POST", json: { sizeBytes } }),
 };
 
+/* ---------- Hero banners (admin CRUD) ---------- */
+
+export const heroBanners = {
+  list: ({ includeInactive } = {}) =>
+    apiFetch(sitePath("/hero-banners"), {
+      query: { includeInactive: includeInactive ? "1" : undefined },
+    }),
+  create: ({ imageUrl, linkUrl, label, sortOrder, active }) =>
+    apiFetch(sitePath("/hero-banners"), {
+      method: "POST",
+      json: { imageUrl, linkUrl, label, sortOrder, active },
+    }),
+  update: (id, input) =>
+    apiFetch(sitePath(`/hero-banners/${id}`), { method: "PATCH", json: input }),
+  remove: (id) =>
+    apiFetch(sitePath(`/hero-banners/${id}`), { method: "DELETE" }),
+};
+
 /* ---------- OAuth helpers ---------- */
 
 export const oauth = {

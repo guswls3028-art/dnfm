@@ -83,6 +83,11 @@ export function CurrentUserProvider({ children }) {
     setError(null);
   }, []);
 
+  const siteRoles = Array.isArray(user?.siteRoles) ? user.siteRoles : [];
+  const isSuper = siteRoles.some((r) => r.role === "super");
+  const isNewbAdmin =
+    isSuper || siteRoles.some((r) => r.site === "newb" && (r.role === "admin" || r.role === "super"));
+
   const value = useMemo(
     () => ({
       user,
@@ -90,12 +95,15 @@ export function CurrentUserProvider({ children }) {
       error,
       isLoading: state === STATE.LOADING,
       isAuthed: state === STATE.USER && Boolean(user),
+      siteRoles,
+      isSuper,
+      isNewbAdmin,
       refresh,
       login,
       logout,
       setUser,
     }),
-    [user, state, error, refresh, login, logout],
+    [user, state, error, siteRoles, isSuper, isNewbAdmin, refresh, login, logout],
   );
 
   return <CurrentUserContext.Provider value={value}>{children}</CurrentUserContext.Provider>;
@@ -111,6 +119,9 @@ export function useCurrentUser() {
       error: null,
       isLoading: true,
       isAuthed: false,
+      siteRoles: [],
+      isSuper: false,
+      isNewbAdmin: false,
       refresh: async () => null,
       login: async () => null,
       logout: async () => {},

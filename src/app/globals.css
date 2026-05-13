@@ -2390,6 +2390,276 @@ button {
 }
 
 /* ============================================================
+   HERO — admin banner rail + 톱니 + modal
+   ============================================================ */
+
+.hero-banner-rail {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4);
+  border: 1px solid var(--color-gold-deep);
+  border-radius: var(--radius-md);
+  background: rgba(17, 20, 13, 0.55);
+}
+
+.hero-banner-rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.hero-banner-rail__title {
+  color: var(--color-gold-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero-banner-rail__gear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-gold-deep);
+  border-radius: 50%;
+  background: rgba(176, 140, 58, 0.10);
+  color: var(--color-gold-soft);
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+.hero-banner-rail__gear:hover {
+  background: rgba(176, 140, 58, 0.22);
+  color: var(--color-paper);
+}
+
+.hero-banner-rail__empty {
+  margin: 0;
+  color: var(--color-paper-soft);
+  font-size: var(--fs-sm);
+}
+
+.hero-banner-rail__list {
+  display: flex;
+  gap: var(--sp-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.hero-banner-card {
+  flex: 0 0 auto;
+  width: 180px;
+  scroll-snap-align: start;
+}
+
+.hero-banner-card--inactive {
+  opacity: 0.5;
+}
+
+.hero-banner-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: rgba(17, 20, 13, 0.6);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.16s ease, transform 0.16s ease;
+}
+.hero-banner-card__link:hover {
+  border-color: var(--color-gold);
+  transform: translateY(-2px);
+}
+
+.hero-banner-card__img {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-banner-card__label {
+  display: block;
+  padding: 6px 10px 10px;
+  color: var(--color-paper);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.hero-banner-card__hidden-mark {
+  position: absolute;
+  margin: 6px;
+  padding: 2px 8px;
+  background: rgba(17, 20, 13, 0.85);
+  color: var(--color-gold-soft);
+  font-size: var(--fs-xs);
+  border-radius: var(--radius-xs);
+}
+
+/* ----- Banner admin modal ----- */
+.banner-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  z-index: 1000;
+}
+
+.banner-modal {
+  width: 100%;
+  max-width: 640px;
+  max-height: calc(100vh - var(--sp-7));
+  overflow-y: auto;
+  background:
+    var(--bg-parchment-texture),
+    var(--grad-parchment);
+  background-blend-mode: multiply, normal;
+  border: 1px solid var(--color-gold-deep);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+}
+
+.banner-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5) var(--sp-6) var(--sp-3);
+  border-bottom: 1px solid var(--color-gold-deep);
+}
+
+.banner-modal__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--color-olive-deep);
+}
+
+.banner-modal__close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--fs-lg);
+  color: var(--color-olive-deep);
+}
+
+.banner-modal__section {
+  padding: var(--sp-5) var(--sp-6);
+  border-bottom: 1px solid rgba(31, 35, 26, 0.10);
+}
+.banner-modal__section:last-child {
+  border-bottom: none;
+}
+
+.banner-modal__subtitle {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-olive-deep);
+}
+
+.banner-modal__form {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.banner-modal__form .field__label {
+  color: var(--color-olive-deep);
+  font-weight: 700;
+}
+
+.banner-modal__form .input {
+  color: var(--color-text);
+  background: rgba(255, 253, 245, 0.78);
+  border-color: rgba(31, 35, 26, 0.32);
+}
+.banner-modal__form .input:focus {
+  border-color: var(--color-gold-deep);
+  background: rgba(255, 253, 245, 0.95);
+  box-shadow: 0 0 0 3px rgba(176, 140, 58, 0.20);
+  outline: none;
+}
+
+.banner-modal__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-olive-deep);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.banner-modal__list {
+  display: grid;
+  gap: var(--sp-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.banner-modal__item {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid rgba(31, 35, 26, 0.20);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 253, 245, 0.45);
+  align-items: center;
+}
+
+.banner-modal__thumb {
+  width: 88px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius-xs);
+  border: 1px solid rgba(31, 35, 26, 0.18);
+}
+
+.banner-modal__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--color-olive-deep);
+}
+.banner-modal__meta strong {
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.banner-modal__meta small {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.banner-modal__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+/* ============================================================
    HERO — 커뮤니티 감성 (공원 정자 톤)
    ============================================================ */
 

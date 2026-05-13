@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { host } from "@/lib/content";
+import HeroAdminBanners from "./HeroAdminBanners";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -77,6 +78,8 @@ export default function HeroStage({ site }) {
               ))}
             </ul>
           ) : null}
+
+          <HeroAdminBanners />
         </div>
 
         <div className="hero__visual">
