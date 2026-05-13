@@ -1,14 +1,18 @@
 # dnfm Project
 
-> **TODO**: 프로젝트 도메인이 정해지면 A·B·C·D 섹션을 채워주세요. 현재는 .claude/rules/ 7개 파일만 활성. 도메인 정보 채우기 전에는 rules가 universal AI 협업 메타룰로만 작동.
-
 ## A. Project Overview
 
-- **Stack**: Next.js App Router, React, Node.js/pnpm workspace
-- **Git**: single repo 예정
-- **현재 버전**: 0.1.0
-- **루트 작업 산출물**: `dist/` (build output), `_artifacts/` (gitignore 권장)
-- **도메인**: `newb/` = `dnfm.kr` 던파 모바일 뉴비 훈련소, `allow/` = `allow.dnfm.kr` 허락님 스트리머 페이지
+- **Stack**: Next.js 15.5.7 (App Router, standalone output) + React 19, Node 20, pnpm workspace
+- **Frontend 앱 2개 (친구 사이트, 인증/세션 공유 예정)**
+  - `newb/` → `dnfm.kr`, `www.dnfm.kr` (던파 모바일 뉴비 훈련소)
+  - `allow/` → `allow.dnfm.kr` (허락님 스트리머 페이지)
+- **Backend (Stage 2 예정)**: `api.dnfm.kr` — Hono 단일 백엔드. 인증/세션/DB/R2 presign 공유. 쿠키 도메인 `.dnfm.kr` 로 sibling subdomain 공유.
+- **호스팅**: EC2 단일 인스턴스. Nginx 가 host header 로 newb(:3000) / allow(:3001) / api(:4000) 분기. PM2 로 프로세스 관리.
+- **CDN**: Cloudflare proxy (orange-cloud). Pages 가 아닌 일반 CDN/WAF. SSL Full strict.
+- **R2 버킷**: 사용자 업로드 (스트리머/뉴비 자료). 백엔드 api 가 presigned URL 발급. public 차단.
+- **Git**: single repo (https://github.com/guswls3028-art/dnfm)
+- **현재 버전**: 0.1.0 (Stage 1 — 정적 사이트 2개 선배포)
+- **루트 작업 산출물**: `_artifacts/` (gitignore). `이미지/` 폴더는 자산 위치 결정 전까지 untrack.
 
 ## B. Workflow
 
@@ -52,9 +56,15 @@
 - **Domains**: `.claude/domains/` — 도메인별 비즈니스 규칙. (도메인 결정 후 채움)
 - Ignore: `node_modules/`, `dist/`, `build/`, `__pycache__/`, `.next/`, `.cache/`
 
-## E. 도메인 정책 (TBD)
+## E. 도메인 정책
 
 - 각 앱의 `src/lib/content.js`가 운영 콘텐츠 SSOT. 링크/문구/가이드 카드/체크리스트는 이 파일에서 우선 수정.
 - 확정되지 않은 외부 링크는 가짜 URL 대신 `url: null` + `reason`으로 비활성 상태를 명시.
-- `dnfm.kr`, `www.dnfm.kr`는 `newb/` 앱, `allow.dnfm.kr`는 `allow/` 앱으로 별도 배포.
-- 도메인 및 배포 흐름은 `docs/domain-routing.md` 참조.
+- 두 사이트는 친구 사이트. 인증/세션/유저 데이터는 `api.dnfm.kr` 에서 공유 (쿠키 도메인 `.dnfm.kr`). 화면/콘텐츠 운영은 각자 독립.
+- 도메인 라우팅: `docs/domain-routing.md`. EC2 배포 절차: `docs/deploy-ec2.md`.
+
+## F. 단계별 로드맵
+
+- **Stage 1 (현재)**: 정적 사이트 2개를 EC2 standalone + Cloudflare CDN 으로 선배포. 도메인 생존.
+- **Stage 2**: `api.dnfm.kr` 추가. 인증(쿠키 도메인 `.dnfm.kr`), R2 presigned URL, 사용자 업로드.
+- **Stage 3**: CI quality gate, EC2 자동 배포 webhook.
