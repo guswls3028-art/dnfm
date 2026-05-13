@@ -12,7 +12,7 @@ function normalizePost(p) {
   if (!p) return null;
   return {
     id: p.id || p.postId,
-    label: p.categoryLabel || p.label || p.category || "글",
+    label: p.categoryName || p.categoryLabel || p.label || p.category || "글",
     title: p.title || "(제목 없음)",
     author: p.authorName || p.author || p.user?.displayName || "익명",
     time: p.timeAgo || p.time || p.createdAt || "",

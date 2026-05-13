@@ -16,8 +16,8 @@ function normalizePost(p) {
   if (!p) return null;
   return {
     id: p.id || p.postId || p.slug,
-    label: p.categoryLabel || p.label || (p.category ? p.category : "글"),
-    categoryId: p.categoryId || p.category || "talk",
+    label: p.categoryName || p.categoryLabel || p.label || (p.category ? p.category : "글"),
+    categoryId: p.categorySlug || p.categoryId || p.category || "talk",
     title: p.title || "(제목 없음)",
     author: p.authorName || p.author || p.user?.displayName || "익명",
     time: p.timeAgo || p.time || p.createdAtLabel || p.createdAt || "",

@@ -7,10 +7,9 @@
 
 :root {
   /* ----- 색상 — 던파 양피지 + 한국군 밀리터리 톤 ----- */
-  /* 자주(purple) token 이름 유지 (코드 일괄 교체 회피), 값만 dark olive 으로. */
-  --color-purple: #3a4d23;          /* 군대 다크 올리브 (메인) */
-  --color-purple-soft: #5a6e3a;     /* 밝은 올리브 */
-  --color-purple-deep: #1f2a12;     /* 짙은 올리브 베이스 */
+  --color-olive: #3a4d23;           /* 군대 다크 올리브 (메인) */
+  --color-olive-soft: #5a6e3a;      /* 밝은 올리브 */
+  --color-olive-deep: #1f2a12;      /* 짙은 올리브 베이스 */
   --color-gold: #b08c3a;            /* 황동/탄피 골드 (채도 ↓) */
   --color-gold-soft: #c9a55a;
   --color-gold-deep: #7a5e1f;
@@ -28,7 +27,7 @@
   --color-red: #c8492a;             /* 강조 빨강 (crimson 보다 채도 ↑) */
   --color-mint: #4fe0a8;            /* 청량 민트 */
   --color-azure: #6fa8ff;           /* 하늘 블루 */
-  --color-purple-real: #8e6fb8;     /* 실제 violet (token 이름 purple 은 올리브임) */
+  --color-violet: #8e6fb8;          /* 실제 violet 액센트 */
   --color-line: rgba(58, 77, 35, 0.22);
   --color-line-soft: rgba(58, 77, 35, 0.10);
   --color-line-strong: rgba(31, 35, 26, 0.62);
@@ -39,9 +38,6 @@
   --color-text-on-gold: #2e3324;
 
   /* ----- 추가 token — 카키/도그태그/카무 alias ----- */
-  --color-olive: var(--color-purple);
-  --color-olive-soft: var(--color-purple-soft);
-  --color-olive-deep: var(--color-purple-deep);
   --color-brass: var(--color-gold);
   --color-brass-soft: var(--color-gold-soft);
   --color-brass-deep: var(--color-gold-deep);
@@ -69,7 +65,7 @@
     linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-deep) 100%);
   --grad-gold:
     linear-gradient(135deg, var(--color-gold-soft) 0%, var(--color-gold) 50%, var(--color-gold-deep) 100%);
-  --grad-purple:
+  --grad-olive:
     linear-gradient(135deg, var(--color-olive-soft) 0%, var(--color-olive) 50%, var(--color-olive-deep) 100%);
   --grad-crimson:
     linear-gradient(135deg, #b03333 0%, var(--color-crimson) 50%, var(--color-crimson-deep) 100%);
@@ -105,7 +101,7 @@
   --shadow-md: 0 6px 18px rgba(17, 20, 13, 0.18), 0 2px 4px rgba(17, 20, 13, 0.10);
   --shadow-lg: 0 18px 45px rgba(17, 20, 13, 0.28), 0 4px 12px rgba(17, 20, 13, 0.14);
   --shadow-gold-glow: 0 0 0 1px rgba(212, 162, 76, 0.55), 0 0 18px rgba(212, 162, 76, 0.35);
-  --shadow-purple-glow: 0 0 0 1px rgba(58, 77, 35, 0.55), 0 0 22px rgba(58, 77, 35, 0.35);
+  --shadow-olive-glow: 0 0 0 1px rgba(58, 77, 35, 0.55), 0 0 22px rgba(58, 77, 35, 0.35);
 
   /* ----- typography ----- */
   --font-display: "Cinzel", "Nanum Myeongjo", "Noto Serif KR", serif;
@@ -599,11 +595,11 @@ button {
 }
 
 .card--parchment .card__title {
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
 }
 
 .card--parchment .field__label {
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
   font-weight: 800;
 }
 
@@ -643,7 +639,7 @@ button {
 }
 
 .card--parchment .card__action {
-  color: var(--color-purple);
+  color: var(--color-olive);
 }
 
 .badge {
@@ -664,9 +660,9 @@ button {
   background: var(--color-gold);
 }
 
-.badge--purple {
+.badge--olive {
   color: var(--color-paper);
-  background: var(--color-purple);
+  background: var(--color-olive);
 }
 
 .badge--crimson {
@@ -795,13 +791,13 @@ button {
   align-items: center;
   gap: var(--sp-2);
   padding: 6px var(--sp-3);
-  border: 1px solid var(--color-purple);
+  border: 1px solid var(--color-olive);
   border-radius: var(--radius-pill);
   font-family: var(--font-display);
   font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
   background: rgba(255, 253, 245, 0.55);
 }
 
@@ -812,7 +808,7 @@ button {
   font-weight: 800;
   letter-spacing: 0.01em;
   line-height: 1.12;
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
   text-shadow: 0 2px 0 rgba(255, 253, 245, 0.85);
 }
 
@@ -1190,7 +1186,7 @@ button {
   border-radius: var(--radius-sm);
   background:
     radial-gradient(circle at 30% 40%, rgba(212, 162, 76, 0.42), transparent 55%),
-    var(--grad-purple);
+    var(--grad-olive);
   display: grid;
   place-items: center;
   color: var(--color-gold);
@@ -1214,7 +1210,7 @@ button {
     radial-gradient(circle at 30% 40%, rgba(79, 224, 168, 0.30), transparent 55%),
     linear-gradient(135deg, #2c4422 0%, #3a4d23 50%, #1f2a12 100%);
   color: var(--color-mint);
-  border-color: var(--color-purple-soft);
+  border-color: var(--color-olive-soft);
 }
 
 .event-card__head {
@@ -1274,7 +1270,7 @@ button {
 }
 
 .guide-card:hover {
-  border-color: var(--color-purple-soft);
+  border-color: var(--color-olive-soft);
   transform: translateY(-2px);
 }
 
@@ -1475,7 +1471,7 @@ button {
   font-size: var(--fs-3xl);
   font-weight: 800;
   text-align: center;
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
 }
 
 .auth-card__sub {
@@ -1486,7 +1482,7 @@ button {
 }
 
 .auth-card .field__label {
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
 }
 
 .auth-card .input,
@@ -1512,7 +1508,7 @@ button {
   align-items: center;
   gap: var(--sp-3);
   margin: var(--sp-5) 0;
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
   font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -1535,7 +1531,7 @@ button {
 
 .auth-card__foot a {
   font-weight: 800;
-  color: var(--color-purple);
+  color: var(--color-olive);
 }
 
 /* ============================================================
@@ -1745,7 +1741,7 @@ button {
   margin: 0 0 var(--sp-2);
   font-family: var(--font-display);
   font-size: var(--fs-xl);
-  color: var(--color-purple-deep);
+  color: var(--color-olive-deep);
 }
 
 .profile-row {
@@ -2096,7 +2092,7 @@ button {
   background: linear-gradient(90deg, var(--color-azure), #3d7cd6);
 }
 .demographics__bar[data-accent="violet"] > span {
-  background: linear-gradient(90deg, var(--color-purple-real), #6a4f99);
+  background: linear-gradient(90deg, var(--color-violet), #6a4f99);
 }
 .demographics__bar[data-accent="crimson"] > span {
   background: linear-gradient(90deg, var(--color-red), var(--color-crimson));
@@ -2575,7 +2571,7 @@ button {
       rgba(58, 77, 35, 0.12) 12px,
       rgba(58, 77, 35, 0.12) 24px
     ),
-    var(--grad-purple);
+    var(--grad-olive);
   display: grid;
   place-items: center;
   border: 1px dashed rgba(176, 140, 58, 0.45);

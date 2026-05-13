@@ -41,7 +41,7 @@ export default function ProfilePage() {
         setMyPosts(
           list.map((p) => ({
             id: p.id || p.postId,
-            label: p.categoryLabel || p.label || "글",
+            label: p.categoryName || p.categoryLabel || p.label || "글",
             title: p.title || "(제목 없음)",
             time: p.timeAgo || p.time || p.createdAt || "",
             comments:
