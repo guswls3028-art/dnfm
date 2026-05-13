@@ -1,4 +1,6 @@
 node_modules/
+.next/
+out/
 dist/
 _artifacts/
 
@@ -13,3 +15,7 @@ _artifacts/
 
 .cache/
 .tmp/
+.vercel/
+Thumbs.db
+
+이미지/

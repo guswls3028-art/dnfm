@@ -2,13 +2,13 @@
 
 ## 빠르게 바꿀 곳
 
-모든 화면 문구와 링크는 `src/content.js`에 있습니다.
+각 사이트의 화면 문구와 링크는 해당 앱의 `src/lib/content.js`에 있습니다.
 
-- 카톡방 URL: `training.actions`와 `training.linkGroups`의 `카톡방`
-- 공식 링크: `training.linkGroups`의 `공식 바로가기`
-- 허락님 채널: `allow.actions`와 `allow.linkGroups`
-- 가이드 카드: 각 사이트의 `guides`
-- 체크리스트: 각 사이트의 `checklist`
+- 카톡방 URL: `newb/src/lib/content.js`
+- 공식 링크: `newb/src/lib/content.js`
+- 허락님 채널: `allow/src/lib/content.js`
+- 가이드 카드: 각 앱의 `guides`
+- 체크리스트: 각 앱의 `checklist`
 
 ## 링크 원칙
 

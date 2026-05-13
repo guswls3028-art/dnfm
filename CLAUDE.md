@@ -4,11 +4,11 @@
 
 ## A. Project Overview
 
-- **Stack**: dependency-free static frontend (HTML / CSS / vanilla JS), Node.js scripts for local server/build/check
+- **Stack**: Next.js App Router, React, Node.js/pnpm workspace
 - **Git**: single repo 예정
 - **현재 버전**: 0.1.0
 - **루트 작업 산출물**: `dist/` (build output), `_artifacts/` (gitignore 권장)
-- **도메인**: `dnfm.kr` = 던파 모바일 뉴비 훈련소, `allow.dnfm.kr` = 허락님 스트리머 페이지
+- **도메인**: `newb/` = `dnfm.kr` 던파 모바일 뉴비 훈련소, `allow/` = `allow.dnfm.kr` 허락님 스트리머 페이지
 
 ## B. Workflow
 
@@ -54,7 +54,7 @@
 
 ## E. 도메인 정책 (TBD)
 
-- `src/content.js`가 운영 콘텐츠 SSOT. 링크/문구/가이드 카드/체크리스트는 이 파일에서 우선 수정.
+- 각 앱의 `src/lib/content.js`가 운영 콘텐츠 SSOT. 링크/문구/가이드 카드/체크리스트는 이 파일에서 우선 수정.
 - 확정되지 않은 외부 링크는 가짜 URL 대신 `url: null` + `reason`으로 비활성 상태를 명시.
-- `dnfm.kr`, `www.dnfm.kr`, `allow.dnfm.kr`는 같은 정적 앱에서 호스트명으로 분기.
+- `dnfm.kr`, `www.dnfm.kr`는 `newb/` 앱, `allow.dnfm.kr`는 `allow/` 앱으로 별도 배포.
 - 도메인 및 배포 흐름은 `docs/domain-routing.md` 참조.
