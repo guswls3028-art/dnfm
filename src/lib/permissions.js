@@ -1,7 +1,7 @@
 /**
  * permissions.js — frontend 권한 helper.
  *
- * /auth/me 는 user.siteRoles: [{ site: "newb"|"allow"|"*", role: "member"|"admin"|"super" }] 를 반환.
+ * /auth/me 는 user.siteRoles: [{ site: "newb"|"hurock"|"*", role: "member"|"admin"|"super" }] 를 반환.
  *   - 사이트별 row 가 없으면 일반 member 로 간주.
  *   - site = "*" 인 super row 는 모든 사이트에 admin 권한.
  *

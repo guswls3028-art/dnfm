@@ -531,7 +531,7 @@ export const site = {
   ],
   siblingSite: {
     label: "허락 페이지",
-    href: "https://allow.dnfm.kr",
+    href: "https://hurock.dnfm.kr",
     description: "친구 사이트, 별도 운영"
   },
   footerNote:
