@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch, ApiError } from "@/lib/api-client";
+import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { site } from "@/lib/content";
 
@@ -11,15 +11,38 @@ export default function NewPostPage() {
   const router = useRouter();
   const { isAuthed, isLoading } = useCurrentUser();
 
-  const writableCats = site.boardCategories.filter(
-    (c) => c.id !== "all" && c.id !== "notice",
+  // backend 카테고리 fetch — 회원 글 작성 가능 카테고리만 표시. fetch 실패 시 mock fallback.
+  const [categories, setCategories] = useState(
+    site.boardCategories.filter((c) => c.id !== "all" && c.id !== "notice"),
   );
-
-  const [categoryId, setCategoryId] = useState(writableCats[0]?.id || "talk");
+  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || categories[0]?.id || "talk");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const data = await postsApi.categories();
+        const items = Array.isArray(data) ? data : data?.items || [];
+        if (!alive || items.length === 0) return;
+        const writable = items
+          .filter((c) => c.writeRoleMin !== "admin")
+          .map((c) => ({ id: c.slug, slug: c.slug, label: c.name }));
+        if (writable.length > 0) {
+          setCategories(writable);
+          setCategorySlug(writable[0].slug);
+        }
+      } catch {
+        /* mock fallback */
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !isAuthed) {
@@ -48,7 +71,8 @@ export default function NewPostPage() {
       const data = await apiFetch("/sites/newb/posts", {
         method: "POST",
         json: {
-          categoryId,
+          // backend 가 slug 또는 UUID 둘 다 받음. mock fallback 도 slug 사용.
+          categorySlug,
           title: t,
           body: b,
         },
@@ -124,12 +148,12 @@ export default function NewPostPage() {
                 id="post-cat"
                 name="category"
                 className="select"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
+                value={categorySlug}
+                onChange={(e) => setCategorySlug(e.target.value)}
               >
-                {writableCats.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    [{c.label}]
+                {categories.map((c) => (
+                  <option key={c.slug || c.id} value={c.slug || c.id}>
+                    [{c.label || c.name}]
                   </option>
                 ))}
               </select>
