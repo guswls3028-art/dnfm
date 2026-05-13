@@ -52,11 +52,14 @@ export default function ProfilePage() {
         );
       } catch (err) {
         if (cancelled) return;
-        const msg =
-          err instanceof ApiError
-            ? `${err.message} (${err.status})`
-            : err?.message || "내 글을 불러오지 못했습니다.";
-        setPostsError(msg);
+        if (typeof console !== "undefined") {
+          console.warn("[profile] my posts fetch failed:", err);
+        }
+        const friendly =
+          err instanceof ApiError && err.status >= 500
+            ? "잠시 후 다시 시도해 주세요."
+            : "지금은 내 글 목록을 가져올 수 없어요.";
+        setPostsError(friendly);
         setMyPosts([]);
       }
     })();

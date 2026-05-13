@@ -94,11 +94,15 @@ function BoardInner() {
         setTotal(t);
       } catch (err) {
         if (cancelled) return;
-        const msg =
-          err instanceof ApiError
-            ? `${err.message} (${err.status})`
-            : err?.message || "게시판을 불러오지 못했습니다.";
-        setError(msg);
+        if (typeof console !== "undefined") {
+          // 실제 에러 사항은 콘솔로. 사용자에겐 친근한 카피만.
+          console.warn("[board] posts fetch failed:", err);
+        }
+        const friendly =
+          err instanceof ApiError && err.status >= 500
+            ? "게시판 서버가 잠시 응답하지 않아요. 잠시 후 새로고침 해주세요."
+            : "지금은 게시글을 가져올 수 없어요. 잠시 후 다시 시도해 주세요.";
+        setError(friendly);
         setPosts([]);
         setTotal(0);
       }
