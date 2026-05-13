@@ -79,9 +79,21 @@ function LoginInner() {
     }
   }
 
-  function handleOAuth(provider) {
+  async function handleOAuth(provider) {
     const back = encodeURIComponent(next);
-    window.location.href = `${API_BASE}/auth/oauth/${provider}/start?next=${back}`;
+    const url = `${API_BASE}/auth/oauth/${provider}/start?next=${back}`;
+    setError(null);
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "manual" });
+      if (res.status === 503) {
+        const label = provider === "kakao" ? "카카오" : "구글";
+        setError(`${label} 로그인은 아직 준비 중입니다. 잠시만 기다려 주세요.`);
+        return;
+      }
+    } catch {
+      /* network/CORS 무시 — redirect 시도 */
+    }
+    window.location.href = url;
   }
 
   return (
