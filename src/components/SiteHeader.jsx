@@ -5,6 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "@/lib/use-current-user";
 
+/**
+ * SiteHeader — 좌측 사이드바 + 모바일 상단바.
+ *  - PC (≥1024px): 좌측 사이드바 항상 열림. 상단바 숨김. main 은 sidebar 폭만큼 우측 이동.
+ *  - Mobile (<1024px): 상단바 가시. 햄버거 클릭 시 사이드바 슬라이드인 (좌→우) + 백드롭.
+ */
 export default function SiteHeader({ site }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -21,126 +26,136 @@ export default function SiteHeader({ site }) {
       if (e.key === "Escape") setOpen(false);
     };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
   }, [open]);
 
   async function handleLogout() {
     await logout();
+    setOpen(false);
     router.push("/");
     router.refresh();
   }
 
   const displayName = user?.displayName || user?.username || "";
+  const isActive = (href) => {
+    if (!pathname) return false;
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
-    <header className={`site-header${open ? " is-open" : ""}`} aria-label="사이트 헤더">
-      <div className="site-header__inner content-wrap">
-        <Link href="/" className="site-brand" aria-label={`${site.title} 홈`}>
-          <span className="site-brand__seal" aria-hidden="true">D</span>
-          <span className="site-brand__wordmark">
-            <strong>{site.brandMark}</strong>
-            <small>{site.shortTitle}</small>
-          </span>
-        </Link>
-
-        <nav className="site-nav" aria-label="주 메뉴">
-          {site.navItems.map((item) => (
-            <Link className="site-nav__link" key={item.label} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="site-actions">
-          {site.siblingSite ? (
-            <a
-              className="site-actions__sibling"
-              href={site.siblingSite.href}
-              target="_blank"
-              rel="noreferrer"
-              title={site.siblingSite.description}
-            >
-              {site.siblingSite.label}
-            </a>
-          ) : null}
-          {isLoading ? (
-            <span className="site-actions__loading" aria-hidden="true">…</span>
-          ) : isAuthed ? (
-            <>
-              <Link className="site-actions__user" href="/profile" title="내 페이지">
-                {displayName}
-              </Link>
-              <button
-                type="button"
-                className="btn btn--sm btn--ghost"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <Link className="btn btn--sm btn--secondary" href="/login">
-              로그인
-            </Link>
-          )}
-        </div>
-
+    <>
+      {/* 모바일 전용 상단바 */}
+      <header className="site-topbar" aria-label="모바일 헤더">
         <button
           type="button"
           className="site-burger"
           aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
           aria-expanded={open}
-          aria-controls="site-drawer"
+          aria-controls="site-sidebar"
           onClick={() => setOpen((v) => !v)}
         >
           <span className="site-burger__bars" aria-hidden="true">
             <span />
           </span>
         </button>
-      </div>
+        <Link href="/" className="site-topbar__brand" aria-label={`${site.title} 홈`}>
+          <span className="site-brand__seal" aria-hidden="true">D</span>
+          <strong>{site.brandMark}</strong>
+        </Link>
+        <div className="site-topbar__spacer" aria-hidden="true" />
+      </header>
 
-      <div id="site-drawer" className="site-drawer" role="navigation" aria-label="모바일 메뉴">
-        <div className="site-drawer__group">
+      {/* 백드롭 (모바일 슬라이드 인 상태) */}
+      <button
+        type="button"
+        className={`site-sidebar__backdrop${open ? " is-open" : ""}`}
+        aria-hidden="true"
+        tabIndex={-1}
+        onClick={() => setOpen(false)}
+      />
+
+      {/* 사이드바 */}
+      <aside
+        id="site-sidebar"
+        className={`site-sidebar${open ? " is-open" : ""}`}
+        aria-label="주 메뉴"
+      >
+        <div className="site-sidebar__head">
+          <Link href="/" className="site-brand" aria-label={`${site.title} 홈`}>
+            <span className="site-brand__seal" aria-hidden="true">D</span>
+            <span className="site-brand__wordmark">
+              <strong>{site.brandMark}</strong>
+              <small>{site.shortTitle}</small>
+            </span>
+          </Link>
+        </div>
+
+        <nav className="site-sidebar__nav" aria-label="주 메뉴 항목">
           {site.navItems.map((item) => (
-            <Link className="site-drawer__link" key={item.label} href={item.href}>
-              {item.label}
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`site-sidebar__link${isActive(item.href) ? " is-active" : ""}`}
+              onClick={() => setOpen(false)}
+            >
+              <span>{item.label}</span>
             </Link>
           ))}
-        </div>
-        <div className="site-drawer__group">
-          {isAuthed ? (
+        </nav>
+
+        <div className="site-sidebar__foot">
+          {isLoading ? (
+            <span className="site-sidebar__user-loading" aria-hidden="true">…</span>
+          ) : isAuthed ? (
             <>
               <Link
-                className="site-drawer__link site-drawer__link--primary"
+                className="site-sidebar__user"
                 href="/profile"
+                title="내 페이지"
+                onClick={() => setOpen(false)}
               >
-                {displayName} 님 · 내 페이지
+                <span className="site-sidebar__user-avatar" aria-hidden="true">
+                  {displayName?.[0] || "?"}
+                </span>
+                <span className="site-sidebar__user-name">{displayName}</span>
               </Link>
               <button
                 type="button"
-                className="site-drawer__link"
+                className="site-sidebar__logout"
                 onClick={handleLogout}
               >
                 로그아웃
               </button>
             </>
           ) : (
-            <Link className="site-drawer__link site-drawer__link--primary" href="/login">
+            <Link
+              className="site-sidebar__cta"
+              href="/login"
+              onClick={() => setOpen(false)}
+            >
               로그인 / 입소 신청
             </Link>
           )}
+
           {site.siblingSite ? (
             <a
-              className="site-drawer__link"
+              className="site-sidebar__sibling"
               href={site.siblingSite.href}
               target="_blank"
               rel="noreferrer"
+              title={site.siblingSite.description}
             >
               {site.siblingSite.label} ↗
             </a>
           ) : null}
         </div>
-      </div>
-    </header>
+      </aside>
+    </>
   );
 }

@@ -42,10 +42,12 @@ export default function RootLayout({ children }) {
         <CurrentUserProvider>
           <div className="site-frame" data-theme={site.theme}>
             <SiteHeader site={site} />
-            <main id="main-content" tabIndex={-1}>
-              {children}
-            </main>
-            <SiteFooter site={site} />
+            <div className="site-frame__body">
+              <main id="main-content" tabIndex={-1}>
+                {children}
+              </main>
+              <SiteFooter site={site} />
+            </div>
           </div>
         </CurrentUserProvider>
       </body>
