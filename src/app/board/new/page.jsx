@@ -134,6 +134,7 @@ export default function NewPostPage() {
 
       <section className="section">
         <div className="content-wrap" style={{ maxWidth: 820 }}>
+          <article className="card card--parchment" style={{ padding: "var(--sp-6)" }}>
           <form
             aria-label="글쓰기 폼"
             style={{ display: "grid", gap: "var(--sp-4)" }}
@@ -215,6 +216,7 @@ export default function NewPostPage() {
               </button>
             </div>
           </form>
+          </article>
         </div>
       </section>
     </>

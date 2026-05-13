@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useCurrentUser } from "@/lib/use-current-user";
 
 export default function SiteHeader({ site }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, isAuthed, isLoading, logout } = useCurrentUser();
 
   useEffect(() => {
     setOpen(false);
@@ -20,6 +23,14 @@ export default function SiteHeader({ site }) {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
+
+  async function handleLogout() {
+    await logout();
+    router.push("/");
+    router.refresh();
+  }
+
+  const displayName = user?.displayName || user?.username || "";
 
   return (
     <header className={`site-header${open ? " is-open" : ""}`} aria-label="사이트 헤더">
@@ -52,9 +63,26 @@ export default function SiteHeader({ site }) {
               {site.siblingSite.label}
             </a>
           ) : null}
-          <Link className="btn btn--sm btn--secondary" href="/login">
-            로그인
-          </Link>
+          {isLoading ? (
+            <span className="site-actions__loading" aria-hidden="true">…</span>
+          ) : isAuthed ? (
+            <>
+              <Link className="site-actions__user" href="/profile" title="내 페이지">
+                {displayName}
+              </Link>
+              <button
+                type="button"
+                className="btn btn--sm btn--ghost"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <Link className="btn btn--sm btn--secondary" href="/login">
+              로그인
+            </Link>
+          )}
         </div>
 
         <button
@@ -80,9 +108,27 @@ export default function SiteHeader({ site }) {
           ))}
         </div>
         <div className="site-drawer__group">
-          <Link className="site-drawer__link site-drawer__link--primary" href="/login">
-            로그인 / 입소 신청
-          </Link>
+          {isAuthed ? (
+            <>
+              <Link
+                className="site-drawer__link site-drawer__link--primary"
+                href="/profile"
+              >
+                {displayName} 님 · 내 페이지
+              </Link>
+              <button
+                type="button"
+                className="site-drawer__link"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <Link className="site-drawer__link site-drawer__link--primary" href="/login">
+              로그인 / 입소 신청
+            </Link>
+          )}
           {site.siblingSite ? (
             <a
               className="site-drawer__link"
