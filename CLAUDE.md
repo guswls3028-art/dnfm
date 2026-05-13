@@ -1,17 +1,15 @@
-# dnfm Project
+# dnfm-newb Project
 
 ## A. Project Overview
 
-- **Stack**: Next.js 15.5.7 (App Router, standalone output) + React 19, Node 20, pnpm workspace
-- **Frontend 앱 2개 (친구 사이트, 인증/세션 공유 예정)**
-  - `newb/` → `dnfm.kr`, `www.dnfm.kr` (던파 모바일 뉴비 훈련소)
-  - `allow/` → `allow.dnfm.kr` (허락님 스트리머 페이지)
-- **Backend (Stage 2 예정)**: `api.dnfm.kr` — Hono 단일 백엔드. 인증/세션/DB/R2 presign 공유. 쿠키 도메인 `.dnfm.kr` 로 sibling subdomain 공유.
-- **호스팅**: EC2 단일 인스턴스. Nginx 가 host header 로 newb(:3000) / allow(:3001) / api(:4000) 분기. PM2 로 프로세스 관리.
-- **CDN**: Cloudflare proxy (orange-cloud). Pages 가 아닌 일반 CDN/WAF. SSL Full strict.
-- **R2 버킷**: 사용자 업로드 (스트리머/뉴비 자료). 백엔드 api 가 presigned URL 발급. public 차단.
-- **Git**: single repo (https://github.com/guswls3028-art/dnfm)
-- **현재 버전**: 0.1.0 (Stage 1 — 정적 사이트 2개 선배포)
+- **Stack**: Next.js 15.5.7 (App Router, standalone output) + React 19, Node 20.
+- **사이트**: `dnfm.kr`, `www.dnfm.kr` — 던파 모바일 뉴비 훈련소 카톡방 공식 웹.
+- **운영자 = 사용자(=방장=개발자) 본인**. 비개발자 UX 강도 약함. 코드/DB 직접 수정 OK.
+- **자매 사이트**: `allow.dnfm.kr` — 허락님 페이지. **별도 git repo (`guswls3028-art/dnfm-allow`)** 로 운영. 같은 백엔드(`api.dnfm.kr`, Stage 2)·같은 회원/세션(쿠키 도메인 `.dnfm.kr`)을 공유하지만 **frontend 코드·디자인 시스템은 완전 독립**. 한쪽 작업이 다른쪽에 영향 0.
+- **호스팅**: EC2 단일 인스턴스(Nginx host 분기) + Cloudflare proxy (orange-cloud). SSL Full strict.
+- **R2 버킷**: 사용자 업로드. 백엔드 api 가 presigned URL 발급. public 차단.
+- **Git**: `https://github.com/guswls3028-art/dnfm` (이 repo = newb 전용).
+- **현재 버전**: 0.1.0 (Stage 1 — 정적 사이트 선배포).
 - **루트 작업 산출물**: `_artifacts/` (gitignore). `이미지/` 폴더는 자산 위치 결정 전까지 untrack.
 
 ## B. Workflow
@@ -19,8 +17,7 @@
 **inspect → edit → local dev rendering → local E2E → deploy → 검증 → summarize**
 - Do NOT: inspect → ask confirmation → wait. 확인 질문은 failure mode.
 - **local dev rendering**: build 통과 ≠ 정상. 실제 렌더링 확인 후 E2E 진행.
-- **E2E 환경**: (frontend/.env.e2e, playwright.config 등 — 추후 추가)
-- **테스트**: 격리 환경, `[E2E-{timestamp}]` 또는 동등 태그, cleanup 필수.
+- **E2E**: 격리 환경, `[E2E-{timestamp}]` 태그, cleanup 필수.
 
 ## C. Harness Architecture
 
@@ -37,37 +34,42 @@
 
 ```
 .claude/rules/ (전부 자동 로딩)
-  anti-avoidance.md      — 회피 방지 메타룰. 합리화 금지, 검증 fail 3-tier default, 보고 양식 강제
-  core.md                — 절대 원칙, 우선순위, 실행 모드, 토큰 효율
-  code-quality.md        — 아키텍처, 디버깅, 리팩토링, 성능, 하드닝
-  ui-quality.md          — 디자인, UX, 일관성, 상품성, narrow viewport 검증
-  completion-criteria.md — E2E 검증, 완료 판단, 금지 패턴, fail 분기
-  collaboration-policy.md — Git / 도구 / 보고 / UX 톤 / 메모리 정리 / 백로그 풀어서
-
-.claude/skills/   — (미정. 실행 모드별 skill 추가 예정)
-.claude/agents/   — (미정. 별도 컨텍스트 에이전트)
-.claude/context/  — (미정. 도메인별 on-demand 참조)
+  anti-avoidance.md       — 회피 방지 메타룰
+  core.md                 — 절대 원칙, 우선순위, 실행 모드, 토큰 효율
+  code-quality.md         — 아키텍처, 디버깅, 리팩토링, 성능, 하드닝
+  ui-quality.md           — 디자인, UX, 일관성, 상품성, narrow viewport 검증
+  completion-criteria.md  — E2E 검증, 완료 판단, 금지 패턴, fail 분기
+  collaboration-policy.md — Git / 도구 / 보고 / UX 톤 / 메모리 정리 / 백로그
+  codex-delegation.md     — Codex 위임 패턴
 ```
 
 ## D. Reference System
 
 - **Rules**: `.claude/rules/` — 원칙 + 품질 기준. 자동 로딩.
-- **Context (on-demand)**: `.claude/context/` — 필요 시에만. 항상 로드 금지. (현재 비어 있음)
-- **Domains**: `.claude/domains/` — 사이트별 비즈니스 mental model. 해당 사이트 작업 시 읽기.
-  - `newb.md` — 뉴비 훈련소 (사용자 본인 공식 웹, 봇/이벤트 뿌리, 운영자=개발자)
-  - `allow.md` — 허락 페이지 (허락님 self-service, 콘테스트/투표/경품, B급 감성)
-  - `shared.md` — 두 사이트 공유 모델 (회원 통합, 권한 분리, cross-link 중간, R2 업로드, TM 회피)
-- Ignore: `node_modules/`, `dist/`, `build/`, `__pycache__/`, `.next/`, `.cache/`
+- **Domains**: `.claude/domains/` — 비즈니스 mental model.
+  - `newb.md` — 본 사이트 본업·운영·콘텐츠 정책
+- **Context (on-demand)**: `.claude/context/` — 비어 있음. 필요 시 추가.
+- Ignore: `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `_artifacts/`, `이미지/`
 
-## E. 도메인 정책
+## E. 자매 사이트 격리 정책 (절대)
 
-- 각 앱의 `src/lib/content.js`가 운영 콘텐츠 SSOT. 링크/문구/가이드 카드/체크리스트는 이 파일에서 우선 수정.
-- 확정되지 않은 외부 링크는 가짜 URL 대신 `url: null` + `reason`으로 비활성 상태를 명시.
-- 두 사이트는 친구 사이트. 인증/세션/유저 데이터는 `api.dnfm.kr` 에서 공유 (쿠키 도메인 `.dnfm.kr`). 화면/콘텐츠 운영은 각자 독립.
-- 도메인 라우팅: `docs/domain-routing.md`. EC2 배포 절차: `docs/deploy-ec2.md`.
+- `allow.dnfm.kr` 작업 시 이 repo 와 무관. **별도 repo / 별도 세션 / 별도 디자인 시스템.**
+- 두 사이트가 공유하는 건 backend api (Stage 2 의 `api.dnfm.kr`) + 회원/세션/R2 뿐. frontend 측 공유 코드 0.
+- 이 repo 에서 allow 코드를 읽거나 참고하거나 import 하면 안 됨.
+- cross-link 표시 (footer 의 "허락 페이지" 같은) 는 hardcoded URL 만. allow 의 컴포넌트/타입 import X.
 
-## F. 단계별 로드맵
+## F. 도메인 정책
 
-- **Stage 1 (현재)**: 정적 사이트 2개를 EC2 standalone + Cloudflare CDN 으로 선배포. 도메인 생존.
-- **Stage 2**: `api.dnfm.kr` 추가. 인증(쿠키 도메인 `.dnfm.kr`), R2 presigned URL, 사용자 업로드.
-- **Stage 3**: CI quality gate, EC2 자동 배포 webhook.
+- `src/lib/content.js` 가 정적 콘텐츠 SSOT (hero/가이드/체크리스트/링크 그룹).
+- 동적 콘텐츠 (공지/이벤트/봇 데이터/사용자 글) 는 Stage 2 이후 `api.dnfm.kr` backend.
+- 외부 링크 placeholder = `url: null` + `reason`. 비활성 버튼.
+- 공식 wordmark / 공식 게시판 카테고리 directly copy 금지. 자체 브랜드 = `DNFM.KR / 던파 모바일 뉴비 훈련소`.
+- 도메인 라우팅: `docs/domain-routing.md`. EC2 배포: `docs/deploy-ec2.md`.
+
+## G. 단계별 로드맵
+
+- **Stage 1 (현재)**: 정적 사이트 EC2 standalone + Cloudflare CDN 선배포. 도메인 생존.
+- **Stage 2**: `api.dnfm.kr` 백엔드 (별도 repo). 인증, R2 presign, 게시판/댓글/좋아요 등 커뮤니티 코어.
+- **Stage 3**: 커뮤니티 풀 UI (회원/게시판/댓글/좋아요/검색/알림/마이페이지/어드민).
+- **Stage 4**: 챗봇 / 이벤트 페이지 / 자동 알림 (운영자 = 개발자 본인의 봇 뿌리).
+- **Stage 5**: CI quality gate, EC2 자동 배포 webhook.

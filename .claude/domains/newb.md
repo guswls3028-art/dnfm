@@ -1,6 +1,6 @@
 # Domain: newb (뉴비 훈련소)
 
-`dnfm.kr` / `www.dnfm.kr` — 던파 모바일 뉴비 훈련소 카톡방 공식 웹.
+`dnfm.kr` / `www.dnfm.kr` — 던파 모바일 뉴비 훈련소 카톡방 공식 웹. **이 repo (`dnfm-newb`) 의 단일 사이트.**
 
 ## 1. 본업
 
@@ -34,8 +34,14 @@
 - **이벤트 페이지** — 친구 사이트(allow) 의 콘테스트와 별개로 newb 자체 이벤트도 운영 가능.
 - 콘텐츠 동적화 (공지/이벤트 게시판) 는 사용자 본인이 코드로 직접 추가 — UI self-service 우선순위 X.
 
-## 6. 관련 정책
+## 6. 자매 사이트 관계
 
-- 친구 사이트 관계 / 인증 공유 / cross-link 패턴: [[shared]]
-- 허락 페이지 (자매 사이트): [[allow]]
-- 도메인 라우팅 / 배포: `docs/domain-routing.md`, `docs/deploy-ec2.md`
+- `allow.dnfm.kr` 는 **별도 repo (`dnfm-allow`)**. 이 repo 와 frontend 코드·디자인 시스템 완전 격리.
+- 공유 = backend api (Stage 2 `api.dnfm.kr`) + 회원/세션 (쿠키 도메인 `.dnfm.kr`) + R2 업로드 뿐.
+- 이 repo 에서 allow 코드 read/import/참고 X. cross-link 표시는 hardcoded URL (`https://allow.dnfm.kr`) 만.
+
+## 7. 관련 파일
+
+- 도메인 라우팅: `docs/domain-routing.md`
+- 배포: `docs/deploy-ec2.md`
+- 콘텐츠 운영: `docs/content-operations.md`

@@ -1,29 +1,31 @@
-# dnfm.kr
+# dnfm-newb
 
-던파 모바일 뉴비 훈련소와 허락님 스트리머 페이지를 각각 독립 Next.js 앱으로 관리하는 레포입니다.
+`dnfm.kr` / `www.dnfm.kr` — 던파 모바일 뉴비 훈련소 카톡방 공식 웹.
 
 ## 구조
 
-- `newb/` - `dnfm.kr`, 던파 모바일 뉴비 훈련소
-- `allow/` - `allow.dnfm.kr`, 허락님 스트리머 페이지
-- `scripts/` - 레포 구조 점검
-- `docs/` - 도메인, 배포, 운영 가이드
+- `src/app/` — Next.js App Router (페이지)
+- `src/components/` — 컴포넌트
+- `src/lib/content.js` — 정적 콘텐츠 SSOT (hero / 가이드 / 체크리스트 / 링크 그룹)
+- `public/` — 정적 자산
+- `docs/` — 도메인 라우팅 / 배포 / 운영 가이드
+
+자매 사이트 `allow.dnfm.kr` 는 **별도 repo** [`guswls3028-art/dnfm-allow`](https://github.com/guswls3028-art/dnfm-allow) 에서 독립 운영. 한쪽 작업이 다른쪽에 영향 0.
 
 ## 실행
 
 ```bash
 pnpm install
-pnpm run check
-pnpm run build
+pnpm dev      # http://localhost:3000
+pnpm build    # standalone output (배포 산출물)
+pnpm start    # production preview
 ```
 
-개별 개발 서버:
+## 배포
 
-```bash
-pnpm run dev:newb
-pnpm run dev:allow
-```
+EC2 단일 인스턴스 + Cloudflare CDN. 절차는 `docs/deploy-ec2.md`.
 
 ## 운영 메모
 
-실제 카카오톡 오픈채팅 URL과 허락님 채널 URL은 아직 제공되지 않았으므로 각 앱의 `src/lib/content.js`에 `url: null`로 두었습니다. 사이트에서는 비활성 버튼으로 표시되어 잘못된 링크를 내보내지 않습니다.
+- 외부 링크 placeholder 는 `src/lib/content.js` 에서 `url: null` + `reason` 패턴 유지. 확정되면 URL 만 채움.
+- 공식 nexon/dnfm wordmark / 공식 게시판 카테고리 directly copy 금지. 자체 브랜드 표기.
