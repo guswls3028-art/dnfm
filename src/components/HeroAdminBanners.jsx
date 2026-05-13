@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { heroBanners as bannersApi, ApiError } from "@/lib/api-client";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { heroBanners as bannersApi, uploads as uploadsApi, ApiError } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 
 /**
@@ -115,7 +115,58 @@ function BannerEditorModal({ banners, onClose, onChanged }) {
   const [draft, setDraft] = useState({ imageUrl: "", linkUrl: "", label: "", sortOrder: 0, active: true });
   const [editingId, setEditingId] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadHint, setUploadHint] = useState(null);
   const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const uploadFile = async (file) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("이미지 파일만 업로드할 수 있어요.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("이미지는 10MB 이하만 업로드할 수 있어요.");
+      return;
+    }
+    setUploading(true);
+    setError(null);
+    setUploadHint(null);
+    try {
+      const presign = await uploadsApi.presignedPut({
+        purpose: "hero_banner",
+        contentType: file.type,
+        sizeBytes: file.size,
+      });
+      const putRes = await fetch(presign.putUrl, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!putRes.ok) {
+        throw new Error(`R2 업로드 실패 (${putRes.status})`);
+      }
+      const confirmed = await uploadsApi.confirm(presign.uploadId, { sizeBytes: file.size });
+      const finalUrl = confirmed?.upload?.publicUrl || presign.publicUrl || "";
+      if (finalUrl) {
+        setDraft((d) => ({ ...d, imageUrl: finalUrl }));
+        setUploadHint(`업로드 완료 — ${file.name}`);
+      } else {
+        setUploadHint(
+          "업로드 완료. R2 공개 URL 미설정으로 자동 채움이 안 됐어요. 운영 환경에 R2_PUBLIC_BASE 설정 필요.",
+        );
+        setDraft((d) => ({ ...d, imageUrl: presign.r2Key }));
+      }
+    } catch (err) {
+      const msg =
+        err instanceof ApiError ? err.message : err?.message || "업로드 중 오류가 발생했습니다.";
+      setError(msg);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const reset = () => {
     setDraft({ imageUrl: "", linkUrl: "", label: "", sortOrder: 0, active: true });
@@ -207,7 +258,7 @@ function BannerEditorModal({ banners, onClose, onChanged }) {
           <h3 className="banner-modal__subtitle">{editingId ? "배너 수정" : "새 배너"}</h3>
           <form className="banner-modal__form" onSubmit={submit}>
             <div className="field">
-              <label className="field__label" htmlFor="bnr-img">이미지 URL</label>
+              <label className="field__label" htmlFor="bnr-img">이미지</label>
               <input
                 id="bnr-img"
                 className="input"
@@ -215,6 +266,20 @@ function BannerEditorModal({ banners, onClose, onChanged }) {
                 value={draft.imageUrl}
                 onChange={(e) => setDraft({ ...draft, imageUrl: e.target.value })}
               />
+              <div style={{ display: "flex", gap: "var(--sp-2)", alignItems: "center", marginTop: 6 }}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => uploadFile(e.target.files?.[0])}
+                  disabled={uploading}
+                  style={{ flex: 1, minWidth: 0 }}
+                />
+                {uploading ? <span className="field__hint">업로드 중…</span> : null}
+              </div>
+              {uploadHint ? (
+                <span className="field__hint" style={{ color: "var(--color-gold-deep)" }}>{uploadHint}</span>
+              ) : null}
             </div>
             <div className="field">
               <label className="field__label" htmlFor="bnr-link">클릭 이동 URL (선택)</label>
