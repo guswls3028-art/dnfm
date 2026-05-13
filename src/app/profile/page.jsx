@@ -162,12 +162,6 @@ export default function ProfilePage() {
                 <span className="profile-row__label">아이디</span>
                 <span className="profile-row__value">{safeString(user.username)}</span>
               </div>
-              {user.email ? (
-                <div className="profile-row">
-                  <span className="profile-row__label">이메일</span>
-                  <span className="profile-row__value">{safeString(user.email)}</span>
-                </div>
-              ) : null}
               {user.createdAt ? (
                 <div className="profile-row">
                   <span className="profile-row__label">가입일</span>

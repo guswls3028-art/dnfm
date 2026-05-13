@@ -500,7 +500,7 @@ export const site = {
     {
       step: 1,
       title: "기본 정보",
-      body: "닉네임, 이메일, 비밀번호를 입력합니다. 이메일은 가입 알림과 비밀번호 재설정에만 사용합니다."
+      body: "아이디, 닉네임, 비밀번호를 입력합니다."
     },
     {
       step: 2,
@@ -519,9 +519,9 @@ export const site = {
     }
   ],
   loginProviders: [
-    { id: "local", label: "DNFM 계정으로 로그인", note: "이메일·비밀번호" },
+    { id: "local", label: "DNFM 계정으로 로그인", note: "아이디·비밀번호" },
     { id: "kakao", label: "카카오로 시작", note: "톡방과 같은 계정 권장", brand: "kakao" },
-    { id: "google", label: "구글로 시작", note: "이메일 자동 입력", brand: "google" }
+    { id: "google", label: "구글로 시작", brand: "google" }
   ],
   timelineTitle: "운영 흐름",
   timeline: [
@@ -538,7 +538,6 @@ export const site = {
     "DNFM.KR 은 던파 모바일 뉴비 훈련소 카톡방의 비공식 운영 허브입니다. 던전앤파이터 모바일 IP는 NEXON / NEOPLE 에 귀속됩니다.",
   profileMock: {
     nickname: "모험가닉네임",
-    email: "user@dnfm.kr",
     joinedAt: "2026-04-21",
     dnfCharacter: {
       name: "캐릭이름",
