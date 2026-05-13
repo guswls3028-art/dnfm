@@ -2229,7 +2229,10 @@ button {
 
 .guild-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  /* auto-fill + minmax(320px, 360px) — 1개 길드일 때도 카드가 1180px 까지 늘어지지 않게.
+     auto-fit 으로 두면 빈 칸이 collapse 되어 1개 카드가 full row 차지. */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 360px));
+  justify-content: start;
   gap: var(--sp-4);
 }
 
