@@ -309,6 +309,99 @@ button {
   opacity: 1;
 }
 
+.site-burger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-gold);
+  cursor: pointer;
+  padding: 0;
+}
+
+.site-burger:hover,
+.site-burger:focus-visible {
+  border-color: var(--color-gold);
+  background: rgba(212, 162, 76, 0.08);
+}
+
+.site-burger__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 18px;
+}
+
+.site-burger__bars::before,
+.site-burger__bars::after,
+.site-burger__bars span {
+  content: "";
+  display: block;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+.site-drawer {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  background: rgba(17, 20, 13, 0.98);
+  border-bottom: 1px solid var(--color-gold-deep);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.site-drawer__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.site-drawer__group + .site-drawer__group {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--color-line);
+}
+
+.site-drawer__link {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-text-on-dark);
+}
+
+.site-drawer__link:hover,
+.site-drawer__link:focus-visible {
+  background: rgba(212, 162, 76, 0.10);
+  color: var(--color-gold);
+}
+
+.site-drawer__link--primary {
+  justify-content: center;
+  background: var(--grad-gold);
+  color: var(--color-text-on-gold);
+}
+
+.site-drawer__link--primary:hover {
+  filter: brightness(1.05);
+  color: var(--color-text-on-gold);
+}
+
 .site-footer {
   margin-top: var(--sp-10);
   padding: var(--sp-8) 0;
@@ -443,8 +536,8 @@ button {
 .btn:disabled,
 .btn[aria-disabled="true"] {
   cursor: not-allowed;
-  opacity: 0.55;
-  filter: grayscale(0.4);
+  opacity: 0.7;
+  filter: grayscale(0.15);
 }
 
 .btn--icon-only {
@@ -858,19 +951,21 @@ button {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.02em;
-  color: var(--color-gold);
+  color: var(--color-paper);
   word-break: keep-all;
 }
 
 .section__kicker {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-family: var(--font-display);
   font-size: var(--fs-xs);
-  letter-spacing: 0.16em;
-  color: var(--color-purple-soft);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-soft);
+  text-transform: uppercase;
 }
 
 .section__more {
@@ -1756,18 +1851,25 @@ button {
   }
 
   .site-header__inner {
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    min-height: auto;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto;
+    min-height: 56px;
     padding-top: var(--sp-2);
     padding-bottom: var(--sp-2);
     gap: var(--sp-2);
   }
 
-  .site-nav {
-    grid-column: 1 / -1;
-    overflow-x: auto;
-    justify-content: flex-start;
+  .site-nav,
+  .site-actions {
+    display: none;
+  }
+
+  .site-burger {
+    display: inline-flex;
+  }
+
+  .site-header.is-open .site-drawer {
+    display: flex;
   }
 
   .site-brand__seal {
@@ -2000,12 +2102,89 @@ button {
 }
 
 /* ============================================================
-   GUIDE COMMAND
+   FILE INPUT — 커스텀 (raw browser style 숨김)
    ============================================================ */
 
-.section--guide-cmd {
-  background: rgba(58, 77, 35, 0.08);
+.file-input {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 6px 6px 6px var(--sp-4);
+  background: rgba(17, 20, 13, 0.55);
+  border: 1px dashed var(--color-gold-deep);
+  border-radius: var(--radius-md);
+  color: var(--color-paper);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease;
 }
+
+.file-input:hover {
+  border-color: var(--color-gold);
+  background: rgba(212, 162, 76, 0.06);
+}
+
+.file-input.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.file-input input[type="file"] {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.file-input__btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 var(--sp-4);
+  background: var(--grad-gold);
+  color: var(--color-text-on-gold);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+.file-input__hint {
+  color: var(--color-paper-soft);
+}
+
+/* ============================================================
+   COMPACT ROW — guide-cmd + friendly-guilds 2-col 묶음
+   ============================================================ */
+
+.section--compact-row {
+  background: rgba(58, 77, 35, 0.06);
+}
+
+.compact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+.compact-row__col {
+  min-width: 0;
+}
+
+.section__head--compact {
+  margin-bottom: var(--sp-4);
+}
+
+@media (max-width: 860px) {
+  .compact-row {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+}
+
+/* ============================================================
+   GUIDE COMMAND
+   ============================================================ */
 
 .guide-cmd {
   display: flex;

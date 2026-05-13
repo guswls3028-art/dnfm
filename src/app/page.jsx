@@ -84,47 +84,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--guide-cmd" aria-labelledby="cmd-title">
-        <div className="content-wrap">
-          <header className="section__head">
-            <div>
-              <span className="section__kicker">GUIDE COMMAND</span>
-              <h2 id="cmd-title" className="section__title">
-                톡방 가이드 명령어
-              </h2>
+      <section className="section section--compact-row" aria-label="가이드 명령어와 친화 길드">
+        <div className="content-wrap compact-row">
+          <div className="compact-row__col" id="guide-cmd-col" aria-labelledby="cmd-title">
+            <header className="section__head section__head--compact">
+              <div>
+                <span className="section__kicker">GUIDE COMMAND</span>
+                <h2 id="cmd-title" className="section__title">
+                  톡방 가이드 명령어
+                </h2>
+              </div>
+            </header>
+            <div className="guide-cmd">
+              <code className="guide-cmd__code">{guideCommand.trigger}</code>
+              <p className="guide-cmd__note">{guideCommand.note}</p>
+              <small className="guide-cmd__author">작성: {guideCommand.author}</small>
             </div>
-          </header>
-          <div className="guide-cmd">
-            <code className="guide-cmd__code">{guideCommand.trigger}</code>
-            <p className="guide-cmd__note">{guideCommand.note}</p>
-            <small className="guide-cmd__author">작성: {guideCommand.author}</small>
           </div>
-        </div>
-      </section>
 
-      <section className="section" id="friendly-guilds" aria-labelledby="guild-title">
-        <div className="content-wrap">
-          <header className="section__head">
-            <div>
-              <span className="section__kicker">GUILD</span>
-              <h2 id="guild-title" className="section__title">
-                뉴비 친화 길드
-              </h2>
+          <div className="compact-row__col" id="friendly-guilds" aria-labelledby="guild-title">
+            <header className="section__head section__head--compact">
+              <div>
+                <span className="section__kicker">GUILD</span>
+                <h2 id="guild-title" className="section__title">
+                  뉴비 친화 길드
+                </h2>
+              </div>
+            </header>
+            <div className="guild-grid">
+              {friendlyGuilds.map((g) => (
+                <article className="guild-card" key={g.name}>
+                  <header>
+                    <strong>{g.name}</strong>
+                    <small>길마 · {g.leader}</small>
+                  </header>
+                  <p>{g.description}</p>
+                  <a className="btn btn--secondary" href={g.url} target="_blank" rel="noreferrer">
+                    공식 길드 페이지 →
+                  </a>
+                </article>
+              ))}
             </div>
-          </header>
-          <div className="guild-grid">
-            {friendlyGuilds.map((g) => (
-              <article className="guild-card" key={g.name}>
-                <header>
-                  <strong>{g.name}</strong>
-                  <small>길마 · {g.leader}</small>
-                </header>
-                <p>{g.description}</p>
-                <a className="btn btn--secondary" href={g.url} target="_blank" rel="noreferrer">
-                  공식 길드 페이지 →
-                </a>
-              </article>
-            ))}
           </div>
         </div>
       </section>

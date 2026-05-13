@@ -55,7 +55,11 @@ export default function NewPostPage() {
 
             <div className="field">
               <label className="field__label" htmlFor="post-file">첨부 (선택)</label>
-              <input id="post-file" name="attachment" type="file" className="input" disabled title="백엔드 연동 전" />
+              <label className="file-input is-disabled" htmlFor="post-file">
+                <span className="file-input__btn">파일 선택</span>
+                <span className="file-input__hint">선택된 파일 없음</span>
+                <input id="post-file" name="attachment" type="file" disabled title="백엔드 연동 전" />
+              </label>
               <span className="field__hint">이미지 / 캡처 — 최대 5MB. 백엔드 연동 후 활성화됩니다.</span>
             </div>
 
