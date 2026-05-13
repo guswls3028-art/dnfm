@@ -20,7 +20,5 @@ Thumbs.db
 
 이미지/
 
-# polyrepo 분할 잔재 — dev 서버 .next 락 때문에 working tree 에 남은 옛 디렉토리.
-# 사용자 dev 서버 stop 후 통째 삭제 가능.
-newb/
-allow/
+# Agent 작업 worktree (자동 생성, prune 후 사라짐)
+.claude/worktrees/
