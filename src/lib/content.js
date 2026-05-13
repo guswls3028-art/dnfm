@@ -122,7 +122,7 @@ export const site = {
     }
   ],
   actions: [
-    { label: "카톡방 입장", url: null, reason: "오픈채팅 URL 등록 전" },
+    { label: "카톡방 입장", url: "https://open.kakao.com/o/gbsjsZ5g", note: "뉴비훈련소 오픈채팅" },
     { label: "공식 홈페이지", url: "https://dnfm.nexon.com/", note: "이벤트 랜딩" },
     { label: "공지사항", url: "https://dnfm.nexon.com/News/Notice", note: "점검, 오류, 공지" },
     { label: "진행 이벤트", url: "https://dnfm.nexon.com/News/Event", note: "보상 확인" }
