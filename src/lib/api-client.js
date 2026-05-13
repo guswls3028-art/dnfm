@@ -1,18 +1,29 @@
-// api-client.js — dnfm 백엔드 (api.dnfm.kr) fetch wrapper
-// - base URL: NEXT_PUBLIC_API_BASE 환경변수 → fallback https://api.dnfm.kr
-// - credentials: "include" (쿠키 도메인 .dnfm.kr 공유)
-// - 응답 envelope 자동 unwrap: {data}/{error} → data 반환, error 시 ApiError throw
-// - timeout 15초 (AbortController)
-//
-// 사용 예:
-//   const me = await apiFetch("/auth/me");
-//   const res = await apiFetch("/auth/login/local", { method: "POST", json: { username, password } });
+/**
+ * api-client.js — dnfm.kr (newb) → api.dnfm.kr
+ *
+ * 공통 fetch wrapper.
+ *   - base = NEXT_PUBLIC_API_BASE 또는 https://api.dnfm.kr (prod 기본)
+ *   - credentials: "include" — 쿠키 도메인은 .dnfm.kr 이라 sibling subdomain 공유
+ *   - JSON body / multipart 자동 처리
+ *   - 응답 envelope `{ data }` 자동 unwrap, `{ error: {code,message,details} }` → ApiError throw
+ *   - timeout 15s (AbortController)
+ *
+ * 두 frontend (newb / allow) 모두 같은 backend (`api.dnfm.kr`) 호출 — wrapper shape 도 같게 유지.
+ * 차이는 SITE 상수와 content.js (정적 콘텐츠 SSOT) 뿐.
+ */
 
-export const API_BASE =
-  (typeof process !== "undefined" && process.env && process.env.NEXT_PUBLIC_API_BASE) ||
-  "https://api.dnfm.kr";
+const DEFAULT_BASE = "https://api.dnfm.kr";
+const SITE = "newb";
+const DEFAULT_TIMEOUT_MS = 15_000;
 
-const DEFAULT_TIMEOUT_MS = 15000;
+function resolveBase() {
+  if (typeof process !== "undefined" && process.env && process.env.NEXT_PUBLIC_API_BASE) {
+    return process.env.NEXT_PUBLIC_API_BASE.replace(/\/+$/, "");
+  }
+  return DEFAULT_BASE;
+}
+
+export const API_BASE = resolveBase();
 
 export class ApiError extends Error {
   constructor({ status, code, message, details, raw }) {
@@ -27,30 +38,36 @@ export class ApiError extends Error {
 
 function joinUrl(base, path) {
   if (/^https?:\/\//i.test(path)) return path;
-  if (!path.startsWith("/")) path = "/" + path;
-  return base.replace(/\/$/, "") + path;
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return base.replace(/\/$/, "") + p;
+}
+
+function buildQuery(query) {
+  if (!query) return "";
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(query)) {
+    if (v === undefined || v === null || v === "") continue;
+    qs.set(k, String(v));
+  }
+  const s = qs.toString();
+  return s ? `?${s}` : "";
 }
 
 /**
- * apiFetch
- * @param {string} path  — "/auth/me" 같은 상대 경로 또는 절대 URL
- * @param {object} init  — 표준 fetch init + 확장
- *   - json: object → JSON.stringify + Content-Type: application/json
- *   - form: FormData → multipart (Content-Type 직접 X — browser 가 boundary 처리)
- *   - timeoutMs: 기본 15000
- *   - raw: true → envelope unwrap 안 함 (res 객체 반환)
- * @returns {Promise<any>} envelope 의 data 필드. raw=true 면 Response.
+ * 저수준 호출. envelope `{data}` 자동 unwrap.
  */
 export async function apiFetch(path, init = {}) {
   const {
     json,
     form,
+    query,
     timeoutMs = DEFAULT_TIMEOUT_MS,
     raw = false,
     headers: extraHeaders,
     ...rest
   } = init;
 
+  const url = joinUrl(API_BASE, path) + buildQuery(query);
   const headers = { Accept: "application/json", ...(extraHeaders || {}) };
   let body = rest.body;
 
@@ -58,7 +75,7 @@ export async function apiFetch(path, init = {}) {
     headers["Content-Type"] = "application/json";
     body = JSON.stringify(json);
   } else if (form !== undefined) {
-    body = form; // browser 가 multipart boundary 자동 세팅
+    body = form;
   }
 
   const controller = new AbortController();
@@ -66,7 +83,7 @@ export async function apiFetch(path, init = {}) {
 
   let res;
   try {
-    res = await fetch(joinUrl(API_BASE, path), {
+    res = await fetch(url, {
       method: rest.method || (body ? "POST" : "GET"),
       credentials: "include",
       headers,
@@ -77,9 +94,17 @@ export async function apiFetch(path, init = {}) {
   } catch (err) {
     clearTimeout(timer);
     if (err && err.name === "AbortError") {
-      throw new ApiError({ status: 0, code: "timeout", message: `요청 시간 초과 (${timeoutMs}ms)` });
+      throw new ApiError({
+        status: 0,
+        code: "timeout",
+        message: `요청 시간 초과 (${timeoutMs}ms)`,
+      });
     }
-    throw new ApiError({ status: 0, code: "network", message: err?.message || "네트워크 오류" });
+    throw new ApiError({
+      status: 0,
+      code: "network",
+      message: err?.message || "네트워크 오류",
+    });
   } finally {
     clearTimeout(timer);
   }
@@ -95,7 +120,6 @@ export async function apiFetch(path, init = {}) {
       payload = null;
     }
   } else {
-    // 비 JSON 응답 — 텍스트 한 번 비워줘서 connection leak 방지
     try {
       await res.text();
     } catch {}
@@ -121,3 +145,92 @@ export async function apiFetch(path, init = {}) {
 export function buildApiUrl(path) {
   return joinUrl(API_BASE, path);
 }
+
+/* ---------- Auth ---------- */
+
+export const auth = {
+  me: () => apiFetch("/auth/me"),
+  logout: () => apiFetch("/auth/logout", { method: "POST" }),
+  loginLocal: ({ username, password }) =>
+    apiFetch("/auth/login/local", { method: "POST", json: { username, password } }),
+  signupLocal: ({ username, password, displayName, email, dnfProfile }) =>
+    apiFetch("/auth/signup/local", {
+      method: "POST",
+      json: { username, password, displayName, email, dnfProfile },
+    }),
+  checkAvailability: ({ username, displayName }) =>
+    apiFetch("/auth/check-availability", { query: { username, displayName } }),
+  refresh: () => apiFetch("/auth/refresh", { method: "POST" }),
+  ocrDnfProfile: ({ type, file, fileUrl }) => {
+    if (file) {
+      const fd = new FormData();
+      fd.append("file", file);
+      return apiFetch(`/auth/dnf-profile/ocr/${type}`, { method: "POST", form: fd });
+    }
+    return apiFetch(`/auth/dnf-profile/ocr/${type}`, {
+      method: "POST",
+      json: { fileUrl },
+    });
+  },
+  confirmDnfProfile: (data) =>
+    apiFetch("/auth/dnf-profile/confirm", { method: "POST", json: data }),
+};
+
+/* ---------- Posts (board) ---------- */
+
+const sitePath = (path) => `/sites/${SITE}${path}`;
+
+export const posts = {
+  categories: () => apiFetch(sitePath("/categories")),
+  list: ({ categoryId, flair, postType, bestOnly, q, page, pageSize, sort } = {}) =>
+    apiFetch(sitePath("/posts"), {
+      query: { categoryId, flair, postType, bestOnly, q, page, pageSize, sort },
+    }),
+  detail: (id) => apiFetch(sitePath(`/posts/${id}`)),
+  create: ({ categoryId, title, body, bodyFormat, flair, postType, attachmentR2Keys }) =>
+    apiFetch(sitePath("/posts"), {
+      method: "POST",
+      json: { categoryId, title, body, bodyFormat, flair, postType, attachmentR2Keys },
+    }),
+  update: (id, input) =>
+    apiFetch(sitePath(`/posts/${id}`), { method: "PATCH", json: input }),
+  remove: (id) => apiFetch(sitePath(`/posts/${id}`), { method: "DELETE" }),
+  // voteType: "recommend" | "downvote" (backend postVoteTypes enum)
+  vote: (id, voteType) =>
+    apiFetch(sitePath(`/posts/${id}/vote`), { method: "POST", json: { voteType } }),
+};
+
+/* ---------- Comments ---------- */
+
+export const comments = {
+  list: (postId, { page, pageSize } = {}) =>
+    apiFetch(sitePath(`/posts/${postId}/comments`), { query: { page, pageSize } }),
+  create: (postId, { body, parentId }) =>
+    apiFetch(sitePath(`/posts/${postId}/comments`), {
+      method: "POST",
+      json: { body, parentId },
+    }),
+  update: (id, { body }) =>
+    apiFetch(sitePath(`/comments/${id}`), { method: "PATCH", json: { body } }),
+  remove: (id) => apiFetch(sitePath(`/comments/${id}`), { method: "DELETE" }),
+};
+
+/* ---------- Uploads ---------- */
+
+export const uploads = {
+  presignedPut: ({ filename, contentType, scope = SITE }) =>
+    apiFetch("/uploads/presigned-put", {
+      method: "POST",
+      json: { filename, contentType, scope },
+    }),
+  confirm: (id) => apiFetch(`/uploads/${id}/confirm`, { method: "POST" }),
+};
+
+/* ---------- OAuth helpers ---------- */
+
+export const oauth = {
+  googleStart: (returnTo = "/") =>
+    `${API_BASE}/auth/oauth/google/start?site=${SITE}&returnTo=${encodeURIComponent(returnTo)}`,
+  kakaoStart: (returnTo = "/") =>
+    `${API_BASE}/auth/oauth/kakao/start?site=${SITE}&returnTo=${encodeURIComponent(returnTo)}`,
+};

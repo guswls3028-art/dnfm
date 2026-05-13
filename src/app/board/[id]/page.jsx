@@ -91,7 +91,7 @@ export default function PostDetailPage() {
     try {
       await apiFetch(`/sites/newb/posts/${encodeURIComponent(post.id)}/vote`, {
         method: "POST",
-        json: { value: 1 },
+        json: { voteType: "recommend" },
       });
       setVoteMsg("추천했어요!");
       await load();
