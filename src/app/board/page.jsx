@@ -213,7 +213,7 @@ function BoardInner() {
                   </span>
                   <span className="board-row__meta">잠시만 기다려주세요</span>
                 </div>
-              ) : sorted.length === 0 ? (
+              ) : sorted.length === 0 && !error ? (
                 <div className="board-row">
                   <span className="board-row__label">안내</span>
                   <span className="board-row__title">

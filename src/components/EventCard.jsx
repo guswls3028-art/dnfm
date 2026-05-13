@@ -22,9 +22,14 @@ export default function EventCard({ event }) {
     </div>
   );
 
+  const categorySlug =
+    event.category === "공식" ? "official"
+    : event.category === "톡방" ? "talk"
+    : "other";
+
   return (
-    <article className={className}>
-      <div className="event-card__banner" aria-hidden="true">
+    <article className={className} data-category={categorySlug}>
+      <div className="event-card__banner" data-category={categorySlug} aria-hidden="true">
         {event.bannerLabel || event.category}
       </div>
       {head}

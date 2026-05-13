@@ -1201,6 +1201,22 @@ button {
   border: 1px solid var(--color-line-strong);
 }
 
+.event-card__banner[data-category="official"] {
+  background:
+    radial-gradient(circle at 30% 40%, rgba(212, 162, 76, 0.55), transparent 55%),
+    var(--grad-gold);
+  color: var(--color-text-on-gold);
+  border-color: var(--color-gold-deep);
+}
+
+.event-card__banner[data-category="talk"] {
+  background:
+    radial-gradient(circle at 30% 40%, rgba(79, 224, 168, 0.30), transparent 55%),
+    linear-gradient(135deg, #2c4422 0%, #3a4d23 50%, #1f2a12 100%);
+  color: var(--color-mint);
+  border-color: var(--color-purple-soft);
+}
+
 .event-card__head {
   display: flex;
   align-items: center;
