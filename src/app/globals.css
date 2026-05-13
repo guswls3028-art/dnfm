@@ -23,6 +23,12 @@
   --color-crimson-deep: #5a0e0e;
   --color-paper: #f5ecd2;           /* 본문 양피지 베이스 */
   --color-paper-warm: #e8dcb4;
+  --color-paper-soft: rgba(245, 236, 210, 0.72);
+  --color-amber: #d49542;           /* 따뜻한 호박색 (gold ↔ red 중간) */
+  --color-red: #c8492a;             /* 강조 빨강 (crimson 보다 채도 ↑) */
+  --color-mint: #4fe0a8;            /* 청량 민트 */
+  --color-azure: #6fa8ff;           /* 하늘 블루 */
+  --color-purple-real: #8e6fb8;     /* 실제 violet (token 이름 purple 은 올리브임) */
   --color-line: rgba(58, 77, 35, 0.22);
   --color-line-soft: rgba(58, 77, 35, 0.10);
   --color-line-strong: rgba(31, 35, 26, 0.62);
@@ -594,6 +600,36 @@ button {
 
 .card--parchment .card__title {
   color: var(--color-purple-deep);
+}
+
+.card--parchment .field__label {
+  color: var(--color-purple-deep);
+  font-weight: 800;
+}
+
+.card--parchment .field__hint {
+  color: var(--color-text-muted);
+}
+
+.card--parchment .input,
+.card--parchment .textarea,
+.card--parchment .select {
+  color: var(--color-text);
+  background: rgba(255, 253, 245, 0.78);
+  border-color: rgba(31, 35, 26, 0.32);
+}
+
+.card--parchment .input::placeholder,
+.card--parchment .textarea::placeholder {
+  color: rgba(31, 35, 26, 0.42);
+}
+
+.card--parchment .input:focus,
+.card--parchment .textarea:focus,
+.card--parchment .select:focus {
+  border-color: var(--color-gold-deep);
+  background: rgba(255, 253, 245, 0.95);
+  box-shadow: 0 0 0 3px rgba(176, 140, 58, 0.20);
 }
 
 .card__body {
@@ -2015,8 +2051,9 @@ button {
 
 .demographics__bar {
   position: relative;
-  height: 10px;
-  background: rgba(244, 228, 181, 0.06);
+  height: 12px;
+  background: rgba(244, 228, 181, 0.14);
+  border: 1px solid rgba(244, 228, 181, 0.10);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -2024,25 +2061,29 @@ button {
 .demographics__bar > span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--color-gold), var(--color-amber));
+  background: linear-gradient(90deg, var(--color-gold-soft), var(--color-amber));
   border-radius: 6px;
   max-width: 100%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset;
 }
 
+.demographics__bar[data-accent="gold"] > span {
+  background: linear-gradient(90deg, var(--color-gold-soft), var(--color-amber));
+}
 .demographics__bar[data-accent="amber"] > span {
-  background: linear-gradient(90deg, var(--color-amber), var(--color-gold));
+  background: linear-gradient(90deg, var(--color-amber), var(--color-gold-soft));
 }
 .demographics__bar[data-accent="mint"] > span {
-  background: linear-gradient(90deg, #4fe0a8, var(--color-gold));
+  background: linear-gradient(90deg, var(--color-mint), #2fb88a);
 }
 .demographics__bar[data-accent="blue"] > span {
-  background: linear-gradient(90deg, #6fa8ff, var(--color-purple-soft));
+  background: linear-gradient(90deg, var(--color-azure), #3d7cd6);
 }
 .demographics__bar[data-accent="violet"] > span {
-  background: linear-gradient(90deg, var(--color-purple), var(--color-gold));
+  background: linear-gradient(90deg, var(--color-purple-real), #6a4f99);
 }
 .demographics__bar[data-accent="crimson"] > span {
-  background: linear-gradient(90deg, var(--color-red), var(--color-gold));
+  background: linear-gradient(90deg, var(--color-red), var(--color-crimson));
 }
 
 .demographics__pct {
@@ -2270,7 +2311,12 @@ button {
 
 @media (max-width: 720px) {
   .demographics__row {
-    grid-template-columns: 80px 1fr 42px;
+    grid-template-columns: 96px 1fr 48px;
+  }
+  .demographics__label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -2337,8 +2383,42 @@ button {
 
 .hero--community {
   background:
-    radial-gradient(ellipse at 0% 0%, rgba(58, 77, 35, 0.25), transparent 55%),
-    radial-gradient(ellipse at 100% 100%, rgba(176, 140, 58, 0.18), transparent 60%);
+    radial-gradient(ellipse at 0% 0%, rgba(58, 77, 35, 0.55), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(176, 140, 58, 0.42), transparent 60%),
+    linear-gradient(180deg, #1c2412 0%, #11140d 100%);
+  color: var(--color-paper);
+}
+
+.hero--community .hero__kicker {
+  color: var(--color-gold-soft);
+  border-color: var(--color-gold-deep);
+  background: rgba(176, 140, 58, 0.08);
+}
+
+.hero--community .hero__title {
+  color: var(--color-gold-soft);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.95),
+    0 4px 14px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(176, 140, 58, 0.35);
+}
+
+.hero--community .hero__title span {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 0 -8px;
+  background: linear-gradient(180deg, rgba(17, 20, 13, 0.45), rgba(17, 20, 13, 0.20));
+  border-radius: 6px;
+}
+
+.hero--community .hero__body {
+  color: var(--color-paper-warm);
+}
+
+.hero--community .hero__bullets li {
+  color: var(--color-paper);
 }
 
 .hero__subtitle {

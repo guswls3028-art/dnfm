@@ -73,23 +73,48 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <section className="section">
-        <div className="content-wrap">
-          <p>불러오는 중…</p>
-        </div>
-      </section>
+      <>
+        <section className="page-hero">
+          <div className="content-wrap page-hero__inner">
+            <div>
+              <h1 className="page-hero__title">마이페이지</h1>
+              <p className="page-hero__sub">로그인 정보를 확인하고 있어요.</p>
+            </div>
+          </div>
+        </section>
+        <section className="section">
+          <div className="content-wrap">
+            <p className="auth-msg auth-msg--info" style={{ margin: 0 }}>
+              잠시만 기다려주세요…
+            </p>
+          </div>
+        </section>
+      </>
     );
   }
 
   if (!isAuthed || !user) {
     return (
-      <section className="section">
-        <div className="content-wrap">
-          <p className="auth-msg auth-msg--info">
-            로그인이 필요합니다. <Link href="/login?next=/profile">로그인 →</Link>
-          </p>
-        </div>
-      </section>
+      <>
+        <section className="page-hero">
+          <div className="content-wrap page-hero__inner">
+            <div>
+              <h1 className="page-hero__title">마이페이지</h1>
+              <p className="page-hero__sub">로그인 후 이용할 수 있어요.</p>
+            </div>
+            <Link href="/login?next=/profile" className="btn btn--primary btn--sm">
+              로그인 →
+            </Link>
+          </div>
+        </section>
+        <section className="section">
+          <div className="content-wrap">
+            <p className="auth-msg auth-msg--info" style={{ margin: 0 }}>
+              잠시 후 로그인 화면으로 이동합니다.
+            </p>
+          </div>
+        </section>
+      </>
     );
   }
 

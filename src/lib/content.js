@@ -6,8 +6,8 @@
 export const host = {
   nickname: "시너지통",
   role: "방장 / 운영자 / 개발자",
-  avatarSrc: "/host-avatar.jpg",
-  bannerSrc: "/banner.jpg",
+  avatarSrc: "/banner.jpg",
+  bannerSrc: "/host-avatar.jpg",
   contact: { type: "kakao_dm", reason: "톡방 방장 프로필 1:1 대화" },
 };
 
