@@ -2702,3 +2702,150 @@ button {
   font-size: var(--fs-sm);
   color: var(--color-paper);
 }
+
+/* ─────────────────────────────────────────────────────────── 페이지네이션 */
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+  padding: var(--sp-3) 0;
+}
+
+.pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--color-gold-soft);
+  border-radius: var(--radius-sm);
+  background: var(--color-ink-soft);
+  color: var(--color-paper);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.pagination__btn:hover:not(.is-disabled):not(.is-current) {
+  background: var(--color-ink-deep);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.pagination__btn.is-current {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+  cursor: default;
+}
+
+.pagination__btn.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.pagination__gap {
+  display: inline-flex;
+  align-items: center;
+  min-width: 24px;
+  height: 36px;
+  color: var(--color-gold-soft);
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .pagination__btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 var(--sp-2);
+    font-size: var(--fs-xs);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────── 운영(admin) 드롭다운 */
+
+.post-head__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.admin-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.admin-menu__trigger {
+  border-color: var(--tone-warning);
+  color: var(--tone-warning);
+  font-weight: 800;
+}
+
+.admin-menu__panel {
+  position: absolute;
+  top: calc(100% + var(--sp-1));
+  right: 0;
+  z-index: 30;
+  min-width: 200px;
+  padding: var(--sp-1);
+  border: 1px solid var(--color-gold-soft);
+  border-radius: var(--radius-sm);
+  background: var(--color-ink);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-menu__item {
+  display: block;
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border: 0;
+  background: transparent;
+  color: var(--color-paper);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-xs, 4px);
+}
+
+.admin-menu__item:hover:not(:disabled) {
+  background: var(--color-ink-soft);
+  color: var(--color-gold);
+}
+
+.admin-menu__item--danger {
+  color: #ff8b8b;
+}
+
+.admin-menu__item--danger:hover:not(:disabled) {
+  background: var(--color-crimson-deep);
+  color: #ffd5d5;
+}
+
+.admin-menu__item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-menu__msg {
+  color: var(--color-gold-soft);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+

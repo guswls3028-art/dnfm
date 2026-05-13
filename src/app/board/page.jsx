@@ -4,9 +4,12 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import BoardRow from "@/components/BoardRow";
+import Pagination from "@/components/Pagination";
 import { apiFetch, ApiError } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { site } from "@/lib/content";
+
+const PAGE_SIZE = 20;
 
 function normalizePost(p) {
   // 백엔드 응답 모양이 확정되기 전까지 방어적으로 매핑.
@@ -51,9 +54,11 @@ function BoardLoading() {
 function BoardInner() {
   const params = useSearchParams();
   const activeCat = params.get("category") || "all";
+  const pageParam = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
   const { isAuthed } = useCurrentUser();
 
   const [posts, setPosts] = useState(null); // null = loading
+  const [total, setTotal] = useState(0);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -61,7 +66,11 @@ function BoardInner() {
     setPosts(null);
     setError(null);
 
-    const qs = new URLSearchParams({ page: "1", pageSize: "20", sort: "recent" });
+    const qs = new URLSearchParams({
+      page: String(pageParam),
+      pageSize: String(PAGE_SIZE),
+      sort: "recent",
+    });
     if (activeCat !== "all") qs.set("category", activeCat);
 
     (async () => {
@@ -76,6 +85,13 @@ function BoardInner() {
               ? data
               : [];
         setPosts(list.map(normalizePost).filter(Boolean));
+        const t =
+          typeof data?.total === "number"
+            ? data.total
+            : Array.isArray(list)
+              ? list.length
+              : 0;
+        setTotal(t);
       } catch (err) {
         if (cancelled) return;
         const msg =
@@ -84,22 +100,32 @@ function BoardInner() {
             : err?.message || "게시판을 불러오지 못했습니다.";
         setError(msg);
         setPosts([]);
+        setTotal(0);
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [activeCat]);
+  }, [activeCat, pageParam]);
 
   const sorted = useMemo(() => {
     if (!posts) return null;
+    // pinned 우선 정렬은 같은 페이지 안에서만. (서버가 이미 pinned DESC + createdAt DESC)
     return [...posts].sort(
       (a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)),
     );
   }, [posts]);
 
   const catLabel = site.boardCategories.find((c) => c.id === activeCat)?.label || "전체";
+
+  const buildPageHref = (n) => {
+    const qs = new URLSearchParams();
+    if (activeCat !== "all") qs.set("category", activeCat);
+    if (n > 1) qs.set("page", String(n));
+    const s = qs.toString();
+    return s ? `/board?${s}` : "/board";
+  };
 
   return (
     <>
@@ -150,7 +176,12 @@ function BoardInner() {
           <div className="board" style={{ marginTop: "var(--sp-5)" }}>
             <div className="board__head">
               <h2>
-                {catLabel} · {sorted ? `${sorted.length}건` : "불러오는 중…"}
+                {catLabel} ·{" "}
+                {sorted
+                  ? total > 0
+                    ? `총 ${total}건${total > PAGE_SIZE ? ` · ${pageParam} 페이지` : ""}`
+                    : `${sorted.length}건`
+                  : "불러오는 중…"}
               </h2>
               {isAuthed ? (
                 <Link className="card__action" href="/board/new">
@@ -194,6 +225,13 @@ function BoardInner() {
                 ))
               )}
             </div>
+
+            <Pagination
+              current={pageParam}
+              total={total}
+              pageSize={PAGE_SIZE}
+              buildHref={buildPageHref}
+            />
           </div>
         </div>
       </section>

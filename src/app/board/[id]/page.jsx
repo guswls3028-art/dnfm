@@ -5,6 +5,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiFetch, ApiError } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
+import { isSiteAdmin } from "@/lib/permissions";
+import AdminPostMenu from "@/components/AdminPostMenu";
 
 function normalizePost(p) {
   if (!p) return null;
@@ -39,7 +41,8 @@ export default function PostDetailPage() {
   const params = useParams();
   const router = useRouter();
   const postId = params?.id;
-  const { isAuthed } = useCurrentUser();
+  const { isAuthed, user } = useCurrentUser();
+  const isAdmin = isSiteAdmin(user, "newb");
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -193,7 +196,16 @@ export default function PostDetailPage() {
         <div className="content-wrap" style={{ display: "grid", gap: "var(--sp-4)" }}>
           <article>
             <header className="post-head">
-              <span className="badge badge--soft">{post.label}</span>
+              <div className="post-head__top">
+                <span className="badge badge--soft">{post.label}</span>
+                {isAdmin ? (
+                  <AdminPostMenu
+                    postId={post.id}
+                    pinned={post.pinned}
+                    onChange={load}
+                  />
+                ) : null}
+              </div>
               <h1 className="post-head__title">
                 {post.pinned ? "📌 " : ""}
                 {post.title}
