@@ -2,7 +2,7 @@
 
 이 repo (`dnfm-newb`, `dnfm.kr` / `www.dnfm.kr`) 를 EC2 + Cloudflare proxy 로 띄우는 절차.
 
-자매 사이트 `dnfm-allow` 는 같은 EC2 인스턴스 안에 다른 디렉토리·다른 포트로 동거. 단, 본 repo 작업으로 흔들 일 없음.
+친구들 `dnfm-allow` 는 같은 EC2 인스턴스 안에 다른 디렉토리·다른 포트로 동거. 단, 본 repo 작업으로 흔들 일 없음.
 
 ## 0. 사전
 

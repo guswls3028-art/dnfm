@@ -5,7 +5,7 @@
 - **Stack**: Next.js 15.5.7 (App Router, standalone output) + React 19, Node 20.
 - **사이트**: `dnfm.kr`, `www.dnfm.kr` — 던파 모바일 뉴비 훈련소 카톡방 공식 웹.
 - **운영자 = 사용자(=방장=개발자) 본인**. 비개발자 UX 강도 약함. 코드/DB 직접 수정 OK.
-- **자매 사이트**: `allow.dnfm.kr` — 허락님 페이지. **별도 git repo (`guswls3028-art/dnfm-allow`)** 로 운영. 같은 백엔드(`api.dnfm.kr`, Stage 2)·같은 회원/세션(쿠키 도메인 `.dnfm.kr`)을 공유하지만 **frontend 코드·디자인 시스템은 완전 독립**. 한쪽 작업이 다른쪽에 영향 0.
+- **친구들**: `allow.dnfm.kr` — 허락님 페이지. **별도 git repo (`guswls3028-art/dnfm-allow`)** 로 운영. 같은 백엔드(`api.dnfm.kr`, Stage 2)·같은 회원/세션(쿠키 도메인 `.dnfm.kr`)을 공유하지만 **frontend 코드·디자인 시스템은 완전 독립**. 한쪽 작업이 다른쪽에 영향 0.
 - **호스팅**: EC2 단일 인스턴스(Nginx host 분기) + Cloudflare proxy (orange-cloud). SSL Full strict.
 - **R2 버킷**: 사용자 업로드. 백엔드 api 가 presigned URL 발급. public 차단.
 - **Git**: `https://github.com/guswls3028-art/dnfm` (이 repo = newb 전용).
@@ -51,7 +51,7 @@
 - **Context (on-demand)**: `.claude/context/` — 비어 있음. 필요 시 추가.
 - Ignore: `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `_artifacts/`, `이미지/`
 
-## E. 자매 사이트 격리 정책 (절대)
+## E. 친구들 격리 정책 (절대)
 
 - `allow.dnfm.kr` 작업 시 이 repo 와 무관. **별도 repo / 별도 세션 / 별도 디자인 시스템.**
 - 두 사이트가 공유하는 건 backend api (Stage 2 의 `api.dnfm.kr`) + 회원/세션/R2 뿐. frontend 측 공유 코드 0.

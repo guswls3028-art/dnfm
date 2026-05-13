@@ -5,7 +5,7 @@
 각 사이트의 화면 문구와 링크는 해당 앱의 `src/lib/content.js`에 있습니다.
 
 - 카톡방 URL / 공식 링크 / 가이드 카드 / 체크리스트: `src/lib/content.js`
-- 자매 사이트 `allow.dnfm.kr` 콘텐츠는 **별도 repo** (`dnfm-allow`) 에서 관리. 이 repo 와 무관.
+- 친구들 `allow.dnfm.kr` 콘텐츠는 **별도 repo** (`dnfm-allow`) 에서 관리. 이 repo 와 무관.
 
 ## 링크 원칙
 

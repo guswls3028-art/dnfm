@@ -34,7 +34,7 @@
 - **이벤트 페이지** — 친구 사이트(allow) 의 콘테스트와 별개로 newb 자체 이벤트도 운영 가능.
 - 콘텐츠 동적화 (공지/이벤트 게시판) 는 사용자 본인이 코드로 직접 추가 — UI self-service 우선순위 X.
 
-## 6. 자매 사이트 관계
+## 6. 친구들 관계
 
 - `allow.dnfm.kr` 는 **별도 repo (`dnfm-allow`)**. 이 repo 와 frontend 코드·디자인 시스템 완전 격리.
 - 공유 = backend api (Stage 2 `api.dnfm.kr`) + 회원/세션 (쿠키 도메인 `.dnfm.kr`) + R2 업로드 뿐.

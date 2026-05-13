@@ -10,7 +10,7 @@
 - `public/` — 정적 자산
 - `docs/` — 도메인 라우팅 / 배포 / 운영 가이드
 
-자매 사이트 `allow.dnfm.kr` 는 **별도 repo** [`guswls3028-art/dnfm-allow`](https://github.com/guswls3028-art/dnfm-allow) 에서 독립 운영. 한쪽 작업이 다른쪽에 영향 0.
+친구들 `allow.dnfm.kr` 는 **별도 repo** [`guswls3028-art/dnfm-allow`](https://github.com/guswls3028-art/dnfm-allow) 에서 독립 운영. 한쪽 작업이 다른쪽에 영향 0.
 
 ## 실행
 
