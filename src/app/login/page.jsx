@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { API_BASE } from "@/lib/api-client";
 import { site } from "@/lib/content";
@@ -47,12 +47,19 @@ function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
   const next = safeRedirect(params.get("next"));
-  const { login } = useCurrentUser();
+  const { login, isAuthed, isLoading } = useCurrentUser();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // 이미 로그인된 사용자가 /login 진입 시 next 또는 / 로 보냄.
+  useEffect(() => {
+    if (!isLoading && isAuthed) {
+      router.replace(next);
+    }
+  }, [isLoading, isAuthed, next, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();

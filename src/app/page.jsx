@@ -4,6 +4,7 @@ import BoardRow from "@/components/BoardRow";
 import EventCard from "@/components/EventCard";
 import GuideCard from "@/components/GuideCard";
 import Checklist from "@/components/Checklist";
+import HomeCommunityBoard from "@/components/HomeCommunityBoard";
 import LinkGroup from "@/components/LinkGroup";
 import {
   site,
@@ -165,11 +166,7 @@ export default function HomePage() {
                   더 보기 →
                 </Link>
               </div>
-              <div className="board__rows">
-                {site.communityPosts.map((post) => (
-                  <BoardRow key={post.id || post.title} post={post} />
-                ))}
-              </div>
+              <HomeCommunityBoard />
             </div>
           </div>
         </div>
