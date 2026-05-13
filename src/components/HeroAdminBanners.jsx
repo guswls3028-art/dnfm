@@ -134,29 +134,13 @@ function BannerEditorModal({ banners, onClose, onChanged }) {
     setError(null);
     setUploadHint(null);
     try {
-      const presign = await uploadsApi.presignedPut({
-        purpose: "hero_banner",
-        contentType: file.type,
-        sizeBytes: file.size,
-      });
-      const putRes = await fetch(presign.putUrl, {
-        method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!putRes.ok) {
-        throw new Error(`R2 업로드 실패 (${putRes.status})`);
-      }
-      const confirmed = await uploadsApi.confirm(presign.uploadId, { sizeBytes: file.size });
-      const finalUrl = confirmed?.upload?.publicUrl || presign.publicUrl || "";
+      const result = await uploadsApi.uploadFile({ file, purpose: "hero_banner" });
+      const finalUrl = result?.publicUrl || "";
       if (finalUrl) {
         setDraft((d) => ({ ...d, imageUrl: finalUrl }));
         setUploadHint(`업로드 완료 — ${file.name}`);
       } else {
-        setUploadHint(
-          "업로드 완료. R2 공개 URL 미설정으로 자동 채움이 안 됐어요. 운영 환경에 R2_PUBLIC_BASE 설정 필요.",
-        );
-        setDraft((d) => ({ ...d, imageUrl: presign.r2Key }));
+        setUploadHint("업로드 완료 — URL 수신 실패. 운영자에게 보고.");
       }
     } catch (err) {
       const msg =

@@ -229,6 +229,13 @@ export const uploads = {
     }),
   confirm: (id, { sizeBytes } = {}) =>
     apiFetch(`/uploads/${id}/confirm`, { method: "POST", json: { sizeBytes } }),
+  /** multipart 직접 업로드 — backend proxy (R2 CORS 회피용). */
+  uploadFile: ({ file, purpose }) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("purpose", purpose);
+    return apiFetch("/uploads/file", { method: "POST", form: fd });
+  },
 };
 
 /* ---------- Hero banners (admin CRUD) ---------- */
