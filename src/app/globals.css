@@ -1807,3 +1807,271 @@ button {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ============================================================
+   ABOUT — 톡방 철학 + 인원 분포
+   ============================================================ */
+
+.section--about {
+  background:
+    radial-gradient(circle at 12% 30%, rgba(212, 162, 76, 0.08), transparent 55%),
+    radial-gradient(circle at 88% 70%, rgba(107, 44, 142, 0.12), transparent 55%);
+}
+
+.about__one-liner {
+  margin: 0 0 var(--sp-5);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 4px solid var(--color-gold);
+  background: rgba(13, 7, 25, 0.55);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--color-paper);
+  line-height: 1.6;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.about__bullets {
+  list-style: none;
+  margin: 0 0 var(--sp-6);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--sp-3);
+}
+
+.about__bullets li {
+  padding: var(--sp-3) var(--sp-4);
+  background: rgba(13, 7, 25, 0.4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  color: var(--color-paper-soft);
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.about__bullets li::before {
+  content: "▸ ";
+  color: var(--color-gold);
+  font-weight: 800;
+}
+
+.demographics {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  background: rgba(13, 7, 25, 0.5);
+}
+
+.demographics__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.demographics__head strong {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+}
+
+.demographics__head small {
+  color: var(--color-paper-soft);
+  font-size: var(--fs-2xs);
+}
+
+.demographics__row {
+  display: grid;
+  grid-template-columns: 100px 1fr 48px;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 4px 0;
+}
+
+.demographics__label {
+  font-size: var(--fs-sm);
+  color: var(--color-paper);
+}
+
+.demographics__bar {
+  position: relative;
+  height: 10px;
+  background: rgba(244, 228, 181, 0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.demographics__bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-amber));
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+.demographics__bar[data-accent="amber"] > span {
+  background: linear-gradient(90deg, var(--color-amber), var(--color-gold));
+}
+.demographics__bar[data-accent="mint"] > span {
+  background: linear-gradient(90deg, #4fe0a8, var(--color-gold));
+}
+.demographics__bar[data-accent="blue"] > span {
+  background: linear-gradient(90deg, #6fa8ff, var(--color-purple-soft));
+}
+.demographics__bar[data-accent="violet"] > span {
+  background: linear-gradient(90deg, var(--color-purple), var(--color-gold));
+}
+.demographics__bar[data-accent="crimson"] > span {
+  background: linear-gradient(90deg, var(--color-red), var(--color-gold));
+}
+
+.demographics__pct {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ============================================================
+   RULES — 톡방 규칙
+   ============================================================ */
+
+.rules-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--sp-3);
+}
+
+.rules-grid__item {
+  position: relative;
+  padding: var(--sp-4);
+  background: rgba(13, 7, 25, 0.55);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.rules-grid__item strong {
+  display: block;
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  margin-bottom: var(--sp-2);
+}
+
+.rules-grid__item p {
+  margin: 0;
+  color: var(--color-paper-soft);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.rules-grid__num {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   GUIDE COMMAND
+   ============================================================ */
+
+.section--guide-cmd {
+  background: rgba(107, 44, 142, 0.08);
+}
+
+.guide-cmd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-6) var(--sp-4);
+  border: 1px dashed var(--color-gold);
+  border-radius: var(--radius-md);
+  background: rgba(13, 7, 25, 0.6);
+  text-align: center;
+}
+
+.guide-cmd__code {
+  display: inline-block;
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--color-ink-deep);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  color: var(--color-gold);
+  font-family: var(--font-mono, "Consolas", monospace);
+  font-size: var(--fs-xl);
+  letter-spacing: 0.06em;
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.guide-cmd__note {
+  margin: 0;
+  color: var(--color-paper);
+  font-size: var(--fs-md);
+  word-break: keep-all;
+}
+
+.guide-cmd__author {
+  color: var(--color-paper-soft);
+  font-size: var(--fs-xs);
+}
+
+/* ============================================================
+   FRIENDLY GUILDS
+   ============================================================ */
+
+.guild-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--sp-4);
+}
+
+.guild-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: rgba(13, 7, 25, 0.6);
+  border: 1px solid var(--color-gold-deep);
+  border-radius: var(--radius-md);
+}
+
+.guild-card header strong {
+  display: block;
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  margin-bottom: 2px;
+}
+
+.guild-card header small {
+  color: var(--color-paper-soft);
+  font-size: var(--fs-xs);
+}
+
+.guild-card p {
+  margin: 0;
+  color: var(--color-paper);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  flex: 1;
+  word-break: keep-all;
+}
+
+@media (max-width: 720px) {
+  .demographics__row {
+    grid-template-columns: 80px 1fr 42px;
+  }
+}

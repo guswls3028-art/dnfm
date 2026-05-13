@@ -5,7 +5,14 @@ import EventCard from "@/components/EventCard";
 import GuideCard from "@/components/GuideCard";
 import Checklist from "@/components/Checklist";
 import LinkGroup from "@/components/LinkGroup";
-import { site } from "@/lib/content";
+import {
+  site,
+  philosophy,
+  demographics,
+  rules,
+  guideCommand,
+  friendlyGuilds,
+} from "@/lib/content";
 
 export default function HomePage() {
   const ongoingEvents = site.eventCards.filter((e) => e.status !== "종료").slice(0, 2);
@@ -13,6 +20,114 @@ export default function HomePage() {
   return (
     <>
       <HeroStage site={site} />
+
+      <section className="section section--about" id="about" aria-labelledby="about-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">PHILOSOPHY</span>
+              <h2 id="about-title" className="section__title">
+                톡방 철학
+              </h2>
+            </div>
+            <span className="section__more" aria-hidden="true">
+              운영자 직접 명시
+            </span>
+          </header>
+
+          <p className="about__one-liner">
+            “{philosophy.oneLiner}”
+          </p>
+          <ul className="about__bullets">
+            {philosophy.bullets.map((b, i) => (
+              <li key={i}>{b}</li>
+            ))}
+          </ul>
+
+          <div className="demographics" aria-label={`톡방 인원 분포 (${demographics.asOf} 기준)`}>
+            <div className="demographics__head">
+              <strong>인원 분포</strong>
+              <small>{demographics.asOf} 대화 기준 추정</small>
+            </div>
+            {demographics.bars.map((bar) => (
+              <div className="demographics__row" key={bar.label}>
+                <span className="demographics__label">{bar.label}</span>
+                <span className="demographics__bar" data-accent={bar.accent}>
+                  <span style={{ width: `${bar.pct * 2}%` }} />
+                </span>
+                <span className="demographics__pct">{bar.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="rules" aria-labelledby="rules-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">RULES</span>
+              <h2 id="rules-title" className="section__title">
+                기본 규칙
+              </h2>
+            </div>
+          </header>
+          <ol className="rules-grid">
+            {rules.map((r, i) => (
+              <li className="rules-grid__item" key={r.title}>
+                <span className="rules-grid__num">{String(i + 1).padStart(2, "0")}</span>
+                <strong>{r.title}</strong>
+                <p>{r.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="section section--guide-cmd" aria-labelledby="cmd-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">GUIDE COMMAND</span>
+              <h2 id="cmd-title" className="section__title">
+                톡방 가이드 명령어
+              </h2>
+            </div>
+          </header>
+          <div className="guide-cmd">
+            <code className="guide-cmd__code">{guideCommand.trigger}</code>
+            <p className="guide-cmd__note">{guideCommand.note}</p>
+            <small className="guide-cmd__author">작성: {guideCommand.author}</small>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="friendly-guilds" aria-labelledby="guild-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">GUILD</span>
+              <h2 id="guild-title" className="section__title">
+                뉴비 친화 길드
+              </h2>
+            </div>
+          </header>
+          <div className="guild-grid">
+            {friendlyGuilds.map((g) => (
+              <article className="guild-card" key={g.name}>
+                <header>
+                  <strong>{g.name}</strong>
+                  <small>길마 · {g.leader}</small>
+                </header>
+                <p>{g.description}</p>
+                <a className="btn btn--secondary" href={g.url} target="_blank" rel="noreferrer">
+                  공식 길드 페이지 →
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="section" id="news-board" aria-labelledby="notice-title">
         <div className="content-wrap">
