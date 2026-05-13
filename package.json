@@ -1,0 +1,16 @@
+{
+  "name": "dnfm-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "dnfm.kr community hub for Dungeon & Fighter Mobile newcomers and creator sub-sites.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs src",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs dist",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+_artifacts/
+
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+.vscode/
+.idea/
+
+.cache/
+.tmp/
