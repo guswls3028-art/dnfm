@@ -1,9 +1,11 @@
-import Link from "next/link";
-import { site } from "@/lib/content";
+"use client";
 
-export const metadata = {
-  title: "로그인"
-};
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useCurrentUser } from "@/lib/use-current-user";
+import { API_BASE } from "@/lib/api-client";
+import { site } from "@/lib/content";
 
 function providerClass(brand) {
   if (brand === "kakao") return "btn btn--kakao btn--block btn--lg";
@@ -11,41 +13,152 @@ function providerClass(brand) {
   return "btn btn--primary btn--block btn--lg";
 }
 
+function safeRedirect(to) {
+  if (!to) return "/";
+  if (typeof to !== "string") return "/";
+  // 외부 redirect 차단 — 내부 path 만 허용
+  if (!to.startsWith("/") || to.startsWith("//")) return "/";
+  return to;
+}
+
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginShell loading />}>
+      <LoginInner />
+    </Suspense>
+  );
+}
+
+function LoginShell({ loading }) {
   return (
     <div className="auth-shell">
       <div className="auth-card">
         <h1 className="auth-card__title">훈련소 입장</h1>
-        <p className="auth-card__sub">{site.brandMark} · {site.shortTitle}</p>
+        <p className="auth-card__sub">
+          {site.brandMark} · {site.shortTitle}
+        </p>
+        {loading ? <p>불러오는 중…</p> : null}
+      </div>
+    </div>
+  );
+}
 
-        <form className="signup-steps" action="#" aria-label="로그인 폼">
+function LoginInner() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const next = safeRedirect(params.get("next"));
+  const { login } = useCurrentUser();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (submitting) return;
+    setError(null);
+
+    if (!username.trim() || !password) {
+      setError("아이디와 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await login({ username: username.trim(), password });
+      router.push(next);
+      router.refresh();
+    } catch (err) {
+      const msg =
+        err && err.message
+          ? err.message
+          : "로그인에 실패했습니다. 잠시 후 다시 시도해주세요.";
+      setError(msg);
+      setSubmitting(false);
+    }
+  }
+
+  function handleOAuth(provider) {
+    const back = encodeURIComponent(next);
+    window.location.href = `${API_BASE}/auth/oauth/${provider}/start?next=${back}`;
+  }
+
+  return (
+    <div className="auth-shell">
+      <div className="auth-card">
+        <h1 className="auth-card__title">훈련소 입장</h1>
+        <p className="auth-card__sub">
+          {site.brandMark} · {site.shortTitle}
+        </p>
+
+        <form
+          className="signup-steps"
+          aria-label="로그인 폼"
+          onSubmit={handleSubmit}
+          noValidate
+        >
           <div className="field">
-            <label className="field__label" htmlFor="login-email">이메일</label>
-            <input id="login-email" name="email" type="email" className="input" placeholder="you@example.com" autoComplete="email" />
+            <label className="field__label" htmlFor="login-username">
+              아이디
+            </label>
+            <input
+              id="login-username"
+              name="username"
+              className="input"
+              placeholder="가입한 아이디"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoFocus
+            />
           </div>
           <div className="field">
-            <label className="field__label" htmlFor="login-pw">비밀번호</label>
-            <input id="login-pw" name="password" type="password" className="input" placeholder="비밀번호" autoComplete="current-password" />
+            <label className="field__label" htmlFor="login-pw">
+              비밀번호
+            </label>
+            <input
+              id="login-pw"
+              name="password"
+              type="password"
+              className="input"
+              placeholder="비밀번호"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          <button type="submit" className="btn btn--primary btn--block btn--lg" disabled title="백엔드 연동 전">
-            로그인 (준비중)
+
+          {error ? (
+            <p className="auth-msg auth-msg--error" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <button
+            type="submit"
+            className="btn btn--primary btn--block btn--lg"
+            disabled={submitting}
+          >
+            {submitting ? "로그인 중…" : "로그인"}
           </button>
         </form>
 
         <div className="auth-card__divider">또는</div>
 
         <div className="auth-card__providers">
-          {site.loginProviders.filter((p) => p.id !== "local").map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              className={providerClass(p.brand)}
-              disabled
-              title="소셜 로그인 준비중"
-            >
-              {p.label}
-            </button>
-          ))}
+          {site.loginProviders
+            .filter((p) => p.id !== "local")
+            .map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className={providerClass(p.brand)}
+                onClick={() => handleOAuth(p.id)}
+              >
+                {p.label}
+              </button>
+            ))}
         </div>
 
         <p className="auth-card__foot">

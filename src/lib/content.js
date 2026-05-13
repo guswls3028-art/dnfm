@@ -395,10 +395,11 @@ export const site = {
     }
   ],
   navItems: [
-    { label: "공지", href: "/#news-board" },
+    { label: "소개", href: "/about" },
     { label: "커뮤니티", href: "/board" },
-    { label: "가이드", href: "/#training-guide" },
-    { label: "이벤트", href: "/events" }
+    { label: "가이드", href: "/guide" },
+    { label: "이벤트", href: "/events" },
+    { label: "친화 길드", href: "/guilds" }
   ],
   boardCategories: [
     { id: "all", label: "전체" },

@@ -1,6 +1,7 @@
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import { CurrentUserProvider } from "@/lib/use-current-user";
 import { site } from "@/lib/content";
 
 export const metadata = {
@@ -16,13 +17,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko" suppressHydrationWarning>
       <body>
-        <div className="site-frame" data-theme={site.theme}>
-          <SiteHeader site={site} />
-          <main id="main-content" tabIndex={-1}>
-            {children}
-          </main>
-          <SiteFooter site={site} />
-        </div>
+        <CurrentUserProvider>
+          <div className="site-frame" data-theme={site.theme}>
+            <SiteHeader site={site} />
+            <main id="main-content" tabIndex={-1}>
+              {children}
+            </main>
+            <SiteFooter site={site} />
+          </div>
+        </CurrentUserProvider>
       </body>
     </html>
   );
