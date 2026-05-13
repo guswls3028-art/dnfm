@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { host } from "@/lib/content";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -51,8 +52,31 @@ export default function HeroStage({ site }) {
             </Link>
           </div>
         </div>
-        <div className="hero__visual" aria-hidden="true">
-          <div className="hero__visual-seal">DNFM</div>
+        <div className="hero__visual">
+          {host.bannerSrc ? (
+            <img
+              className="hero__visual-banner"
+              src={host.bannerSrc}
+              alt="뉴비 훈련소 배너"
+              loading="eager"
+              fetchPriority="high"
+            />
+          ) : (
+            <div className="hero__visual-seal" aria-hidden="true">DNFM</div>
+          )}
+          <div className="hero__host">
+            <img
+              className="hero__host-avatar"
+              src={host.avatarSrc}
+              alt={`${host.nickname} 프사`}
+              loading="lazy"
+            />
+            <div className="hero__host-meta">
+              <span className="hero__host-label">방장</span>
+              <strong className="hero__host-name">{host.nickname}</strong>
+              <small className="hero__host-note">{host.role}</small>
+            </div>
+          </div>
         </div>
       </div>
     </section>

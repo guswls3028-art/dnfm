@@ -2,6 +2,88 @@
 // 외부 URL이 아직 확정되지 않은 경우 url: null + reason 으로 비활성 상태를 명시
 // 알 수 없는 값은 가짜 URL 만들지 말고 그대로 null + reason 유지
 
+// 톡방 운영자 (방장) — 사용자 본인.
+export const host = {
+  nickname: "시너지통",
+  role: "방장 / 운영자 / 개발자",
+  avatarSrc: "/host-avatar.jpg",
+  bannerSrc: "/banner.jpg",
+  contact: { type: "kakao_dm", reason: "톡방 방장 프로필 1:1 대화" },
+};
+
+// 톡방 핵심 철학 — 운영자 직접 명시.
+export const philosophy = {
+  oneLiner: "정보부족으로 인한 뉴비의 불이익 예방 + 자유로운 소통.",
+  bullets: [
+    "이 방은 뉴비 / 복귀 / 초보 / 라이트 유저를 돕고자 개설한 방입니다.",
+    "저스펙·무과금·소과금·라이트 유저를 무시하거나 조롱하지 않습니다.",
+    "상위 컨텐츠 진입을 위한 성장 과정은 도와드리지만, 컨텐츠를 대신 깨드리는 방은 아닙니다.",
+    "각자의 과금 수준, 플레이 속도, 목표를 존중해주세요.",
+    "싸우지 말고 사이좋게 지내주세요. 가장 중요한 규칙입니다.",
+  ],
+};
+
+// 톡방 인원 분포 (2026.05.08 대화기준 추정치).
+export const demographics = {
+  asOf: "2026-05-08",
+  bars: [
+    { label: "생뉴비", pct: 37, accent: "gold" },
+    { label: "뉴비 & 복귀", pct: 22, accent: "amber" },
+    { label: "초보졸업", pct: 17, accent: "mint" },
+    { label: "중수/실전러", pct: 13, accent: "blue" },
+    { label: "준고인물", pct: 8, accent: "violet" },
+    { label: "고인물", pct: 4, accent: "crimson" },
+  ],
+};
+
+// 톡방 기본 규칙 — 운영자 명시.
+export const rules = [
+  { title: "싸우지 않기", body: "제일 중요한 규칙입니다." },
+  { title: "서로 존중하기", body: "스펙·과금·숙련도·게임이해도·플레이 방식으로 사람을 무시하지 않습니다." },
+  { title: "계정 거래 관련 질문 금지", body: "이 방은 뉴비 가이드 방입니다. 게임 정책위반 관련은 금지." },
+  { title: "게임과 무관한 광고/홍보 금지", body: "스팸성 홍보는 제재될 수 있습니다." },
+  { title: "타톡방/방송/길드 등 홍보는 자유", body: "단, 과도한 반복 홍보나 분쟁 유도는 삼가주세요." },
+  { title: "들낙 자유", body: "필요할 때 들어오고, 필요 없으시면 나가셔도 됩니다." },
+  { title: "질문 환영", body: "단순한 질문도 괜찮습니다. 부끄러워하지 말고 아무거나 질문해도 됩니다." },
+];
+
+// 닉네임 가이드 — 닉네임은 자유. 가입 시 본캐 캐릭명/모험단명 함께 입력.
+export const nicknameGuide = {
+  format: "닉 자유 + 가입 시 본캐 캐릭터명 / 모험단명",
+  fields: [
+    { key: "nickname", label: "닉네임", required: true, hint: "자유롭게 — 톡방 / 사이트에 노출" },
+    { key: "mainCharacter", label: "본캐 캐릭터명", required: true, hint: "예: 지금간다", autoFill: "ocr_character_select" },
+    { key: "adventurer", label: "모험단명", required: true, hint: "예: 광기의 파도", autoFill: "ocr_basic_info" },
+  ],
+  examples: {
+    good: ["(뉴비)지금간다/엘마"],
+    bad: ["뉴비/엘마 (다른 사람과 중복)", "뉴비 (단독, 구분 불가)", "복귀유저", "던린이"],
+  },
+  notes: [
+    "톡방 닉네임은 자유롭게. 단, 중복되기 쉬운 단독 닉네임은 가급적 변경.",
+    "닉 앞에 (뉴비) 표식 가능.",
+    "직업 함께 표기 추천 (예: 지금간다/엘마).",
+    "본캐 + 모험단명은 회원가입 시 던파 캡처 OCR 으로 자동 채움 (수기 수정 가능).",
+  ],
+};
+
+// 가이드 명령어 — 톡방 채팅창에서.
+export const guideCommand = {
+  trigger: "/가이드ㅡ*",
+  author: "@맑남",
+  note: "톡방 채팅창에 입력 시 가이드 카드가 자동으로 뜹니다.",
+};
+
+// 뉴비 친화 길드.
+export const friendlyGuilds = [
+  {
+    leader: "잭터",
+    name: "잭터님의 즉시가입 길드",
+    description: "길드 아지트 만렙 — 모든 던전에서 유용한 버프 요리를 매일 지급. 뉴비/복귀 환영.",
+    url: "https://dnfm.nexon.com/Community/Guild/View/3243836",
+  },
+];
+
 export const site = {
   id: "training",
   hostnames: ["dnfm.kr", "www.dnfm.kr"],
