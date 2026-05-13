@@ -22,6 +22,43 @@ export const site = {
     { label: "공지사항", url: "https://dnfm.nexon.com/News/Notice", note: "점검, 오류, 공지" },
     { label: "진행 이벤트", url: "https://dnfm.nexon.com/News/Event", note: "보상 확인" }
   ],
+  eventSlides: [
+    { index: "1", title: "입소 안내", body: "처음 온 모험가를 위한 성장 순서" },
+    { index: "2", title: "공식 공지", body: "점검, 업데이트, 보상 링크" },
+    { index: "3", title: "질문 루트", body: "직업, 장비, 파티 질문 정리" },
+    { index: "4", title: "가이드 보드", body: "반복 질문을 한 장으로 회수" }
+  ],
+  notices: [
+    { label: "공지", title: "5/14(목) 정기점검 안내", url: "https://dnfm.nexon.com/News/Notice" },
+    { label: "이벤트", title: "진행 이벤트와 보상 기간 확인", url: "https://dnfm.nexon.com/News/Event" },
+    { label: "가이드", title: "신규 모험가 공식 추천 가이드", url: "https://dnfm.nexon.com/Guide/Recommand" },
+    { label: "운영", title: "뉴비 훈련소 상단 공지 갱신 예정", url: null }
+  ],
+  noticesMoreUrl: "https://dnfm.nexon.com/News/Notice",
+  communityPosts: [
+    { label: "질문", title: "직업 선택 전에 먼저 볼 기준", meta: "뉴비 질문" },
+    { label: "팁", title: "피로도와 이벤트 숙제 체크 순서", meta: "성장 루트" },
+    { label: "파티", title: "파티 입장 전 준비물과 용어", meta: "협동 콘텐츠" },
+    { label: "장비", title: "장비 스크린샷 질문 양식", meta: "답변 템플릿" }
+  ],
+  communityMoreUrl: null,
+  featureCards: [
+    {
+      title: "처음 시작 루트",
+      body: "설치 후 초반 진행, 직업 선택, 성장 기준을 한 장으로 정리합니다.",
+      accent: "gold"
+    },
+    {
+      title: "오늘의 던파모바일",
+      body: "이벤트, 점검, 보상 기간을 톡방 공지에 맞게 빠르게 확인합니다.",
+      accent: "red"
+    },
+    {
+      title: "공식 정보 연결",
+      body: "출처가 필요한 내용은 공식 홈페이지와 추천 가이드로 바로 연결합니다.",
+      accent: "ink"
+    }
+  ],
   stats: [
     { value: "01", label: "입장 후 먼저 볼 것", detail: "초반 성장 순서" },
     { value: "02", label: "매일 확인할 것", detail: "공식 이벤트와 점검" },

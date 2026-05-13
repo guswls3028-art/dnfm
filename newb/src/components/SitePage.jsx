@@ -34,6 +34,125 @@ function Action({ action, className = "action-button" }) {
   );
 }
 
+function SiteHeader({ site }) {
+  return (
+    <header className="official-header" aria-label="사이트 헤더">
+      <div className="utility-bar">
+        <a className="menu-button" href="#main-content" aria-label="본문으로 이동">
+          <span aria-hidden="true" />
+          메뉴
+        </a>
+        <a className="publisher-wordmark" href="/" aria-label="dnfm.kr 홈">
+          DNFM.KR
+        </a>
+        <div className="utility-actions" aria-label="회원 메뉴">
+          <button type="button" disabled aria-disabled="true">로그인 (준비 중)</button>
+        </div>
+      </div>
+
+      <div className="game-nav">
+        <a className="game-brand" href="/" aria-label={`${site.title} 홈`}>
+          <span className="game-emblem" aria-hidden="true">D</span>
+          <span>
+            <strong>{site.title}</strong>
+            <small>{site.eyebrow}</small>
+          </span>
+        </a>
+        <nav className="primary-nav" aria-label="주 메뉴">
+          <a href="#news-board">공지</a>
+          <a href="#community-board">커뮤니티</a>
+          <a href="#training-guide">가이드</a>
+          <a href="#quick-links">체크리스트</a>
+        </nav>
+        <a className="start-button" href="#news-board">
+          소식 보기
+        </a>
+      </div>
+    </header>
+  );
+}
+
+function HeroStage({ site }) {
+  return (
+    <section className="hero-stage" aria-labelledby="hero-title">
+      <div className="hero-visual">
+        <img src="/abstract-arad.svg" alt="" aria-hidden="true" />
+      </div>
+      <div className="hero-copy">
+        <p className="eyebrow">{site.hero.kicker}</p>
+        <h1 id="hero-title" aria-label={site.hero.headline}>
+          {site.hero.headlineLines.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </h1>
+        <p className="hero-body">{site.hero.body}</p>
+        <div className="action-row">
+          {site.actions.map((action) => (
+            <Action action={action} key={action.label} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EventRail({ slides }) {
+  return (
+    <section className="event-rail" aria-label="주요 안내">
+      <div className="event-controls" aria-hidden="true">
+        <span>‹</span>
+        <strong>1/{slides.length}</strong>
+        <span>›</span>
+      </div>
+      {slides.map((slide) => (
+        <article className="event-tab" key={slide.index}>
+          <span>{slide.index}</span>
+          <strong>{slide.title}</strong>
+          <small>{slide.body}</small>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function BoardList({ title, id, items, moreUrl }) {
+  return (
+    <section className="board-panel" id={id} aria-labelledby={`${id}-title`}>
+      <div className="board-heading">
+        <h2 id={`${id}-title`}>{title}</h2>
+        {moreUrl ? (
+          <a href={moreUrl} target="_blank" rel="noreferrer">
+            더보기
+          </a>
+        ) : null}
+      </div>
+      <ul className="board-list">
+        {items.map((item) => {
+          const content = (
+            <>
+              <span className="board-label">{item.label}</span>
+              <strong>{item.title}</strong>
+              <small>{item.meta || "공식 연결"}</small>
+            </>
+          );
+
+          return (
+            <li key={item.title}>
+              {item.url ? (
+                <a href={item.url} target="_blank" rel="noreferrer">
+                  {content}
+                </a>
+              ) : (
+                <span>{content}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 function Checklist({ site }) {
   const [checked, setChecked] = useState({});
 
@@ -112,7 +231,7 @@ function Guides({ site }) {
   );
 
   return (
-    <section className="guide-zone" aria-labelledby="guide-title">
+    <section className="guide-zone" id="training-guide" aria-labelledby="guide-title">
       <div className="section-heading">
         <div>
           <p>GUIDE STACK</p>
@@ -150,116 +269,69 @@ function Guides({ site }) {
 
 export default function SitePage({ site }) {
   return (
-    <div className="app-shell" data-theme={site.theme}>
-      <header className="topbar" aria-label="사이트 헤더">
-        <a className="brand" href="/" aria-label="dnfm.kr 홈">
-          <span className="brand-mark" aria-hidden="true">
-            D
-          </span>
-          <span>
-            <strong>{site.shortTitle}</strong>
-            <small>{site.eyebrow}</small>
-          </span>
-        </a>
-        <nav className="site-switcher" aria-label="사이트 전환">
-          <a className="is-active" href="/" aria-current="page">
-            뉴비 훈련소
-          </a>
-          <a href="https://allow.dnfm.kr">
-            허락
-          </a>
-        </nav>
-      </header>
+    <div className="site-frame" data-theme={site.theme}>
+      <SiteHeader site={site} />
 
-      <main id="app" tabIndex={-1}>
-        <section className="hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">{site.hero.kicker}</p>
-            <h1 aria-label={site.hero.headline}>
-              {site.hero.headlineLines.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </h1>
-            <p className="hero-body">{site.hero.body}</p>
-            <div className="action-row">
-              {site.actions.map((action) => (
-                <Action action={action} key={action.label} />
-              ))}
+      <main id="main-content" tabIndex={-1}>
+        <HeroStage site={site} />
+        <EventRail slides={site.eventSlides} />
+
+        <div className="content-shell">
+          <div className="main-column">
+            <div className="board-grid">
+              <BoardList
+                title="새소식"
+                id="news-board"
+                items={site.notices}
+                moreUrl={site.noticesMoreUrl}
+              />
+              <BoardList
+                title="커뮤니티"
+                id="community-board"
+                items={site.communityPosts}
+                moreUrl={site.communityMoreUrl}
+              />
             </div>
-          </div>
 
-          <aside className="radar-panel" aria-label={`${site.title} 요약`}>
-            <div className="radar-screen" aria-hidden="true">
-              <span className="scan-line" />
-              <span className="node node-a" />
-              <span className="node node-b" />
-              <span className="node node-c" />
-            </div>
-            <div className="callout">
-              <p>{site.hero.calloutTitle}</p>
-              <strong>{site.eyebrow}</strong>
-              <span>{site.hero.calloutBody}</span>
-            </div>
-          </aside>
-        </section>
-
-        <section className="stats-grid" aria-label="핵심 운영 지표">
-          {site.stats.map((stat) => (
-            <article className="stat-tile" key={stat.value}>
-              <strong>{stat.value}</strong>
-              <span>{stat.label}</span>
-              <small>{stat.detail}</small>
-            </article>
-          ))}
-        </section>
-
-        <section className="brief-grid" aria-label="운영 브리핑">
-          {site.briefing.map((item) => (
-            <article className="brief-card" data-accent={item.accent} key={item.title}>
-              <span className="brief-pin" aria-hidden="true" />
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </section>
-
-        <div className="split-layout">
-          <Checklist site={site} />
-          <section className="work-panel links-panel" aria-labelledby="links-title">
-            <div className="section-heading">
-              <div>
-                <p>LINK ROUTER</p>
-                <h2 id="links-title">바로가기</h2>
+            <section className="feature-section" id="today-dnfm" aria-labelledby="feature-title">
+              <div className="board-heading">
+                <h2 id="feature-title">오늘의 훈련소</h2>
+                <span>공식 정보와 톡방 운영을 이어주는 자리</span>
               </div>
-            </div>
-            <div className="link-groups">
-              <LinkGroups groups={site.linkGroups} />
-            </div>
-          </section>
+              <div className="feature-grid">
+                {site.featureCards.map((card) => (
+                  <article className="feature-card" data-accent={card.accent} key={card.title}>
+                    <h3>{card.title}</h3>
+                    <p>{card.body}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <Guides site={site} />
+          </div>
+
+          <aside className="side-column" id="quick-links" aria-label="빠른 메뉴">
+            <section className="login-card">
+              <div className="login-art" aria-hidden="true">DNF</div>
+              <button type="button" disabled aria-disabled="true">로그인 (준비 중)</button>
+              <p>로그인은 곧 열립니다. 지금은 톡방에서 운영자에게 문의해 주세요.</p>
+            </section>
+
+            <section className="quick-panel" aria-labelledby="quick-title">
+              <h2 id="quick-title">바로가기</h2>
+              <div className="link-groups">
+                <LinkGroups groups={site.linkGroups} />
+              </div>
+            </section>
+
+            <Checklist site={site} />
+          </aside>
         </div>
-
-        <Guides site={site} />
-
-        <section className="timeline-section" id={site.timelineId || "operations"} aria-labelledby="timeline-title">
-          <div className="section-heading">
-            <div>
-              <p>OPERATIONS</p>
-              <h2 id="timeline-title">{site.timelineTitle}</h2>
-            </div>
-          </div>
-          <div className="timeline">
-            {site.timeline.map((item) => (
-              <article className="timeline-item" key={item.title}>
-                <span>{item.time}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
 
         <footer className="site-footer">
           <p>{site.footerNote}</p>
+          <a href="https://allow.dnfm.kr">허락 페이지</a>
         </footer>
       </main>
     </div>
