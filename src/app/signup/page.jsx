@@ -11,11 +11,16 @@ import { site } from "@/lib/content";
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,32}$/;
 
 function classifyAvailability(state) {
-  if (state.status === "checking") return { cls: "field__status--checking", text: "확인 중…" };
-  if (state.status === "ok") return { cls: "field__status--ok", text: "사용 가능합니다" };
-  if (state.status === "taken") return { cls: "field__status--bad", text: "이미 사용 중입니다" };
-  if (state.status === "invalid") return { cls: "field__status--bad", text: state.message || "형식이 올바르지 않습니다" };
-  if (state.status === "error") return { cls: "field__status--bad", text: state.message || "확인 실패" };
+  if (state.status === "checking")
+    return { cls: "field__status--checking", icon: "⏳", text: "확인 중…" };
+  if (state.status === "ok")
+    return { cls: "field__status--ok", icon: "✓", text: "사용 가능합니다" };
+  if (state.status === "taken")
+    return { cls: "field__status--bad", icon: "✗", text: "이미 사용 중입니다" };
+  if (state.status === "invalid")
+    return { cls: "field__status--bad", icon: "✗", text: state.message || "형식이 올바르지 않습니다" };
+  if (state.status === "error")
+    return { cls: "field__status--bad", icon: "!", text: state.message || "확인 실패" };
   return null;
 }
 
@@ -88,10 +93,17 @@ export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [results, setResults] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState(null);
+
+  // 비밀번호 일치 inline 표시.
+  const passwordMatch = useMemo(() => {
+    if (!password || !password2) return null;
+    return password === password2 ? "ok" : "mismatch";
+  }, [password, password2]);
 
   const usernameState = useDebouncedAvailability(username, "username", validateUsername);
   const displayNameState = useDebouncedAvailability(
@@ -101,12 +113,20 @@ export default function SignupPage() {
   );
 
   const canProceedStep1 = useMemo(() => {
-    if (!username || !password || !displayName) return false;
+    if (!username || !password || !password2 || !displayName) return false;
     if (password.length < 4) return false;
+    if (password !== password2) return false;
     if (usernameState.status !== "ok") return false;
     if (displayNameState.status !== "ok") return false;
     return true;
-  }, [username, password, displayName, usernameState.status, displayNameState.status]);
+  }, [
+    username,
+    password,
+    password2,
+    displayName,
+    usernameState.status,
+    displayNameState.status,
+  ]);
 
   function handleNext(e) {
     e.preventDefault();
@@ -261,7 +281,9 @@ export default function SignupPage() {
                   />
                   <span className="field__hint">로그인 ID. 가입 후 변경 불가.</span>
                   {usernameMsg ? (
-                    <span className={`field__status ${usernameMsg.cls}`}>{usernameMsg.text}</span>
+                    <span className={`field__status ${usernameMsg.cls}`}>
+                      <span aria-hidden="true">{usernameMsg.icon}</span> {usernameMsg.text}
+                    </span>
                   ) : null}
                 </div>
                 <div className="field">
@@ -281,7 +303,38 @@ export default function SignupPage() {
                   />
                   <span className="field__hint">최소 4자. 학생/뉴비 사용 고려해 너무 까다롭지 않게.</span>
                   {password && password.length < 4 ? (
-                    <span className="field__status field__status--bad">4자 이상 입력해주세요</span>
+                    <span className="field__status field__status--bad">
+                      <span aria-hidden="true">✗</span> 4자 이상 입력해주세요
+                    </span>
+                  ) : password && password.length >= 4 ? (
+                    <span className="field__status field__status--ok">
+                      <span aria-hidden="true">✓</span> 길이 충족
+                    </span>
+                  ) : null}
+                </div>
+                <div className="field">
+                  <label className="field__label" htmlFor="su-pw2">
+                    비밀번호 확인 <span className="field__req">*</span>
+                  </label>
+                  <input
+                    id="su-pw2"
+                    name="password2"
+                    type="password"
+                    className="input"
+                    placeholder="비밀번호 다시 입력"
+                    autoComplete="new-password"
+                    value={password2}
+                    onChange={(e) => setPassword2(e.target.value)}
+                  />
+                  <span className="field__hint">오타 방지용. 위 비밀번호와 같게 입력.</span>
+                  {passwordMatch === "ok" ? (
+                    <span className="field__status field__status--ok">
+                      <span aria-hidden="true">✓</span> 일치합니다
+                    </span>
+                  ) : passwordMatch === "mismatch" ? (
+                    <span className="field__status field__status--bad">
+                      <span aria-hidden="true">✗</span> 비밀번호가 다릅니다
+                    </span>
                   ) : null}
                 </div>
                 <div className="field">
@@ -299,7 +352,9 @@ export default function SignupPage() {
                   />
                   <span className="field__hint">사이트·톡방에서 보일 이름. 자유.</span>
                   {displayNameMsg ? (
-                    <span className={`field__status ${displayNameMsg.cls}`}>{displayNameMsg.text}</span>
+                    <span className={`field__status ${displayNameMsg.cls}`}>
+                      <span aria-hidden="true">{displayNameMsg.icon}</span> {displayNameMsg.text}
+                    </span>
                   ) : null}
                 </div>
 
