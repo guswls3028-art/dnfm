@@ -73,3 +73,22 @@
 - **Stage 3**: 커뮤니티 풀 UI (회원/게시판/댓글/좋아요/검색/알림/마이페이지/어드민).
 - **Stage 4**: 챗봇 / 이벤트 페이지 / 자동 알림 (운영자 = 개발자 본인의 봇 뿌리).
 - **Stage 5**: CI quality gate, EC2 자동 배포 webhook.
+
+---
+
+## 📌 Next Session Entry — 필독 (이 줄을 무시하지 말 것)
+
+**자격증명·배포·인프라 좌표 SSOT** → `C:\academy\dnfm\api\docs\deployment-credentials.md`
+
+해당 파일 한 곳에 정리됨:
+- 라이브 EC2 IP / SSH key / .env 경로 / PM2 / Nginx / R2 / Cloudflare zone
+- 자격증명 현황표 (✅ 주입 완료 / ❌ empty / 🟡 미확인) — EC2 `.env` 실측 기준
+- 새로 발급해야 할 cred 절차 (Kakao OAuth / Cloudflare Origin Cert / Vision API)
+- 다음 세션 진입 조건 A/B/C
+- 흩어진 자료 인덱스
+
+newb 단독 작업이라도 backend `.env` / EC2 / Cloudflare 관련 신호 마주치면 그 파일부터 확인.
+
+**같은 그룹 sibling repo (별도 git remote, frontend 코드는 완전 독립):**
+- `C:\academy\dnfm\allow\` — 친구들 페이지 (allow.dnfm.kr)
+- `C:\academy\dnfm\api\` — 공용 backend (api.dnfm.kr)
