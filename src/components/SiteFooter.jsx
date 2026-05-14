@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { OwnerStamp, EaveLine } from "./PavilionAccent";
 
 /**
  * SiteFooter — 운영 정보 + 빠른 링크 + 카톡방 CTA.
@@ -11,10 +10,7 @@ export default function SiteFooter({ site }) {
 
   return (
     <footer className="site-footer" aria-labelledby="footer-title">
-      <EaveLine className="site-footer__eave" style={{ height: 24, transform: "scaleY(-1)" }} />
       <div className="site-footer__inner content-wrap">
-        <OwnerStamp className="site-footer__stamp" size={72} label={`정자
-안쪽`} />
         <h2 id="footer-title" className="sr-only">사이트 정보</h2>
 
         <div className="site-footer__grid">

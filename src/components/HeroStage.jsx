@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { host } from "@/lib/content";
-import { Lantern, OwnerStamp, EaveLine } from "./PavilionAccent";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -40,12 +39,7 @@ export default function HeroStage({ site }) {
   const primaryAction = site.actions?.find((a) => a.label === "카톡방 입장") ?? site.actions?.[0];
 
   return (
-    <section className="hero hero--community hero--pavilion" aria-labelledby="hero-title">
-      {/* 정자 등불 — 양쪽 처마 끝에 매달림 */}
-      <Lantern className="hero-lantern hero-lantern--left" size={56} />
-      <Lantern className="hero-lantern hero-lantern--right" size={56} />
-      {/* 운영자 인장 — hero 우상단 */}
-      <OwnerStamp className="hero-stamp" size={84} label={`훈련소\n시너지통`} />
+    <section className="hero hero--community" aria-labelledby="hero-title">
       <div className="content-wrap hero__inner">
         <div className="hero__copy">
           {/* 호스트 chip — kicker 위쪽 (시각 충돌 방지: 일러스트 외부) */}
@@ -115,8 +109,6 @@ export default function HeroStage({ site }) {
           )}
         </div>
       </div>
-      {/* 정자 처마 — hero 아래쪽 */}
-      <EaveLine className="hero-eave" />
     </section>
   );
 }

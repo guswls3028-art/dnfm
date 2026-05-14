@@ -127,10 +127,10 @@ export const site = {
   subtitle: "가이드, 이벤트, 질문 흐름을 한곳에 모으는 카톡방 운영 허브",
   theme: "training",
   hero: {
-    kicker: "공원 정자 · 환영의 자리",
+    kicker: "여유로운 톡방 · 환영합니다",
     headline: "길 잃은 뉴비에게 도움을 주는 방",
     headlineLines: ["길 잃은 뉴비에게", "도움을 주는 방"],
-    subtitle: "목적없이 와서 쉬어도 되는 공원정자 감성",
+    subtitle: "빡빡하지 않은 곳 — 잠깐 들렀다 가셔도 됩니다",
     bullets: [
       "뉴비 / 복귀 모두 환영",
       "뉴비 도와주고 싶은 고인물도 환영",
@@ -308,33 +308,33 @@ export const site = {
   eventCards: [
     {
       id: "e1",
-      badge: "HOT",
+      badge: null,
       category: "공식",
-      title: "신규 캐릭터 성장 지원 이벤트",
-      period: "5/8 ~ 5/22",
-      body: "신규 캐릭터 레벨 구간별 성장 재화 지원. 공식 공지 참조.",
+      title: "던파모바일 공식 진행 이벤트",
+      period: "상시 확인",
+      body: "현재 열려 있는 보상, 출석, 성장 지원 이벤트는 공식 이벤트 페이지에서 확인합니다.",
       url: "https://dnfm.nexon.com/News/Event",
       status: "진행중"
     },
     {
       id: "e2",
-      badge: null,
-      category: "톡방",
-      title: "뉴비 훈련소 입소 인증 이벤트",
-      period: "5/13 ~ 5/27",
-      body: "회원가입 + 캐릭터 정보 인증 후 톡방 닉네임 자동 등록.",
+      badge: "NEW",
+      category: "운영",
+      title: "뉴비 훈련소 가입 / 모험단 인증",
+      period: "상시",
+      body: "사이트 가입 후 모험단 캡처를 인증하면 게시판과 톡방 안내를 더 편하게 이용할 수 있습니다.",
       url: "/signup",
       status: "진행중"
     },
     {
       id: "e3",
-      badge: "END",
-      category: "공식",
-      title: "출석 보상 시즌1",
-      period: "4/10 ~ 5/10",
-      body: "시즌1 출석 보상 마감. 시즌2 안내는 공식 공지에서 확인.",
-      url: "https://dnfm.nexon.com/News/Notice",
-      status: "종료"
+      badge: null,
+      category: "허락공대",
+      title: "허락공대 콘테스트",
+      period: "허락공대에서 진행",
+      body: "허락공대 쪽에서 열리는 코디 콘테스트와 결과 발표를 확인합니다.",
+      url: "https://hurock.dnfm.kr/contests",
+      status: "진행중"
     }
   ],
   guideCards: [
