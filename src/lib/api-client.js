@@ -153,10 +153,10 @@ export const auth = {
   logout: () => apiFetch("/auth/logout", { method: "POST" }),
   loginLocal: ({ username, password }) =>
     apiFetch("/auth/login/local", { method: "POST", json: { username, password } }),
-  signupLocal: ({ username, password, displayName, dnfProfile }) =>
+  signupLocal: ({ username, password, displayName, dnfProfile, acceptedTerms }) =>
     apiFetch("/auth/signup/local", {
       method: "POST",
-      json: { username, password, displayName, dnfProfile },
+      json: { username, password, displayName, dnfProfile, acceptedTerms },
     }),
   checkAvailability: ({ username, displayName }) =>
     apiFetch("/auth/check-availability", { query: { username, displayName } }),
@@ -185,6 +185,23 @@ export const auth = {
   confirmDnfProfile: (data) =>
     apiFetch("/auth/dnf-profile/confirm", { method: "POST", json: data }),
   updateMe: (data) => apiFetch("/auth/me", { method: "PATCH", json: data }),
+  changePassword: ({ currentPassword, newPassword }) =>
+    apiFetch("/auth/change-password", {
+      method: "POST",
+      json: { currentPassword, newPassword },
+    }),
+  deleteAccount: ({ password }) =>
+    apiFetch("/auth/me", { method: "DELETE", json: { password } }),
+  sessions: () => apiFetch("/auth/sessions"),
+  revokeSession: (id) => apiFetch(`/auth/sessions/${id}`, { method: "DELETE" }),
+  revokeOtherSessions: () =>
+    apiFetch("/auth/sessions/revoke-others", { method: "POST" }),
+  // super 권한 — 자체 가입자 비번 reset. 응답: { tempPassword, userId, displayName }
+  adminResetPassword: ({ username }) =>
+    apiFetch("/auth/admin/reset-password", {
+      method: "POST",
+      json: { username },
+    }),
 };
 
 /* ---------- Posts (board) ---------- */

@@ -179,9 +179,21 @@ export default function ProfilePage() {
               회원 정보와 던파 캐릭터 정보를 확인하고 수정합니다.
             </p>
           </div>
-          <div style={{ display: "flex", gap: "var(--sp-2)" }}>
+          <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
             <Link href="/board/new" className="btn btn--primary btn--sm">
               글쓰기
+            </Link>
+            <Link href="/profile/edit" className="btn btn--ghost btn--sm">
+              프로필 편집
+            </Link>
+            <Link href="/profile/password" className="btn btn--ghost btn--sm">
+              비밀번호 변경
+            </Link>
+            <Link href="/profile/sessions" className="btn btn--ghost btn--sm">
+              로그인 디바이스
+            </Link>
+            <Link href="/profile/delete" className="btn btn--ghost btn--sm">
+              회원 탈퇴
             </Link>
             <button
               type="button"

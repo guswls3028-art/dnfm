@@ -59,7 +59,7 @@ function LoginInner() {
   // returnTo 가 oauth callback 에서 다시 실려옴 — next 와 동일 의미로 받음.
   const next = safeRedirect(params.get("next") || params.get("returnTo"));
   const oauthErrorCode = params.get("oauth_error");
-  const { login, isAuthed, isLoading } = useCurrentUser();
+  const { login, isAuthed, isLoading, user } = useCurrentUser();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -68,11 +68,16 @@ function LoginInner() {
 
   // 이미 로그인된 사용자가 /login 진입 시 next 또는 / 로 보냄.
   // 단 oauth_error 가 있으면 표시를 위해 redirect 안 함.
+  // mustChangePassword=true 면 next 무시하고 /profile/password 강제.
   useEffect(() => {
     if (!isLoading && isAuthed && !oauthErrorCode) {
-      router.replace(next);
+      if (user?.mustChangePassword) {
+        router.replace("/profile/password?required=1");
+      } else {
+        router.replace(next);
+      }
     }
-  }, [isLoading, isAuthed, next, router, oauthErrorCode]);
+  }, [isLoading, isAuthed, next, router, oauthErrorCode, user?.mustChangePassword]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -86,8 +91,9 @@ function LoginInner() {
 
     setSubmitting(true);
     try {
-      await login({ username: username.trim(), password });
-      router.push(next);
+      const data = await login({ username: username.trim(), password });
+      const must = data?.user?.mustChangePassword;
+      router.push(must ? "/profile/password?required=1" : next);
       router.refresh();
     } catch (err) {
       const msg =

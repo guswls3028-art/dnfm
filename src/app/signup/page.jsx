@@ -94,6 +94,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState(null);
 
@@ -115,6 +116,7 @@ export default function SignupPage() {
     if (password !== password2) return false;
     if (usernameState.status !== "ok") return false;
     if (displayNameState.status !== "ok") return false;
+    if (!acceptedTerms) return false;
     return true;
   }, [
     username,
@@ -123,6 +125,7 @@ export default function SignupPage() {
     displayName,
     usernameState.status,
     displayNameState.status,
+    acceptedTerms,
   ]);
 
   async function handleSubmit(e) {
@@ -143,6 +146,7 @@ export default function SignupPage() {
           username: username.trim(),
           password,
           displayName: displayName.trim(),
+          acceptedTerms: true,
         },
       });
 
@@ -292,6 +296,33 @@ export default function SignupPage() {
                     <span aria-hidden="true">{displayNameMsg.icon}</span> {displayNameMsg.text}
                   </span>
                 ) : null}
+              </div>
+
+              <div className="field">
+                <label
+                  className="field__label"
+                  htmlFor="su-terms"
+                  style={{ display: "flex", alignItems: "flex-start", gap: 8, cursor: "pointer" }}
+                >
+                  <input
+                    id="su-terms"
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    style={{ marginTop: 4 }}
+                  />
+                  <span>
+                    <strong>(필수)</strong>{" "}
+                    <Link href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline" }}>
+                      이용약관
+                    </Link>{" "}
+                    및{" "}
+                    <Link href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline" }}>
+                      개인정보처리방침
+                    </Link>
+                    에 동의합니다
+                  </span>
+                </label>
               </div>
 
               {globalError ? (
