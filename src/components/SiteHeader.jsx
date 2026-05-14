@@ -69,6 +69,36 @@ export default function SiteHeader({ site }) {
           <strong>{site.brandMark}</strong>
         </Link>
         <div className="site-topbar__spacer" aria-hidden="true" />
+        <div className="site-topbar__user-zone">
+          {isLoading ? (
+            <span className="site-topbar__loading" aria-hidden="true">…</span>
+          ) : isAuthed ? (
+            <Link
+              href="/profile"
+              className="site-topbar__user-chip"
+              aria-label="내 페이지"
+              title={displayName}
+            >
+              <span className="site-topbar__user-avatar" aria-hidden="true">
+                {displayName?.[0] || "?"}
+              </span>
+              <span className="site-topbar__user-name">{displayName}</span>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="site-topbar__login">
+                로그인
+              </Link>
+              <Link
+                href="/signup"
+                className="site-topbar__signup"
+                aria-label="입소 신청"
+              >
+                입소
+              </Link>
+            </>
+          )}
+        </div>
       </header>
 
       {/* 백드롭 (모바일 슬라이드 인 상태) */}
