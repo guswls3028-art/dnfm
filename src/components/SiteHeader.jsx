@@ -164,13 +164,22 @@ export default function SiteHeader({ site }) {
               </button>
             </>
           ) : (
-            <Link
-              className="site-sidebar__cta"
-              href="/login"
-              onClick={() => setOpen(false)}
-            >
-              로그인 / 입소 신청
-            </Link>
+            <div className="site-sidebar__auth">
+              <Link
+                className="site-sidebar__cta"
+                href="/signup"
+                onClick={() => setOpen(false)}
+              >
+                입소 신청
+              </Link>
+              <Link
+                className="site-sidebar__login-link"
+                href="/login"
+                onClick={() => setOpen(false)}
+              >
+                이미 회원이면 로그인 →
+              </Link>
+            </div>
           )}
 
           {site.siblingSite ? (
@@ -181,7 +190,8 @@ export default function SiteHeader({ site }) {
               rel="noreferrer"
               title={site.siblingSite.description}
             >
-              {site.siblingSite.label} ↗
+              <small className="site-sidebar__sibling-tag">FRIENDS</small>
+              <span>{site.siblingSite.label} ↗</span>
             </a>
           ) : null}
         </div>

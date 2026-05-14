@@ -78,6 +78,28 @@ export default async function EventDetailPage({ params }) {
               목록으로
             </Link>
           </div>
+
+          {event.category === "톡방" ? (
+            <article
+              className="card card--parchment"
+              style={{ padding: "var(--sp-5)", display: "grid", gap: "var(--sp-2)" }}
+            >
+              <strong style={{ color: "var(--color-gold)" }}>참여 방법</strong>
+              <p style={{ margin: 0, lineHeight: 1.7 }}>
+                톡방 이벤트는 오픈채팅에서 진행됩니다. 입장 후 운영자(시너지통)에게 참여 의사만 남기면 됩니다.
+              </p>
+              <div>
+                <a
+                  className="btn btn--primary btn--sm"
+                  href="https://open.kakao.com/o/gbsjsZ5g"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  카톡방 입장 →
+                </a>
+              </div>
+            </article>
+          ) : null}
         </div>
       </section>
     </>
