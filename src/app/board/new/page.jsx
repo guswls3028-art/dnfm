@@ -303,7 +303,9 @@ function NewPostInner() {
                   onChange={(e) => setBody(e.target.value)}
                 />
                 <div className="composer__meter" aria-live="polite">
-                  <span className="field__hint">엔터로 줄바꿈 · 외부 링크는 자동 인식</span>
+                  <span className="field__hint">
+                    마크다운 지원 — <code>**굵게**</code> <code>*기울임*</code> <code>- 목록</code> <code>[링크](url)</code> <code>`코드`</code> · 외부 링크 자동
+                  </span>
                   <span className={`composer__count${body.length > 4500 ? " is-warn" : ""}`}>
                     {body.length}자 · {body.split(/\n/).length}줄
                   </span>

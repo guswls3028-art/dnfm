@@ -14,7 +14,9 @@ import { useCurrentUser } from "@/lib/use-current-user";
 import { isSiteAdmin } from "@/lib/permissions";
 import AdminPostMenu from "@/components/AdminPostMenu";
 import AuthorCard from "@/components/AuthorCard";
+import BoardFab from "@/components/BoardFab";
 import ReportButton from "@/components/ReportButton";
+import MarkdownBody from "@/components/MarkdownBody";
 
 /**
  * 게시글 상세.
@@ -39,6 +41,7 @@ function normalizePost(p) {
     categorySlug: p.categorySlug || null,
     title: p.title || "(제목 없음)",
     body: p.body || p.content || "",
+    bodyFormat: p.bodyFormat || "markdown",
     flair: p.flair || null,
     authorId: p.authorId || null,
     authorName:
@@ -95,6 +98,7 @@ export default function PostDetailPage() {
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+  const [nextPosts, setNextPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -121,9 +125,28 @@ export default function PostDetailPage() {
         apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}`),
         apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}/comments`).catch(() => null),
       ]);
-      setPost(normalizePost(pData?.post || pData));
+      const np = normalizePost(pData?.post || pData);
+      setPost(np);
       const list = cData?.items || cData?.comments || [];
       setComments(list.map(normalizeComment));
+      // 같은 카테고리 다음 글 stream — 현재 글 제외, 최근 10건.
+      if (np?.categorySlug) {
+        const qs = new URLSearchParams({
+          categorySlug: np.categorySlug,
+          sort: "recent",
+          pageSize: "11", // 11건 fetch → 현재 글 1건 빼고 10건 노출.
+          page: "1",
+        });
+        try {
+          const nx = await apiFetch(`/sites/newb/posts?${qs.toString()}`);
+          const arr = Array.isArray(nx?.items) ? nx.items : [];
+          setNextPosts(arr.filter((p) => p.id !== np.id).slice(0, 10));
+        } catch {
+          setNextPosts([]);
+        }
+      } else {
+        setNextPosts([]);
+      }
     } catch (err) {
       const msg =
         err instanceof ApiError
@@ -438,9 +461,9 @@ export default function PostDetailPage() {
             </header>
             <div
               className="post-body"
-              style={{ whiteSpace: "pre-wrap", marginTop: "var(--sp-4)" }}
+              style={{ marginTop: "var(--sp-4)" }}
             >
-              {post.body || "본문이 없습니다."}
+              <MarkdownBody source={post.body} format={post.bodyFormat} />
             </div>
 
             {post.attachmentR2Keys && post.attachmentR2Keys.length > 0 ? (
@@ -525,7 +548,7 @@ export default function PostDetailPage() {
             ) : null}
           </article>
 
-          <section aria-labelledby="comments-title" style={{ marginTop: "var(--sp-5)" }}>
+          <section aria-labelledby="comments-title" style={{ marginTop: "var(--sp-5)" }} id="comments">
             <header className="section__head">
               <div>
                 <span className="section__kicker">COMMENTS</span>
@@ -646,6 +669,16 @@ export default function PostDetailPage() {
                 onSubmit={handleCommentSubmit}
                 style={{ display: "grid", gap: "var(--sp-2)", marginTop: "var(--sp-4)" }}
               >
+                <p
+                  className="comment-form__hint"
+                  style={{
+                    color: "var(--color-text-muted, var(--muted))",
+                    fontSize: "var(--fs-xs)",
+                    margin: 0,
+                  }}
+                >
+                  정책 위반 댓글은 삭제될 수 있습니다.
+                </p>
                 {!isAuthed ? (
                   <div
                     style={{
@@ -695,8 +728,63 @@ export default function PostDetailPage() {
               </form>
             )}
           </section>
+
+          {nextPosts.length > 0 ? (
+            <section
+              className="next-posts"
+              aria-labelledby="next-posts-title"
+              style={{ marginTop: "var(--sp-6)" }}
+            >
+              <header className="section__head">
+                <div>
+                  <span className="section__kicker">{post.categoryName} · 다음 글</span>
+                  <h2 id="next-posts-title" className="section__title">
+                    다음 글 이어보기
+                  </h2>
+                </div>
+                <Link href={`/board?category=${encodeURIComponent(post.categorySlug || "")}`} className="btn btn--ghost btn--sm">
+                  {post.categoryName} 전체
+                </Link>
+              </header>
+              <ul className="next-posts__list" style={{ display: "grid", gap: "var(--sp-2)", marginTop: "var(--sp-3)", listStyle: "none", padding: 0 }}>
+                {nextPosts.map((np) => (
+                  <li key={np.id} className="next-posts__row">
+                    <Link
+                      href={`/board/${encodeURIComponent(np.id)}`}
+                      className="next-posts__link"
+                      style={{
+                        display: "flex",
+                        gap: "var(--sp-2)",
+                        alignItems: "baseline",
+                        padding: "var(--sp-2) var(--sp-3)",
+                        border: "1px solid var(--color-border, rgba(255,255,255,0.08))",
+                        borderRadius: 8,
+                        textDecoration: "none",
+                        color: "inherit",
+                      }}
+                    >
+                      <span className="badge badge--soft" style={{ flexShrink: 0 }}>
+                        {np.categoryName || post.categoryName}
+                      </span>
+                      <span style={{ flex: 1, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {np.title || "(제목 없음)"}
+                      </span>
+                      <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
+                        💬 {np.commentCount ?? 0}
+                      </span>
+                      <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
+                        👁 {np.viewCount ?? 0}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </div>
       </section>
+
+      <BoardFab />
     </>
   );
 
