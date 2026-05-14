@@ -24,9 +24,9 @@ export const philosophy = {
   ],
 };
 
-// 톡방 인원 분포 (2026.05.08 대화기준 추정치).
+// 톡방 인원 분포 — 운영자 대화 기준 추정. 표현은 안정형(월 단위) 유지.
 export const demographics = {
-  asOf: "2026-05-08",
+  asOf: "2026년 5월",
   bars: [
     { label: "생뉴비", pct: 37, accent: "gold" },
     { label: "뉴비 & 복귀", pct: 22, accent: "amber" },
@@ -193,11 +193,11 @@ export const site = {
     { index: "4", title: "가이드 보드", body: "반복 질문을 한 장으로 회수" }
   ],
   notices: [
-    { id: "n1", label: "공지", title: "5/14(목) 정기점검 안내", url: "https://dnfm.nexon.com/News/Notice", meta: "공식" },
+    { id: "n1", label: "공지", title: "공식 점검·업데이트 일정", url: "https://dnfm.nexon.com/News/Notice", meta: "공식" },
     { id: "n2", label: "이벤트", title: "진행 이벤트와 보상 기간 확인", url: "https://dnfm.nexon.com/News/Event", meta: "공식" },
     { id: "n3", label: "가이드", title: "신규 모험가 공식 추천 가이드", url: "https://dnfm.nexon.com/Guide/Recommand", meta: "공식" },
-    { id: "n4", label: "운영", title: "뉴비 훈련소 상단 공지 갱신 예정", url: null, meta: "내부" },
-    { id: "n5", label: "운영", title: "회원 가입 던파 캡처 인증 안내", url: "/signup", meta: "내부" }
+    { id: "n4", label: "운영", title: "톡방 입장 — 뉴비 훈련소 오픈채팅", url: "https://open.kakao.com/o/gbsjsZ5g", meta: "내부" },
+    { id: "n5", label: "운영", title: "회원 가입 + 던파 캡처 인증 안내", url: "/signup", meta: "내부" }
   ],
   noticesMoreUrl: "https://dnfm.nexon.com/News/Notice",
   communityPosts: [
@@ -312,15 +312,15 @@ export const site = {
       id: "g1",
       category: "시작",
       title: "처음 시작 루트",
-      body: "설치, 서버, 직업 선택, 초반 진행 순서를 한 장으로 정리합니다.",
-      linkLabel: "자체 가이드 준비중",
-      url: null
+      body: "설치 → 서버 선택(카인 추천) → 직업 결정(끌리는 것) → 메인 퀘스트 따라가기. 톡방 채팅창에 `/가이드ㅡ시작` 입력하면 시작 루트 카드를 자동 발송합니다.",
+      linkLabel: "톡방 입장 후 명령어로 보기",
+      url: "https://open.kakao.com/o/gbsjsZ5g"
     },
     {
       id: "g2",
       category: "공식",
       title: "신규 모험가 공식 가이드",
-      body: "공식 추천 가이드에 있는 신규 모험가용 안내로 바로 이동합니다.",
+      body: "넥슨 공식 사이트의 추천 가이드. 직업·콘텐츠·이벤트 기준 공식 자료.",
       linkLabel: "공식 추천 가이드",
       url: "https://dnfm.nexon.com/Guide/Recommand"
     },
@@ -328,17 +328,17 @@ export const site = {
       id: "g3",
       category: "장비",
       title: "장비 질문 받는 법",
-      body: "캐릭터 정보와 현재 목표를 함께 받도록 안내합니다.",
-      linkLabel: "운영 문구 준비중",
-      url: null
+      body: "캐릭터 정보 창 + 현재 강화 단계 + 다음에 하고 싶은 콘텐츠를 함께 적어주세요. 정보가 부족하면 답이 어렵습니다.",
+      linkLabel: "장비 게시판 이동",
+      url: "/board?category=equip"
     },
     {
       id: "g4",
       category: "파티",
       title: "파티와 레이드 예절",
-      body: "뉴비가 부담 없이 파티에 들어갈 수 있도록 준비물·용어 정리.",
-      linkLabel: "초안 슬롯",
-      url: null
+      body: "포션·무기 강화·항마력 확인 후 파티 신청. 모르는 용어는 부담 없이 톡방에 질문 — 거의 항상 누군가 알려줍니다.",
+      linkLabel: "파티 게시판 이동",
+      url: "/board?category=party"
     }
   ],
   stats: [
@@ -376,44 +376,44 @@ export const site = {
     {
       title: "처음 시작 루트",
       category: "시작",
-      body: "설치, 서버, 직업 선택, 초반 진행 순서를 한 장으로 정리할 첫 가이드 슬롯입니다.",
-      linkLabel: "자체 가이드 준비중",
-      url: null
+      body: "설치 → 카인 서버 권장 → 끌리는 직업 → 메인 퀘스트. 톡방 `/가이드ㅡ시작` 명령어로 즉시 카드.",
+      linkLabel: "톡방 입장",
+      url: "https://open.kakao.com/o/gbsjsZ5g"
     },
     {
       title: "신규 모험가 공식 가이드",
       category: "공식",
-      body: "공식 추천 가이드에 있는 신규 모험가용 안내로 바로 이동합니다.",
+      body: "공식 추천 가이드 — 직업·콘텐츠·이벤트 기준 공식 자료.",
       linkLabel: "공식 추천 가이드",
       url: "https://dnfm.nexon.com/Guide/Recommand"
     },
     {
       title: "장비 질문 받는 법",
       category: "장비",
-      body: "스크린샷 없이 답이 어려운 질문은 캐릭터 정보와 현재 목표를 함께 받도록 안내합니다.",
-      linkLabel: "운영 문구 준비중",
-      url: null
+      body: "캐릭터 정보 창 + 현재 강화 단계 + 다음 목표를 함께 적으면 답이 빠릅니다.",
+      linkLabel: "장비 게시판",
+      url: "/board?category=equip"
     },
     {
       title: "파티와 레이드 예절",
       category: "파티",
-      body: "뉴비가 부담 없이 파티에 들어갈 수 있도록 준비물, 용어, 실패 후 대처를 정리합니다.",
-      linkLabel: "초안 슬롯",
-      url: null
+      body: "포션·무기 강화·항마력 확인 후 파티 신청. 용어는 부담 없이 톡방에 질문.",
+      linkLabel: "파티 게시판",
+      url: "/board?category=party"
     },
     {
       title: "공식 팁과 공략 게시판",
       category: "공식",
-      body: "유저 공략과 최신 팁을 확인할 수 있는 공식 커뮤니티 게시판입니다.",
+      body: "유저 공략과 최신 팁 — 공식 커뮤니티 게시판.",
       linkLabel: "팁&공략 이동",
       url: "https://dnfm.nexon.com/Community/Tip"
     },
     {
       title: "복귀자 점검표",
       category: "성장",
-      body: "복귀 시 확인할 이벤트, 장비, 피로도, 주간 콘텐츠 기준을 별도 카드로 확장합니다.",
-      linkLabel: "가이드 준비중",
-      url: null
+      body: "복귀 후 확인 — (1) 시즌 보상 (2) 장비 등급 (3) 일일 피로도 (4) 주간 콘텐츠. 막막하면 톡방 질문 환영.",
+      linkLabel: "톡방 입장",
+      url: "https://open.kakao.com/o/gbsjsZ5g"
     }
   ],
   linkGroups: [
@@ -430,8 +430,8 @@ export const site = {
     {
       title: "운영 채널",
       links: [
-        { label: "카톡방", url: null, reason: "오픈채팅 URL 등록 전" },
-        { label: "가이드 제보", url: null, reason: "폼 또는 게시판 주소 등록 전" },
+        { label: "카톡방 입장", url: "https://open.kakao.com/o/gbsjsZ5g" },
+        { label: "가이드 제보 — 팁 글로", url: "/board/new?category=tip" },
         { label: "운영 문의", url: "mailto:admin@dnfm.kr" }
       ]
     }

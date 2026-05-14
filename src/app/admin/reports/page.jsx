@@ -59,6 +59,7 @@ export default function AdminReportsPage() {
   const userIsAdmin = isSiteAdmin(user, "newb");
   const [statusFilter, setStatusFilter] = useState("pending");
   const [rows, setRows] = useState([]);
+  const [counts, setCounts] = useState({ pending: 0, in_review: 0, resolved: 0, dismissed: 0 });
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
   const [busyId, setBusyId] = useState(null);
@@ -78,11 +79,28 @@ export default function AdminReportsPage() {
     }
   }, [statusFilter]);
 
+  const reloadCounts = useCallback(async () => {
+    try {
+      const out = await Promise.all(
+        STATUS_TABS.map((s) =>
+          reportsApi.list({ status: s.value, pageSize: 1 }).then(
+            (r) => [s.value, typeof r?.total === "number" ? r.total : (Array.isArray(r?.items) ? r.items.length : 0)],
+            () => [s.value, 0]
+          )
+        )
+      );
+      setCounts(Object.fromEntries(out));
+    } catch {
+      /* 통계는 부수적 — 실패해도 본 목록은 살아 있음 */
+    }
+  }, []);
+
   useEffect(() => {
     if (!isLoading && user && userIsAdmin) {
       reload();
+      reloadCounts();
     }
-  }, [isLoading, user, userIsAdmin, reload]);
+  }, [isLoading, user, userIsAdmin, reload, reloadCounts]);
 
   async function applyAction(row, next) {
     if (busyId) return;
@@ -161,6 +179,9 @@ export default function AdminReportsPage() {
                 aria-selected={statusFilter === s.value}
               >
                 {s.label}
+                <span style={{ marginLeft: 6, opacity: 0.72, fontWeight: 600 }}>
+                  {counts[s.value] ?? 0}
+                </span>
               </button>
             ))}
           </div>

@@ -87,6 +87,39 @@ export default function AboutPage() {
           </ol>
         </div>
       </section>
+
+      <section className="section" aria-labelledby="about-join-title">
+        <div className="content-wrap">
+          <article className="card card--parchment about-join">
+            <header className="about-join__head">
+              <span className="section__kicker">JOIN</span>
+              <h2 id="about-join-title" className="about-join__title">
+                톡방에 들어와 직접 보세요
+              </h2>
+            </header>
+            <p className="about-join__body">
+              읽는 것만으로 안 와 닿으면 오픈채팅에 잠깐 들어와 분위기를 보고 가셔도 됩니다.
+              질문이 부담스러우면 그냥 인사만 남기고 가셔도 환영합니다.
+            </p>
+            <div className="about-join__cta">
+              <a
+                className="btn btn--primary btn--lg"
+                href="https://open.kakao.com/o/gbsjsZ5g"
+                target="_blank"
+                rel="noreferrer"
+              >
+                카톡방 입장 →
+              </a>
+              <Link href="/signup" className="btn btn--secondary btn--lg">
+                훈련소 회원 가입
+              </Link>
+              <Link href="/guide" className="btn btn--ghost btn--lg">
+                가이드 먼저 보기
+              </Link>
+            </div>
+          </article>
+        </div>
+      </section>
     </>
   );
 }

@@ -124,11 +124,26 @@ function Inner() {
                 <p>불러오는 중…</p>
               </article>
             ) : rows.length === 0 ? (
-              <article className="card card--parchment" style={{ padding: "var(--sp-4)" }}>
-                <p>아직 {tab === "comments" ? "댓글" : "글"}이 없습니다.</p>
-                <Link href="/board/new" className="btn btn--primary btn--sm">
-                  글쓰기 →
-                </Link>
+              <article className="card card--parchment" style={{ padding: "var(--sp-5)", display: "grid", gap: "var(--sp-3)" }}>
+                <strong style={{ fontSize: "var(--fs-lg)", color: "var(--color-gold)" }}>
+                  아직 {tab === "comments" ? "남긴 댓글" : "작성한 글"}이 없습니다.
+                </strong>
+                <p style={{ margin: 0, lineHeight: 1.7 }}>
+                  {tab === "comments"
+                    ? "다른 사람 글에 댓글을 남기면 여기 모입니다. 게시판에서 마음에 드는 글에 의견을 더해보세요."
+                    : "첫 글을 남기면 여기서 모아 볼 수 있어요. 질문·팁·잡담 모두 환영합니다."}
+                </p>
+                <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
+                  <Link
+                    href={tab === "comments" ? "/board" : "/board/new"}
+                    className="btn btn--primary btn--sm"
+                  >
+                    {tab === "comments" ? "게시판 둘러보기 →" : "첫 글 쓰러 가기 →"}
+                  </Link>
+                  <Link href="/guide" className="btn btn--secondary btn--sm">
+                    가이드 보기
+                  </Link>
+                </div>
               </article>
             ) : tab === "comments" ? (
               rows.map((c) => (

@@ -16,9 +16,19 @@ export default function GuildsPage() {
               뉴비·복귀 환영. 길드 아지트 버프부터 즉시가입까지.
             </p>
           </div>
-          <Link href="/about" className="btn btn--secondary btn--sm">
-            톡방 소개 →
-          </Link>
+          <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
+            <a
+              className="btn btn--primary btn--sm"
+              href="https://open.kakao.com/o/gbsjsZ5g"
+              target="_blank"
+              rel="noreferrer"
+            >
+              카톡방에서 추천 받기 →
+            </a>
+            <Link href="/about" className="btn btn--secondary btn--sm">
+              톡방 소개
+            </Link>
+          </div>
         </div>
       </section>
 
