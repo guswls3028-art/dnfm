@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { host } from "@/lib/content";
-import HeroAdminBanners from "./HeroAdminBanners";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -43,6 +42,22 @@ export default function HeroStage({ site }) {
     <section className="hero hero--community" aria-labelledby="hero-title">
       <div className="content-wrap hero__inner">
         <div className="hero__copy">
+          {/* 호스트 chip — kicker 위쪽 (시각 충돌 방지: 일러스트 외부) */}
+          <div className="hero__host-chip" aria-label={`방장 ${host.nickname}`}>
+            <img
+              className="hero__host-chip-avatar"
+              src={host.avatarSrc}
+              alt={`${host.nickname} 프사`}
+              loading="lazy"
+            />
+            <span className="hero__host-chip-meta">
+              <small>방장</small>
+              <strong>{host.nickname}</strong>
+            </span>
+            <span className="hero__host-chip-dot" aria-hidden="true" />
+            <span className="hero__host-chip-role">{host.role}</span>
+          </div>
+
           <span className="hero__kicker">{hero.kicker}</span>
           <h1 id="hero-title" className="hero__title">
             {hero.headlineLines.map((line) => (
@@ -78,8 +93,6 @@ export default function HeroStage({ site }) {
               ))}
             </ul>
           ) : null}
-
-          <HeroAdminBanners />
         </div>
 
         <div className="hero__visual">
@@ -94,19 +107,6 @@ export default function HeroStage({ site }) {
           ) : (
             <div className="hero__visual-seal" aria-hidden="true">DNFM</div>
           )}
-          <div className="hero__host">
-            <img
-              className="hero__host-avatar"
-              src={host.avatarSrc}
-              alt={`${host.nickname} 프사`}
-              loading="lazy"
-            />
-            <div className="hero__host-meta">
-              <span className="hero__host-label">방장</span>
-              <strong className="hero__host-name">{host.nickname}</strong>
-              <small className="hero__host-note">{host.role}</small>
-            </div>
-          </div>
         </div>
       </div>
     </section>

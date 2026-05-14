@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatRelativeKo } from "@/lib/format-time";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -8,6 +9,7 @@ export default function BoardRow({ post }) {
   const href = post.href || `/board/${post.id}`;
   const labelClass = `board-row__label${post.pinned ? " is-pinned" : ""}`;
   const rowClass = `board-row${post.pinned ? " board-row--pinned" : ""}`;
+  const timeDisplay = post.time ? formatRelativeKo(post.time) : "";
 
   const content = (
     <>
@@ -21,7 +23,7 @@ export default function BoardRow({ post }) {
       </span>
       <span className="board-row__meta">
         {post.author ? <span>{post.author}</span> : null}
-        {post.time ? <span>{post.time}</span> : null}
+        {timeDisplay ? <span>{timeDisplay}</span> : null}
         {typeof post.views === "number" ? <span>조회 {post.views}</span> : null}
         {typeof post.likes === "number" ? <span>추천 {post.likes}</span> : null}
       </span>

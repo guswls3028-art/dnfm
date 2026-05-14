@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroSlider from "@/components/HeroSlider";
 import HeroStage from "@/components/HeroStage";
 import BoardRow from "@/components/BoardRow";
 import EventCard from "@/components/EventCard";
@@ -20,6 +21,7 @@ export default function HomePage() {
 
   return (
     <>
+      <HeroSlider />
       <HeroStage site={site} />
 
       <section className="section section--about" id="about" aria-labelledby="about-title">
@@ -96,9 +98,26 @@ export default function HomePage() {
                 </h2>
               </div>
             </header>
-            <div className="guide-cmd">
-              <code className="guide-cmd__code">{guideCommand.trigger}</code>
+            <div className="guide-cmd guide-cmd--rich">
+              <div className="guide-cmd__demo" aria-hidden="true">
+                <span className="guide-cmd__demo-label">톡방 입력</span>
+                <code className="guide-cmd__code">{guideCommand.trigger}</code>
+              </div>
               <p className="guide-cmd__note">{guideCommand.note}</p>
+              <ul className="guide-cmd__examples">
+                <li>
+                  <span className="guide-cmd__example-key">/가이드ㅡ시작</span>
+                  <span>처음 시작 루트</span>
+                </li>
+                <li>
+                  <span className="guide-cmd__example-key">/가이드ㅡ직업</span>
+                  <span>직업 선택 기준</span>
+                </li>
+                <li>
+                  <span className="guide-cmd__example-key">/가이드ㅡ파티</span>
+                  <span>파티 예절 / 준비물</span>
+                </li>
+              </ul>
               <small className="guide-cmd__author">작성: {guideCommand.author}</small>
             </div>
           </div>
@@ -111,8 +130,11 @@ export default function HomePage() {
                   뉴비 친화 길드
                 </h2>
               </div>
+              <Link className="section__more" href="/guilds">
+                전체 길드 →
+              </Link>
             </header>
-            <div className="guild-grid">
+            <div className="guild-grid guild-grid--home">
               {friendlyGuilds.map((g) => (
                 <article className="guild-card" key={g.name}>
                   <header>
@@ -125,6 +147,18 @@ export default function HomePage() {
                   </a>
                 </article>
               ))}
+              <article className="guild-card guild-card--invite">
+                <header>
+                  <strong>여기에 길드를 걸어보세요</strong>
+                  <small>뉴비/복귀 환영 길드 · 운영자 검토 1~2일</small>
+                </header>
+                <p>
+                  아지트 만렙·버프 가능 / 뉴비 무시·갈취 정책 없음. 길드명·길마·소개·공식 페이지 링크를 운영자에게 보내주세요.
+                </p>
+                <Link className="btn btn--primary btn--sm" href="/guilds">
+                  등록 안내 보기 →
+                </Link>
+              </article>
             </div>
           </div>
         </div>

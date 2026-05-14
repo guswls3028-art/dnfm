@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import BoardRow from "@/components/BoardRow";
 import { posts as postsApi } from "@/lib/api-client";
+import { site } from "@/lib/content";
 
 function normalize(p) {
   return {
@@ -11,7 +12,8 @@ function normalize(p) {
     label: p.categoryLabel || p.label || (p.category ? p.category : "글"),
     title: p.title || "(제목 없음)",
     author: p.authorName || p.author || p.user?.displayName || "익명",
-    time: p.timeAgo || p.time || p.createdAtLabel || p.createdAt || "",
+    // BoardRow 가 ISO/epoch 면 자동 포맷, 사람 친화 문자열이면 그대로 통과 (format-time.js).
+    time: p.timeAgo || p.createdAtLabel || p.time || p.createdAt || "",
     views: typeof p.views === "number" ? p.views : (p.viewCount ?? 0),
     likes: typeof p.likes === "number" ? p.likes : (p.likeCount ?? 0),
     comments:
@@ -21,8 +23,11 @@ function normalize(p) {
   };
 }
 
+// API 실패 / 빈 응답 시 보여줄 정적 fallback (content.js 의 communityPosts).
+const FALLBACK_POSTS = (site.communityPosts || []).slice(0, 5);
+
 export default function HomeCommunityBoard() {
-  const [state, setState] = useState({ status: "loading", items: [] });
+  const [state, setState] = useState({ status: "loading", items: [], source: null });
 
   useEffect(() => {
     let alive = true;
@@ -37,9 +42,13 @@ export default function HomeCommunityBoard() {
             : Array.isArray(data)
               ? data
               : [];
-        setState({ status: "ready", items: list.map(normalize) });
+        if (list.length === 0) {
+          setState({ status: "fallback", items: FALLBACK_POSTS, source: "empty" });
+        } else {
+          setState({ status: "ready", items: list.map(normalize), source: "api" });
+        }
       } catch {
-        if (alive) setState({ status: "error", items: [] });
+        if (alive) setState({ status: "fallback", items: FALLBACK_POSTS, source: "error" });
       }
     })();
     return () => {
@@ -54,6 +63,7 @@ export default function HomeCommunityBoard() {
       </div>
     );
   }
+
   if (state.items.length === 0) {
     return (
       <div className="board__rows">
@@ -63,8 +73,14 @@ export default function HomeCommunityBoard() {
       </div>
     );
   }
+
   return (
     <div className="board__rows">
+      {state.source !== "api" ? (
+        <p className="board__preview-hint" role="note">
+          미리보기 글입니다 — 게시판이 열리면 실제 글로 교체돼요.
+        </p>
+      ) : null}
       {state.items.map((post) => (
         <BoardRow key={post.id || post.title} post={post} />
       ))}

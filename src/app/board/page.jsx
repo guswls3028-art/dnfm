@@ -290,16 +290,15 @@ function BoardInner() {
             <div className="board__head">
               <h2>
                 {catLabel}
-                {qParam ? ` · 검색 "${qParam}"` : ""} ·{" "}
+                {qParam ? ` · 검색 "${qParam}"` : ""}
+              </h2>
+              <span className="board__head-meta" aria-live="polite">
                 {sorted
                   ? total > 0
                     ? `총 ${total}건${total > PAGE_SIZE ? ` · ${pageParam} 페이지` : ""}`
-                    : `0건`
+                    : "0건 · 첫 글을 남겨주세요"
                   : "불러오는 중…"}
-              </h2>
-              <Link className="card__action" href="/board/new">
-                글쓰기 →
-              </Link>
+              </span>
             </div>
 
             {source === "fallback" && sorted && sorted.length > 0 ? (

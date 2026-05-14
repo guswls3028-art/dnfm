@@ -26,6 +26,12 @@ export default function Checklist({ site }) {
     }
   }
 
+  const total = site.checklist.length;
+  const done = hydrated
+    ? site.checklist.reduce((n, _, i) => n + (checked[i] ? 1 : 0), 0)
+    : 0;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
   return (
     <section aria-labelledby="checklist-title">
       <header className="section__head">
@@ -35,7 +41,20 @@ export default function Checklist({ site }) {
             {site.checklistTitle}
           </h2>
         </div>
+        <span className="checklist__count" aria-live="polite">
+          {done} / {total}
+        </span>
       </header>
+      <div
+        className="checklist__progress"
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="오늘 훈련소 체크 진행도"
+      >
+        <span style={{ width: `${pct}%` }} />
+      </div>
       <div className="checklist">
         {site.checklist.map((item, index) => {
           const id = `${site.id}-check-${index}`;

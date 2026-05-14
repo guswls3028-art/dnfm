@@ -55,11 +55,33 @@ export default function GuidePage() {
             </Link>
           </header>
 
-          <div className="events-grid">
-            {site.guideCards.map((guide) => (
-              <GuideCard key={guide.id} guide={guide} />
-            ))}
-          </div>
+          {(() => {
+            const featured = site.guideCards.filter((g) => g.url);
+            const pending = site.guideCards.filter((g) => !g.url);
+            return (
+              <>
+                {featured.length ? (
+                  <div className="guide-featured-grid">
+                    {featured.map((guide) => (
+                      <GuideCard key={guide.id} guide={guide} />
+                    ))}
+                  </div>
+                ) : null}
+                {pending.length ? (
+                  <>
+                    <p className="guide-pending-note" aria-hidden="true">
+                      운영자가 채울 자리 · {pending.length}개 준비중
+                    </p>
+                    <div className="guide-pending-grid">
+                      {pending.map((guide) => (
+                        <GuideCard key={guide.id} guide={guide} />
+                      ))}
+                    </div>
+                  </>
+                ) : null}
+              </>
+            );
+          })()}
         </div>
       </section>
     </>
