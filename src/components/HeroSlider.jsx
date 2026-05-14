@@ -35,9 +35,20 @@ function apiToSlide(b) {
 }
 
 /**
- * content.js fallback → slide (text-only, no image).
+ * content.js fallback → slide.
+ * b.kind 가 "image" 이고 src 가 있으면 image 슬라이드, 아니면 text 슬라이드.
  */
 function fallbackToSlide(b) {
+  if (b.kind === "image" && b.src) {
+    return {
+      id: b.id,
+      kind: "image",
+      src: b.src,
+      label: b.label || "",
+      href: b.href || null,
+      active: true,
+    };
+  }
   return {
     id: b.id,
     kind: "text",

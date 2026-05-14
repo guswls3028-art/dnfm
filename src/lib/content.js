@@ -176,40 +176,36 @@ export const site = {
   // 어드민이 실 배너를 등록하면 자동으로 대체됨.
   heroSliderFallback: [
     {
-      id: "fb-welcome",
-      kicker: "환영합니다",
-      title: "공원 정자에 잠깐 앉아 가세요",
-      body: "뉴비 / 복귀 / 라이트 누구나. 위아래 없는 수평적 공간.",
+      id: "fb-newb-kakao",
+      kind: "image",
+      src: "/배경사진.jpg",
+      label: "뉴비훈련소 카톡방 입장 — 군복 지급, 정자 환영",
+      href: "https://open.kakao.com/o/gbsjsZ5g"
+    },
+    {
+      id: "fb-hurock-contest",
+      kind: "image",
+      src: "/hurock-banner.png",
+      label: "허락 — 룩 콘테스트 이벤트 페이지",
+      href: "https://hurock.dnfm.kr/"
+    },
+    {
+      id: "fb-dnf-update",
+      kicker: "공식 업데이트",
+      title: "던파모바일 최신 업데이트",
+      body: "공식 홈에서 패치 / 신규 콘텐츠 / 보상 기간 확인.",
       accent: "amber",
-      href: "/about",
-      cta: "톡방 안내 보기"
+      href: "https://dnfm.nexon.com/News/Update",
+      cta: "공식 업데이트 →"
     },
     {
-      id: "fb-join",
-      kicker: "카톡방",
-      title: "오픈채팅으로 바로 입장",
-      body: "운영자 시너지통 — 정보 부족으로 인한 뉴비 불이익을 막는 게 목적.",
+      id: "fb-dnf-devnote",
+      kicker: "개발자 노트",
+      title: "던파모바일 최신 개발자노트",
+      body: "방향성 / 패치 의도 / Q&A. 운영 입장 직접.",
       accent: "olive",
-      href: "https://open.kakao.com/o/gbsjsZ5g",
-      cta: "오픈채팅 입장 →"
-    },
-    {
-      id: "fb-guide",
-      kicker: "오늘의 가이드",
-      title: "처음 시작 루트 한 장",
-      body: "직업·서버·초반 동선·일일 숙제 우선순위까지.",
-      accent: "mint",
-      href: "/guide",
-      cta: "가이드 보드"
-    },
-    {
-      id: "fb-event",
-      kicker: "이벤트",
-      title: "공식 + 톡방 이벤트 모음",
-      body: "보상 기간이 끊기지 않게 한 흐름으로.",
-      accent: "crimson",
-      href: "/events",
-      cta: "진행 이벤트 →"
+      href: "https://dnfm.nexon.com/News/DevNote",
+      cta: "개발자 노트 →"
     }
   ],
   actions: [

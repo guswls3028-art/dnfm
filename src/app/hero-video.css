@@ -515,6 +515,24 @@ html {
   overflow-x: hidden;
 }
 
+/* ============================================================
+   모바일 헤더 sticky 보강 — body overflow:hidden 환경에서 sticky 가
+   깨지는 케이스 회피. fixed + main padding-top 으로 항상 보이게.
+   PC (≥1024px) 는 사이드바 별도 그대로.
+   ============================================================ */
+@media (max-width: 1023px) {
+  .site-topbar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-header);
+  }
+  .site-frame__body {
+    padding-top: 56px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-video__video,
   .hero-video__poster {
