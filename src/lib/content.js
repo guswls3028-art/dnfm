@@ -553,15 +553,11 @@ export const site = {
     title: "모험단 인증 (선택)",
     body: "캡처를 묶어서 한 번에 올리면 자동으로 모험단명·대표 캐릭터·캐릭 목록을 인식합니다.",
     captures: [
-      { id: "basic_info", label: "모험단 기본정보", hint: "정보 → 모험단 → 기본정보 화면 1장." },
-      { id: "character_list", label: "보유 캐릭터 (선택)", hint: "모험단 → 보유캐릭터. 캐릭이 많으면 1~3장." },
-      { id: "character_select", label: "캐릭터 선택창", hint: "게임 로그인 직후 캐릭 선택 창 1장. 사칭 방지." }
+      { id: "basic_info", label: "모험단 기본정보", hint: "정보 → 모험단 → 기본정보 화면 1장.", imagePath: "/verify-examples/basic_info.png" },
+      { id: "character_list", label: "보유 캐릭터 (선택)", hint: "모험단 → 보유캐릭터. 캐릭이 많으면 1~3장.", imagePath: "/verify-examples/character_list.png" },
+      { id: "character_select", label: "캐릭터 선택창", hint: "게임 로그인 직후 캐릭 선택 창 1장. 사칭 방지.", imagePath: "/verify-examples/character_select.png" }
     ],
-    rules: [
-      "항마력은 수집하지 않습니다.",
-      "기본정보의 대표 캐릭이 캐릭터 선택창 목록에 있어야 인증 마크가 부여됩니다.",
-      "인증을 안 해도 가입은 유지되며, 나중에 언제든 다시 시도할 수 있습니다."
-    ]
+    rules: []
   },
   loginProviders: [
     { id: "local", label: "DNFM 계정으로 로그인", note: "아이디·비밀번호" },

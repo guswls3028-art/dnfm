@@ -6,8 +6,8 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { apiFetch, ApiError, auth } from "@/lib/api-client";
 import { site } from "@/lib/content";
+import { DNF_CLASSES_GROUPED } from "@/lib/dnf-classes";
 
-const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
 function formatBytes(n) {
@@ -44,9 +44,12 @@ function VerifyInner() {
   const [merged, setMerged] = useState(null);
   const [perImage, setPerImage] = useState([]);
   const [edited, setEdited] = useState({}); // overrides
+  const [editedCharacters, setEditedCharacters] = useState([]); // [{name, klass}]
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
   const [recognized, setRecognized] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthed) router.replace("/login?next=/profile/verify");
@@ -62,10 +65,6 @@ function VerifyInner() {
     setError(null);
     const next = [...files];
     for (const file of list) {
-      if (next.length >= MAX_FILES) {
-        setError(`한 번에 최대 ${MAX_FILES}장까지 업로드 가능합니다.`);
-        break;
-      }
       if (!file.type?.startsWith("image/")) {
         setError("이미지 파일만 업로드 가능합니다.");
         continue;
@@ -77,6 +76,21 @@ function VerifyInner() {
       next.push({ file, url: URL.createObjectURL(file) });
     }
     setFiles(next);
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    if (!dragOver) setDragOver(true);
+  }
+  function handleDragLeave(e) {
+    e.preventDefault();
+    setDragOver(false);
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    setDragOver(false);
+    const dropped = e.dataTransfer?.files;
+    if (dropped && dropped.length) addFiles(dropped);
   }
 
   function removeFile(index) {
@@ -103,6 +117,9 @@ function VerifyInner() {
         mainCharacterName: m?.mainCharacterName ?? "",
         mainCharacterClass: m?.mainCharacterClass ?? "",
       });
+      setEditedCharacters(
+        (m?.characters || []).map((c) => ({ name: c.name || "", klass: c.klass || "" }))
+      );
       setRecognized(true);
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : err?.message || "인식에 실패했습니다.";
@@ -121,20 +138,34 @@ function VerifyInner() {
         .filter((p) => p.screenType === "character_select")
         .flatMap((p) => (p.characters || []).map((c) => c.name))
         .filter(Boolean);
+      const cleanedCharacters = editedCharacters
+        .map((c) => ({ name: (c.name || "").trim(), klass: (c.klass || "").trim() }))
+        .filter((c) => c.name);
       await auth.confirmDnfProfile({
         adventurerName: edited.adventurerName?.trim() || undefined,
         mainCharacterName: edited.mainCharacterName?.trim() || undefined,
         mainCharacterClass: edited.mainCharacterClass?.trim() || undefined,
-        characters: merged.characters?.length ? merged.characters : undefined,
+        characters: cleanedCharacters.length ? cleanedCharacters : undefined,
         characterSelectNames: characterSelectNames.length ? characterSelectNames : undefined,
       });
       await refresh();
-      router.push("/profile?verified=1");
+      setSaved(true);
+      setTimeout(() => router.push("/profile?verified=1"), 1200);
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : err?.message || "저장 실패";
       setError(msg);
       setSaving(false);
     }
+  }
+
+  function updateCharacter(idx, patch) {
+    setEditedCharacters((prev) => prev.map((c, i) => (i === idx ? { ...c, ...patch } : c)));
+  }
+  function removeCharacter(idx) {
+    setEditedCharacters((prev) => prev.filter((_, i) => i !== idx));
+  }
+  function addEmptyCharacter() {
+    setEditedCharacters((prev) => [...prev, { name: "", klass: "" }]);
   }
 
   if (isLoading) {
@@ -173,22 +204,57 @@ function VerifyInner() {
             </h2>
             <p className="auth-card__sub">{guide?.body}</p>
 
-            <ul className="verify-captures">
+            <ul
+              className="verify-captures"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: "var(--sp-2)",
+                listStyle: "none",
+                padding: 0,
+                margin: "0 0 var(--sp-4)",
+              }}
+            >
               {(guide?.captures || []).map((cap) => (
-                <li key={cap.id} className="verify-captures__item">
-                  <strong>{cap.label}</strong>
-                  <span>{cap.hint}</span>
+                <li
+                  key={cap.id}
+                  className="verify-captures__item"
+                  style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}
+                >
+                  {cap.imagePath ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={cap.imagePath}
+                      alt={`${cap.label} 예시`}
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        aspectRatio: "16 / 9",
+                        objectFit: "cover",
+                        borderRadius: 6,
+                        border: "1px solid var(--ink-line, #ddd)",
+                        background: "rgba(0,0,0,0.04)",
+                        display: "block",
+                      }}
+                    />
+                  ) : null}
+                  <strong style={{ fontSize: "0.82rem", lineHeight: 1.25 }}>{cap.label}</strong>
+                  <span style={{ fontSize: "0.74rem", color: "var(--ink-muted, #888)", lineHeight: 1.3 }}>
+                    {cap.hint}
+                  </span>
                 </li>
               ))}
             </ul>
 
-            <ul className="verify-rules">
-              {(guide?.rules || []).map((r) => (
-                <li key={r}>{r}</li>
-              ))}
-            </ul>
-
-            <label className="verify-dropzone">
+            <label
+              className="verify-dropzone"
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              data-drag={dragOver ? "true" : undefined}
+              style={dragOver ? { background: "rgba(99,102,241,0.08)" } : undefined}
+            >
               <input
                 type="file"
                 accept="image/*"
@@ -201,10 +267,10 @@ function VerifyInner() {
               />
               <span className="verify-dropzone__icon" aria-hidden="true">＋</span>
               <span className="verify-dropzone__text">
-                캡처 묶어서 한 번에 올리기 (최대 {MAX_FILES}장 · 각 10MB)
+                캡처 묶어서 한 번에 올리기 (각 10MB)
               </span>
               <span className="verify-dropzone__hint">
-                기본정보·보유캐릭터·캐릭터 선택창 — 한 번에 골라 올리면 자동 분류
+                클릭하거나 드래그해서 올리세요 · 한 번에 골라 올리면 자동 분류
               </span>
             </label>
 
@@ -314,19 +380,65 @@ function VerifyInner() {
                 />
               </div>
 
-              {merged.characters?.length ? (
-                <div className="field">
-                  <label className="field__label">캐릭터 목록 ({merged.characters.length})</label>
-                  <ul className="verify-characters">
-                    {merged.characters.map((c, i) => (
-                      <li key={i}>
-                        <strong>{c.name}</strong>
-                        {c.klass ? <span> · {c.klass}</span> : null}
-                      </li>
-                    ))}
-                  </ul>
+              <div className="field">
+                <label className="field__label">
+                  캐릭터 목록 ({editedCharacters.length}) · 잘못 인식된 이름·직업은 직접 고쳐주세요
+                </label>
+                <div style={{ display: "grid", gap: 6 }}>
+                  {editedCharacters.map((c, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr) auto",
+                        gap: 6,
+                        alignItems: "center",
+                      }}
+                    >
+                      <input
+                        className="input"
+                        value={c.name}
+                        onChange={(e) => updateCharacter(i, { name: e.target.value })}
+                        placeholder="캐릭명"
+                        aria-label={`캐릭터 ${i + 1} 이름`}
+                      />
+                      <select
+                        className="input"
+                        value={c.klass || ""}
+                        onChange={(e) => updateCharacter(i, { klass: e.target.value })}
+                        aria-label={`캐릭터 ${i + 1} 직업`}
+                      >
+                        <option value="">직업 선택</option>
+                        {DNF_CLASSES_GROUPED.map((g) => (
+                          <optgroup key={g.group} label={g.group}>
+                            {g.classes.map((kls) => (
+                              <option key={`${g.group}::${kls}`} value={kls}>
+                                {g.group} · {kls}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        className="btn btn--ghost btn--sm"
+                        onClick={() => removeCharacter(i)}
+                        aria-label="제거"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm"
+                    onClick={addEmptyCharacter}
+                    style={{ justifySelf: "start" }}
+                  >
+                    + 캐릭터 추가
+                  </button>
                 </div>
-              ) : null}
+              </div>
 
               <details className="verify-details">
                 <summary>이미지별 분류 결과 ({perImage.length})</summary>
@@ -341,6 +453,18 @@ function VerifyInner() {
                 </ul>
               </details>
 
+              {saved ? (
+                <p className="auth-msg auth-msg--success" role="status" style={{ marginTop: "var(--sp-3)" }}>
+                  ✓ 저장 완료 — 프로필로 이동합니다…
+                </p>
+              ) : null}
+
+              {error ? (
+                <p className="auth-msg auth-msg--error" role="alert" style={{ marginTop: "var(--sp-3)" }}>
+                  {error}
+                </p>
+              ) : null}
+
               <div style={{ display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-5)" }}>
                 <Link href="/profile" className="btn btn--ghost">
                   나중에 / 건너뛰기
@@ -349,9 +473,9 @@ function VerifyInner() {
                   type="button"
                   className="btn btn--primary btn--lg"
                   onClick={handleSaveAuth}
-                  disabled={saving}
+                  disabled={saving || saved}
                 >
-                  {saving ? "저장 중…" : "이 정보로 인증 저장"}
+                  {saved ? "✓ 저장 완료" : saving ? "저장 중…" : "이 정보로 인증 저장"}
                 </button>
               </div>
             </div>
