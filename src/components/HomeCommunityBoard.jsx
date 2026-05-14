@@ -7,11 +7,16 @@ import { posts as postsApi } from "@/lib/api-client";
 import { site } from "@/lib/content";
 
 function normalize(p) {
+  // backend list 응답에서 회원 글 = author: {id, displayName, dnfProfile}, 비회원 글 = author: null + authorNickname + anonymousMarker.
+  const memberName = typeof p.author === "object" && p.author?.displayName;
+  const anonName = p.authorNickname
+    ? `${p.authorNickname}${p.anonymousMarker ? `(${p.anonymousMarker})` : ""}`
+    : null;
   return {
     id: p.id || p.postId,
     label: p.categoryLabel || p.label || (p.category ? p.category : "글"),
     title: p.title || "(제목 없음)",
-    author: p.authorName || p.author || p.user?.displayName || "익명",
+    author: p.authorName || memberName || anonName || p.user?.displayName || "익명",
     // BoardRow 가 ISO/epoch 면 자동 포맷, 사람 친화 문자열이면 그대로 통과 (format-time.js).
     time: p.timeAgo || p.createdAtLabel || p.time || p.createdAt || "",
     views: typeof p.views === "number" ? p.views : (p.viewCount ?? 0),
