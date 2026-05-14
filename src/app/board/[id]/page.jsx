@@ -44,8 +44,9 @@ function normalizePost(p) {
     authorName:
       p.authorName ||
       p.user?.displayName ||
+      p.author?.displayName ||
       (p.authorId
-        ? p.author || "회원"
+        ? "회원"
         : `${p.authorNickname || "ㅇㅇ"}${p.anonymousMarker ? `(${p.anonymousMarker})` : ""}`),
     createdAt: p.createdAt || p.time || "",
     viewCount: p.viewCount ?? p.views ?? 0,
@@ -55,6 +56,8 @@ function normalizePost(p) {
     locked: Boolean(p.locked),
     postType: p.postType || "normal",
     attachmentR2Keys: Array.isArray(p.attachmentR2Keys) ? p.attachmentR2Keys : [],
+    // backend 가 회원 게시글에 author 객체를 leftJoin 으로 enrichment — AuthorCard 가 사용.
+    author: p.author || null,
   };
 }
 
@@ -386,7 +389,12 @@ export default function PostDetailPage() {
                 {post.postType === "best" ? <span className="badge badge--solid">BEST</span> : null}
                 <div style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-2)" }}>
                   {isAdmin ? (
-                    <AdminPostMenu postId={post.id} pinned={post.pinned} onChange={load} />
+                    <AdminPostMenu
+                      postId={post.id}
+                      pinned={post.pinned}
+                      locked={post.locked}
+                      onChange={load}
+                    />
                   ) : null}
                   <ReportButton targetType="post" targetId={post.id} />
                   {canDeletePostAsAuthor ? (
