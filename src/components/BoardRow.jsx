@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatRelativeKo } from "@/lib/format-time";
+import { Pushpin } from "./PavilionAccent";
 
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
@@ -13,7 +14,10 @@ export default function BoardRow({ post }) {
 
   const content = (
     <>
-      <span className={labelClass}>{post.label}</span>
+      <span className={labelClass}>
+        {post.pinned ? <Pushpin size={14} className="board-row__pin" /> : null}
+        {post.label}
+      </span>
       <span className="board-row__title">
         <strong>{post.title}</strong>
         {post.hot ? <span className="board-row__hot">HOT</span> : null}
