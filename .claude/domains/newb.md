@@ -36,9 +36,9 @@
 
 ## 6. 친구들 관계
 
-- `allow.dnfm.kr` 는 **별도 repo (`dnfm-allow`)**. 이 repo 와 frontend 코드·디자인 시스템 완전 격리.
+- `hurock.dnfm.kr` 는 **별도 repo (`dnfm-hurock`)**. 이 repo 와 frontend 코드·디자인 시스템 완전 격리. (옛 `dnfm-allow` / `allow.dnfm.kr` — 2026-05-14 rename 완료)
 - 공유 = backend api (Stage 2 `api.dnfm.kr`) + 회원/세션 (쿠키 도메인 `.dnfm.kr`) + R2 업로드 뿐.
-- 이 repo 에서 allow 코드 read/import/참고 X. cross-link 표시는 hardcoded URL (`https://allow.dnfm.kr`) 만.
+- 이 repo 에서 hurock 코드 read/import/참고 X. cross-link 표시는 hardcoded URL (`https://hurock.dnfm.kr`) 만.
 
 ## 7. 관련 파일
 

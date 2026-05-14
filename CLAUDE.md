@@ -21,42 +21,22 @@
 
 ## C. Harness Architecture
 
-역할 분리 아님 — **관심사 계층화.** AI는 모든 관심사를 동시에 적용.
+**룰 SSOT = dnfm 루트** (`C:\academy\dnfm\.claude\rules\`, [[C:\academy\dnfm\CLAUDE.md §B]]). 본 sub-project 자체의 `.claude/rules/` 는 폐기 (2026-05-14 통합). ancestor cascading 으로 dnfm 루트 룰셋 자동 로드.
 
-**우선순위 (충돌 시 적용 순서)**:
-1. 사용자 즉시 지시 (현 메시지)
-2. `anti-avoidance.md` — 회피 방지 메타룰. 모든 정책에 우선.
-3. `core.md`
-4. 그 외 `.claude/rules/*`
-5. `~/.claude/projects/.../memory/` user-scope
-6. CLAUDE.md (본 파일)
-7. 추론 / 일반 best practice
-
-```
-.claude/rules/ (전부 자동 로딩)
-  anti-avoidance.md       — 회피 방지 메타룰
-  core.md                 — 절대 원칙, 우선순위, 실행 모드, 토큰 효율
-  code-quality.md         — 아키텍처, 디버깅, 리팩토링, 성능, 하드닝
-  ui-quality.md           — 디자인, UX, 일관성, 상품성, narrow viewport 검증
-  completion-criteria.md  — E2E 검증, 완료 판단, 금지 패턴, fail 분기
-  collaboration-policy.md — Git / 도구 / 보고 / UX 톤 / 메모리 정리 / 백로그
-  codex-delegation.md     — Codex 위임 패턴
-```
+우선순위 정합은 [[dnfm/.claude/rules/core.md §0]] 참고. 본 파일은 newb sub-project **고유 SSOT** (콘텐츠 SSOT / 운영 / 배포 절차) 만.
 
 ## D. Reference System
 
-- **Rules**: `.claude/rules/` — 원칙 + 품질 기준. 자동 로딩.
-- **Domains**: `.claude/domains/` — 비즈니스 mental model.
-  - `newb.md` — 본 사이트 본업·운영·콘텐츠 정책
-- **Context (on-demand)**: `.claude/context/` — 비어 있음. 필요 시 추가.
+- **Rules (cascading)**: `C:\academy\dnfm\.claude\rules\` — 본 sub-project cwd 에서 자동 로드.
+- **Domains**: `.claude/domains/newb.md` — 본 사이트 본업·운영·콘텐츠 정책.
 - Ignore: `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `_artifacts/`, `이미지/`
 
 ## E. 친구들 격리 정책 (절대)
 
-- `allow.dnfm.kr` 작업 시 이 repo 와 무관. **별도 repo / 별도 세션 / 별도 디자인 시스템.**
+- `hurock.dnfm.kr` 작업 시 이 repo 와 무관. **별도 repo (`dnfm-hurock`) / 별도 세션 / 별도 디자인 시스템.** (옛 `allow.dnfm.kr` — 2026-05-14 rename 완료)
 - 두 사이트가 공유하는 건 backend api (Stage 2 의 `api.dnfm.kr`) + 회원/세션/R2 뿐. frontend 측 공유 코드 0.
-- 이 repo 에서 allow 코드를 읽거나 참고하거나 import 하면 안 됨.
-- cross-link 표시 (footer 의 "허락 페이지" 같은) 는 hardcoded URL 만. allow 의 컴포넌트/타입 import X.
+- 이 repo 에서 hurock 코드를 읽거나 참고하거나 import 하면 안 됨.
+- cross-link 표시 (footer 의 "허락 페이지" 같은) 는 hardcoded URL (`https://hurock.dnfm.kr`) 만. hurock 의 컴포넌트/타입 import X.
 
 ## F. 도메인 정책
 
