@@ -476,6 +476,38 @@ html[data-hero-theme="campfire"] {
   .hero-video__chip-meta small {
     display: none;
   }
+
+  /* CTA — 모바일에선 카톡방 입장 1개만, 카카오 아이콘 + 텍스트 */
+  .hero-video__cta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-top: var(--sp-3);
+  }
+  .hero-video__cta-secondary {
+    display: none;
+  }
+  .hero-video__cta-kakao {
+    width: 100%;
+    height: 52px;
+    font-size: var(--fs-md);
+    font-weight: 800;
+    gap: var(--sp-2);
+    letter-spacing: 0.01em;
+  }
+}
+
+/* 카카오 아이콘 — desktop / mobile 공통 (icon + label) */
+.hero-video__cta-kakao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+.hero-video__cta-kakao-icon {
+  flex-shrink: 0;
+  color: currentColor;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
 }
 
 /* horizontal scroll lockdown — chip focus 가 page 좌우 흔드는 거 방지 */

@@ -144,11 +144,32 @@ export default function HeroVideoStage({ site }) {
           {hero.subtitle ? <p className="hero-video__subtitle">{hero.subtitle}</p> : null}
 
           <div className="hero-video__cta">
-            <HeroCta action={primaryAction} primary />
-            <Link href="/board" className="btn btn--secondary btn--lg">
+            {primaryAction?.url ? (
+              <a
+                className="btn btn--primary btn--lg hero-video__cta-kakao"
+                href={primaryAction.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <svg
+                  className="hero-video__cta-kakao-icon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3C6.48 3 2 6.58 2 11c0 2.86 1.88 5.36 4.7 6.78-.2.7-.74 2.6-.84 3-.13.5.18.5.39.36.16-.1 2.55-1.74 3.58-2.45.7.1 1.43.16 2.17.16 5.52 0 10-3.58 10-8s-4.48-8-10-8z" />
+                </svg>
+                <span>{primaryAction.label}</span>
+              </a>
+            ) : (
+              <HeroCta action={primaryAction} primary />
+            )}
+            <Link href="/board" className="btn btn--secondary btn--lg hero-video__cta-secondary">
               훈련소 둘러보기
             </Link>
-            <Link href="/about" className="btn btn--ghost btn--lg">
+            <Link href="/about" className="btn btn--ghost btn--lg hero-video__cta-secondary">
               톡방 안내 →
             </Link>
           </div>
