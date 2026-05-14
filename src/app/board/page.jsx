@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import BoardFab from "@/components/BoardFab";
 import BoardRow from "@/components/BoardRow";
 import Pagination from "@/components/Pagination";
 import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
@@ -346,6 +347,8 @@ function BoardInner() {
           </div>
         </div>
       </section>
+
+      <BoardFab />
     </>
   );
 }
