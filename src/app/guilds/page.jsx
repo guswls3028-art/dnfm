@@ -87,7 +87,27 @@ export default function GuildsPage() {
                 {host.nickname} 운영자에게 신청 →
               </a>
             </article>
+
+            {Array.from({ length: 3 }).map((_, i) => (
+              <article className="guild-card guild-card--slot" key={`slot-${i}`} aria-hidden="true">
+                <header>
+                  <strong>비어있는 자리</strong>
+                  <small>검토중인 길드가 채워집니다</small>
+                </header>
+                <p>운영자 검토를 통과한 뉴비 친화 길드가 이 자리에 표시됩니다.</p>
+                <span className="action-disabled" aria-disabled="true">접수 대기</span>
+              </article>
+            ))}
           </div>
+
+          <article className="guild-policy">
+            <h3 className="guild-policy__title">운영 정책</h3>
+            <ul>
+              <li><strong>등록 기준</strong> — 뉴비 무시·갈취 정책 0건, 가입 조건 명시</li>
+              <li><strong>심사 기간</strong> — 보통 1~2일 (사용자가 톡방에 신청)</li>
+              <li><strong>해제 기준</strong> — 운영 방침 위반 시 사전 안내 후 해제</li>
+            </ul>
+          </article>
         </div>
       </section>
     </>

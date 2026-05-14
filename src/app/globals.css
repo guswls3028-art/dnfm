@@ -5357,3 +5357,246 @@ main > section {
   border-color: var(--color-gold) !important;
   background: rgba(176, 140, 58, 0.06);
 }
+
+
+/* ============================================================
+   Board row category variant — 페이지 안 변별
+   ============================================================ */
+
+.board-row[data-category="notice"] .board-row__label {
+  color: var(--color-red);
+  border-color: rgba(200, 73, 42, 0.5);
+  background: rgba(200, 73, 42, 0.12);
+}
+.board-row[data-category="question"] .board-row__label {
+  color: var(--color-mint);
+  border-color: rgba(79, 224, 168, 0.5);
+  background: rgba(79, 224, 168, 0.10);
+}
+.board-row[data-category="tip"] .board-row__label {
+  color: var(--color-gold);
+  border-color: rgba(212, 162, 76, 0.55);
+  background: rgba(212, 162, 76, 0.12);
+}
+.board-row[data-category="party"] .board-row__label {
+  color: var(--color-violet);
+  border-color: rgba(142, 111, 184, 0.5);
+  background: rgba(142, 111, 184, 0.12);
+}
+.board-row[data-category="equip"] .board-row__label {
+  color: var(--color-amber);
+  border-color: rgba(212, 149, 66, 0.5);
+  background: rgba(212, 149, 66, 0.12);
+}
+.board-row[data-category="talk"] .board-row__label {
+  color: var(--color-azure);
+  border-color: rgba(111, 168, 255, 0.5);
+  background: rgba(111, 168, 255, 0.10);
+}
+
+/* hover 시 가는 그라데이션 — 카테고리 색 누설 */
+.board-row[data-category="notice"]:hover { background: linear-gradient(90deg, rgba(200,73,42,0.06), transparent 70%); }
+.board-row[data-category="question"]:hover { background: linear-gradient(90deg, rgba(79,224,168,0.06), transparent 70%); }
+.board-row[data-category="tip"]:hover { background: linear-gradient(90deg, rgba(212,162,76,0.06), transparent 70%); }
+.board-row[data-category="party"]:hover { background: linear-gradient(90deg, rgba(142,111,184,0.06), transparent 70%); }
+.board-row[data-category="equip"]:hover { background: linear-gradient(90deg, rgba(212,149,66,0.06), transparent 70%); }
+.board-row[data-category="talk"]:hover { background: linear-gradient(90deg, rgba(111,168,255,0.06), transparent 70%); }
+
+
+/* ============================================================
+   /guide quickstart — 3분 안에 시작 step
+   ============================================================ */
+
+.quickstart {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-4);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: qs;
+}
+
+.quickstart__step {
+  position: relative;
+  padding: var(--sp-5) var(--sp-5) var(--sp-5) var(--sp-6);
+  border: 1px solid rgba(212, 162, 76, 0.22);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(135deg, rgba(212, 162, 76, 0.06), rgba(17, 20, 13, 0.55));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  overflow: hidden;
+}
+
+.quickstart__step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-gold);
+}
+
+.quickstart__step[data-step="2"]::before { background: var(--color-mint); }
+.quickstart__step[data-step="3"]::before { background: var(--color-red); }
+
+.quickstart__num {
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--color-gold);
+  line-height: 0.9;
+  opacity: 0.85;
+}
+
+.quickstart__step[data-step="2"] .quickstart__num { color: var(--color-mint); }
+.quickstart__step[data-step="3"] .quickstart__num { color: var(--color-red); }
+
+.quickstart__step strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  color: var(--color-paper);
+  letter-spacing: 0.01em;
+}
+
+.quickstart__step p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-paper-soft);
+}
+
+.quickstart__step code {
+  display: inline-block;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgba(212, 162, 76, 0.14);
+  border: 1px solid rgba(212, 162, 76, 0.3);
+  border-radius: var(--radius-xs);
+  color: var(--color-gold);
+}
+
+.quickstart__step .btn {
+  margin-top: var(--sp-2);
+  align-self: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .quickstart {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ============================================================
+   Event card category panel — official/talk 시각 변별
+   ============================================================ */
+
+.event-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.event-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  z-index: 1;
+}
+
+.event-card[data-category="official"]::before {
+  background: linear-gradient(180deg, var(--color-gold), var(--color-gold-deep));
+}
+
+.event-card[data-category="talk"]::before {
+  background: linear-gradient(180deg, var(--color-mint), var(--color-olive));
+}
+
+.event-card[data-category="other"]::before {
+  background: var(--color-line-strong);
+}
+
+.event-card[data-category="official"] {
+  background:
+    radial-gradient(ellipse at top right, rgba(212, 162, 76, 0.06), transparent 55%),
+    rgba(17, 20, 13, 0.55);
+}
+
+.event-card[data-category="talk"] {
+  background:
+    radial-gradient(ellipse at top right, rgba(79, 224, 168, 0.06), transparent 55%),
+    rgba(17, 20, 13, 0.55);
+}
+
+.event-card__banner {
+  min-height: 140px;
+  position: relative;
+}
+
+.event-card[data-category="official"] .event-card__title {
+  color: var(--color-gold);
+}
+
+.event-card[data-category="talk"] .event-card__title {
+  color: var(--color-mint);
+}
+
+
+/* ============================================================
+   /guilds slot + policy
+   ============================================================ */
+
+.guild-card--slot {
+  border-style: dashed !important;
+  border-color: rgba(212, 162, 76, 0.18) !important;
+  background: rgba(17, 20, 13, 0.30) !important;
+  opacity: 0.78;
+}
+
+.guild-card--slot strong {
+  color: var(--color-paper-soft);
+}
+
+.guild-card--slot p {
+  color: var(--color-text-muted);
+}
+
+.guild-policy {
+  margin-top: var(--sp-6);
+  padding: var(--sp-5);
+  border: 1px solid rgba(212, 162, 76, 0.18);
+  border-radius: var(--radius-md);
+  background: rgba(17, 20, 13, 0.55);
+}
+
+.guild-policy__title {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.02em;
+}
+
+.guild-policy ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0 0 0 var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--color-paper-soft);
+  line-height: var(--leading-relaxed);
+}
+
+.guild-policy strong {
+  color: var(--color-paper);
+}

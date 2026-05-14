@@ -12,14 +12,48 @@ export default function GuidePage() {
       <section className="page-hero">
         <div className="content-wrap page-hero__inner">
           <div>
+            <span className="page-hero__kicker">GUIDE</span>
             <h1 className="page-hero__title">가이드</h1>
             <p className="page-hero__sub">
-              톡방 채팅창에 명령어 하나로 가이드 카드. 자체 가이드 보드는 점차 채워집니다.
+              톡방 명령어, 공식 자료, 게시판 가이드를 한곳에서 확인합니다.
             </p>
           </div>
           <Link href="/board?category=tip" className="btn btn--secondary btn--sm">
             팁 모음 →
           </Link>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="quickstart-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">3 STEP</span>
+              <h2 id="quickstart-title" className="section__title">
+                3분 안에 시작하기
+              </h2>
+            </div>
+          </header>
+          <ol className="quickstart">
+            <li className="quickstart__step" data-step="1">
+              <span className="quickstart__num">01</span>
+              <strong>서버는 카인</strong>
+              <p>대부분 유저가 카인 서버. 일단 여기서 시작 → 친구 만나기 쉬움.</p>
+            </li>
+            <li className="quickstart__step" data-step="2">
+              <span className="quickstart__num">02</span>
+              <strong>직업은 끌리는 거</strong>
+              <p>초반엔 어느 직업이든 메인 퀘스트로 키울 수 있어요. 직업별 차이는 30레벨 이후.</p>
+            </li>
+            <li className="quickstart__step" data-step="3">
+              <span className="quickstart__num">03</span>
+              <strong>막히면 톡방에서 묻기</strong>
+              <p>채팅에 <code>/가이드ㅡ시작</code> 입력하면 시작 루트 카드 자동. 또는 그냥 질문.</p>
+              <a className="btn btn--primary btn--sm" href="https://open.kakao.com/o/gbsjsZ5g" target="_blank" rel="noreferrer">
+                카톡방 입장 →
+              </a>
+            </li>
+          </ol>
         </div>
       </section>
 
@@ -55,33 +89,11 @@ export default function GuidePage() {
             </Link>
           </header>
 
-          {(() => {
-            const featured = site.guideCards.filter((g) => g.url);
-            const pending = site.guideCards.filter((g) => !g.url);
-            return (
-              <>
-                {featured.length ? (
-                  <div className="guide-featured-grid">
-                    {featured.map((guide) => (
-                      <GuideCard key={guide.id} guide={guide} />
-                    ))}
-                  </div>
-                ) : null}
-                {pending.length ? (
-                  <>
-                    <p className="guide-pending-note" aria-hidden="true">
-                      운영자가 채울 자리 · {pending.length}개 준비중
-                    </p>
-                    <div className="guide-pending-grid">
-                      {pending.map((guide) => (
-                        <GuideCard key={guide.id} guide={guide} />
-                      ))}
-                    </div>
-                  </>
-                ) : null}
-              </>
-            );
-          })()}
+          <div className="guide-featured-grid">
+            {site.guideCards.map((guide) => (
+              <GuideCard key={guide.id} guide={guide} />
+            ))}
+          </div>
         </div>
       </section>
     </>

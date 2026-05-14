@@ -1,12 +1,25 @@
 import Link from "next/link";
 import { formatRelativeKo } from "@/lib/format-time";
 
+function guessCat(label) {
+  switch (label) {
+    case "공지": return "notice";
+    case "질문": return "question";
+    case "팁": return "tip";
+    case "파티": return "party";
+    case "장비": return "equip";
+    case "잡담": return "talk";
+    default: return "other";
+  }
+}
+
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
 }
 
 export default function BoardRow({ post }) {
   const href = post.href || `/board/${post.id}`;
+  const cat = post.categoryId || post.categorySlug || guessCat(post.label);
   const labelClass = `board-row__label${post.pinned ? " is-pinned" : ""}`;
   const rowClass = `board-row${post.pinned ? " board-row--pinned" : ""}`;
   const timeDisplay = post.time ? formatRelativeKo(post.time) : "";
@@ -32,7 +45,7 @@ export default function BoardRow({ post }) {
 
   if (post.url === null || (!post.url && !post.id && !post.href)) {
     return (
-      <div className={rowClass} aria-disabled="true">
+      <div className={rowClass} data-category={cat} aria-disabled="true">
         {content}
       </div>
     );
@@ -40,14 +53,14 @@ export default function BoardRow({ post }) {
 
   if (isExternal(post.url || href)) {
     return (
-      <a className={rowClass} href={post.url || href} target="_blank" rel="noreferrer">
+      <a className={rowClass} data-category={cat} href={post.url || href} target="_blank" rel="noreferrer">
         {content}
       </a>
     );
   }
 
   return (
-    <Link className={rowClass} href={post.url || href}>
+    <Link className={rowClass} data-category={cat} href={post.url || href}>
       {content}
     </Link>
   );
