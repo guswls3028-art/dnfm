@@ -141,7 +141,6 @@ export default function HeroVideoStage({ site }) {
             ))}
           </h1>
           <p className="hero-video__tagline">{theme.tagline}</p>
-          {hero.subtitle ? <p className="hero-video__subtitle">{hero.subtitle}</p> : null}
 
           <div className="hero-video__cta">
             {primaryAction?.url ? (
