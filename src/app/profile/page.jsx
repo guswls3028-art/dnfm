@@ -209,6 +209,27 @@ export default function ProfilePage() {
       <section className="section">
         <div className="content-wrap profile-grid">
           <div style={{ display: "grid", gap: "var(--sp-4)" }}>
+            {/^(google|kakao)_[a-f0-9]{4,}/i.test(user.displayName || "") ? (
+              <article
+                className="profile-card"
+                style={{
+                  borderColor: "var(--color-gold, #d4af37)",
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  background: "rgba(212, 175, 55, 0.08)",
+                }}
+              >
+                <h2 className="profile-card__title">닉네임을 설정해 주세요</h2>
+                <p style={{ lineHeight: 1.7, marginTop: 8 }}>
+                  소셜 로그인 후 임시 닉네임이 부여됐습니다. 본인의 닉네임으로 변경해 주세요.
+                </p>
+                <div style={{ marginTop: "var(--sp-3)" }}>
+                  <Link href="/profile/edit" className="btn btn--primary btn--sm">
+                    프로필 편집으로 가기 →
+                  </Link>
+                </div>
+              </article>
+            ) : null}
             <article className="profile-card">
               <h2 className="profile-card__title">회원 정보</h2>
               <div className="profile-row">

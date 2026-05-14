@@ -77,16 +77,24 @@ export default function EditProfilePage() {
       return;
     }
     if (user) {
-      setDisplayName(user.displayName || "");
+      // OAuth placeholder (google_xxx / kakao_xxx) 이면 input 비워서 본인 닉 입력 유도.
+      const raw = user.displayName || "";
+      const isPlaceholder = /^(google|kakao)_[a-f0-9]{4,}/i.test(raw);
+      setDisplayName(isPlaceholder ? "" : raw);
       setAvatarR2Key(user.avatarR2Key || null);
     }
   }, [isLoading, isAuthed, user, router]);
 
   const original = useMemo(
-    () => ({
-      displayName: user?.displayName || "",
-      avatarR2Key: user?.avatarR2Key || null,
-    }),
+    () => {
+      const raw = user?.displayName || "";
+      const isPlaceholder = /^(google|kakao)_[a-f0-9]{4,}/i.test(raw);
+      return {
+        // OAuth placeholder 는 "원래 닉" 으로 인정 X — 무엇이든 입력하면 dirty 로.
+        displayName: isPlaceholder ? "" : raw,
+        avatarR2Key: user?.avatarR2Key || null,
+      };
+    },
     [user],
   );
 
