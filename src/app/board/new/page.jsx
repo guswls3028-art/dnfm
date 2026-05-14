@@ -149,10 +149,11 @@ function NewPostInner() {
       <section className="page-hero">
         <div className="content-wrap page-hero__inner">
           <div>
+            <span className="page-hero__kicker">NEW POST</span>
             <h1 className="page-hero__title">글쓰기</h1>
             <p className="page-hero__sub">
               {isAuthed
-                ? "말머리를 고르고 본문을 작성해주세요."
+                ? "말머리를 고르고 본문을 자유롭게 작성해주세요."
                 : "비회원도 글을 남길 수 있어요. 닉네임은 비워두면 'ㅇㅇ'이 됩니다."}
             </p>
           </div>
@@ -163,56 +164,58 @@ function NewPostInner() {
       </section>
 
       <section className="section">
-        <div className="content-wrap" style={{ maxWidth: 820 }}>
-          <article className="card card--parchment" style={{ padding: "var(--sp-6)" }}>
+        <div className="content-wrap composer-wrap">
+          <article className="composer card card--parchment">
             <form
               aria-label="글쓰기 폼"
-              style={{ display: "grid", gap: "var(--sp-4)" }}
+              className="composer__form"
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="field">
-                <label className="field__label" htmlFor="post-cat">
-                  카테고리
-                </label>
-                <select
-                  id="post-cat"
-                  className="select"
-                  value={categorySlug}
-                  onChange={(e) => {
-                    setCategorySlug(e.target.value);
-                    setFlair("");
-                  }}
-                >
-                  {categories.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.name}
-                      {!c.allowAnonymous ? " · 회원 전용" : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {selected && selected.flairs && selected.flairs.length > 0 ? (
+              <div className="composer__row composer__row--cats">
                 <div className="field">
-                  <label className="field__label" htmlFor="post-flair">
-                    말머리 (선택)
+                  <label className="field__label" htmlFor="post-cat">
+                    카테고리
                   </label>
                   <select
-                    id="post-flair"
+                    id="post-cat"
                     className="select"
-                    value={flair}
-                    onChange={(e) => setFlair(e.target.value)}
+                    value={categorySlug}
+                    onChange={(e) => {
+                      setCategorySlug(e.target.value);
+                      setFlair("");
+                    }}
                   >
-                    <option value="">없음</option>
-                    {selected.flairs.map((f) => (
-                      <option key={f} value={f}>
-                        [{f}]
+                    {categories.map((c) => (
+                      <option key={c.slug} value={c.slug}>
+                        {c.name}
+                        {!c.allowAnonymous ? " · 회원 전용" : ""}
                       </option>
                     ))}
                   </select>
                 </div>
-              ) : null}
+
+                {selected && selected.flairs && selected.flairs.length > 0 ? (
+                  <div className="field">
+                    <label className="field__label" htmlFor="post-flair">
+                      말머리 (선택)
+                    </label>
+                    <select
+                      id="post-flair"
+                      className="select"
+                      value={flair}
+                      onChange={(e) => setFlair(e.target.value)}
+                    >
+                      <option value="">없음</option>
+                      {selected.flairs.map((f) => (
+                        <option key={f} value={f}>
+                          [{f}]
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+              </div>
 
               {mustLogin ? (
                 <p className="auth-msg auth-msg--info" role="note">
@@ -222,16 +225,10 @@ function NewPostInner() {
               ) : null}
 
               {!isAuthed && !mustLogin ? (
-                <div
-                  style={{
-                    display: "grid",
-                    gap: "var(--sp-3)",
-                    gridTemplateColumns: "1fr 1fr",
-                  }}
-                >
+                <div className="composer__row composer__row--guest">
                   <div className="field">
                     <label className="field__label" htmlFor="guest-nick">
-                      닉네임 (선택)
+                      닉네임 <small>(선택)</small>
                     </label>
                     <input
                       id="guest-nick"
@@ -241,22 +238,22 @@ function NewPostInner() {
                       value={guestNickname}
                       onChange={(e) => setGuestNickname(e.target.value)}
                     />
-                    <span className="field__hint">비우면 'ㅇㅇ' + IP 앞자리</span>
+                    <span className="field__hint">비우면 'ㅇㅇ' + IP 앞자리로 표시</span>
                   </div>
                   <div className="field">
                     <label className="field__label" htmlFor="guest-pw">
-                      비밀번호 (선택)
+                      비밀번호 <small>(선택)</small>
                     </label>
                     <input
                       id="guest-pw"
                       className="input"
                       type="password"
-                      placeholder="4자 이상 — 본인 수정·삭제용"
+                      placeholder="4자 이상"
                       maxLength={128}
                       value={guestPassword}
                       onChange={(e) => setGuestPassword(e.target.value)}
                     />
-                    <span className="field__hint">비우면 본인 수정·삭제 불가</span>
+                    <span className="field__hint">본인 수정·삭제용. 비우면 수정 불가</span>
                   </div>
                 </div>
               ) : null}
@@ -267,39 +264,74 @@ function NewPostInner() {
                 </label>
                 <input
                   id="post-title"
-                  className="input"
-                  placeholder="제목을 입력하세요"
+                  className="input composer__title"
+                  placeholder="한 줄로 요점을 적어주세요"
                   maxLength={200}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-                <span className="field__hint">최대 200자</span>
+                <div className="composer__meter" aria-live="polite">
+                  <span className="field__hint">최대 200자</span>
+                  <span className={`composer__count${title.length > 180 ? " is-warn" : ""}`}>
+                    {title.length} / 200
+                  </span>
+                </div>
               </div>
 
               <div className="field">
-                <label className="field__label" htmlFor="post-body">
-                  본문
-                </label>
+                <div className="composer__body-head">
+                  <label className="field__label" htmlFor="post-body">
+                    본문
+                  </label>
+                  <div className="composer__toolbar" aria-label="작성 도구">
+                    <span className="composer__chip" title="질문 템플릿 삽입">
+                      💬 질문 템플릿
+                    </span>
+                    <span className="composer__chip" title="장비 템플릿 삽입">
+                      🛡 장비 템플릿
+                    </span>
+                  </div>
+                </div>
                 <textarea
                   id="post-body"
-                  className="textarea"
-                  placeholder="질문일 경우 본인 레벨·직업·항마력·막힌 콘텐츠를 함께 적어주세요."
-                  rows={10}
+                  className="textarea textarea--xl composer__body"
+                  placeholder={
+                    "본문을 자유롭게 작성해주세요.\n\n질문이면 본인 레벨 · 직업 · 항마력 · 막힌 콘텐츠를 함께 적어주시면 답변이 빠릅니다.\n\n줄바꿈은 그대로 반영됩니다."
+                  }
+                  rows={16}
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                 />
+                <div className="composer__meter" aria-live="polite">
+                  <span className="field__hint">엔터로 줄바꿈 · 외부 링크는 자동 인식</span>
+                  <span className={`composer__count${body.length > 4500 ? " is-warn" : ""}`}>
+                    {body.length}자 · {body.split(/\n/).length}줄
+                  </span>
+                </div>
               </div>
 
               {isAuthed ? (
                 <div className="field">
-                  <label className="field__label">첨부 이미지 (선택)</label>
+                  <label className="field__label">첨부 이미지 <small>(선택, 최대 5장)</small></label>
                   <ImageUploader
                     value={attachmentR2Keys}
                     onChange={setAttachmentR2Keys}
                     max={5}
                   />
                 </div>
-              ) : null}
+              ) : (
+                !mustLogin ? (
+                  <div className="composer__attach-note">
+                    <strong>이미지 첨부는 회원만</strong>
+                    <span>
+                      비회원도 글은 자유롭게. 사진 첨부가 필요하면{" "}
+                      <Link href={`/login?next=${encodeURIComponent("/board/new")}`}>
+                        로그인 →
+                      </Link>
+                    </span>
+                  </div>
+                ) : null
+              )}
 
               {error ? (
                 <p className="auth-msg auth-msg--error" role="alert">
@@ -307,19 +339,13 @@ function NewPostInner() {
                 </p>
               ) : null}
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "var(--sp-2)",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <div className="composer__actions">
                 <Link href="/board" className="btn btn--ghost">
                   취소
                 </Link>
                 <button
                   type="submit"
-                  className="btn btn--primary"
+                  className="btn btn--primary btn--lg"
                   disabled={submitting || isLoading || mustLogin}
                 >
                   {submitting ? "등록 중…" : "등록"}
@@ -327,6 +353,53 @@ function NewPostInner() {
               </div>
             </form>
           </article>
+
+          <aside className="composer__side" aria-label="작성 가이드">
+            <section className="composer-side-card">
+              <h2 className="composer-side-card__title">작성 팁</h2>
+              <ul className="composer-side-card__list">
+                <li>제목은 핵심 한 줄로. 본문에 디테일.</li>
+                <li>질문은 <strong>레벨·직업·항마력·막힌 콘텐츠</strong> 함께.</li>
+                <li>장비 글은 캐릭터 정보창 캡처 + 다음 목표.</li>
+                <li>도배/광고/외부 거래 글은 즉시 삭제됩니다.</li>
+              </ul>
+            </section>
+
+            <section className="composer-side-card">
+              <h2 className="composer-side-card__title">카테고리 안내</h2>
+              <dl className="composer-side-card__dl">
+                <div>
+                  <dt>질문</dt>
+                  <dd>막혔거나 모르는 것 — 부담 X</dd>
+                </div>
+                <div>
+                  <dt>팁</dt>
+                  <dd>방장이 가이드 후보로 회수</dd>
+                </div>
+                <div>
+                  <dt>파티·장비</dt>
+                  <dd>실전 도움 글. 스크린샷 권장</dd>
+                </div>
+                <div>
+                  <dt>잡담</dt>
+                  <dd>인사·근황·환영 인사 환영</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section className="composer-side-card composer-side-card--cta">
+              <h2 className="composer-side-card__title">실시간 도움</h2>
+              <p>본문 적기 어려우면 카톡방에 먼저 던져보세요. 보통 누군가 답합니다.</p>
+              <a
+                className="btn btn--secondary btn--sm"
+                href="https://open.kakao.com/o/gbsjsZ5g"
+                target="_blank"
+                rel="noreferrer"
+              >
+                카톡방 입장 →
+              </a>
+            </section>
+          </aside>
         </div>
       </section>
     </>
