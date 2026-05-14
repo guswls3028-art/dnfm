@@ -1,6 +1,15 @@
 import "./globals.css";
 import "./hero-video.css";
+import { Noto_Sans_KR } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
+
+const notoSansKr = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-noto-kr",
+});
+
 import SiteFooter from "@/components/SiteFooter";
 import ThemeBootstrap from "@/components/ThemeBootstrap";
 import { CurrentUserProvider } from "@/lib/use-current-user";
@@ -39,7 +48,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" data-hero-theme="moonlight" suppressHydrationWarning>
+    <html lang="ko" data-hero-theme="moonlight" className={notoSansKr.variable} suppressHydrationWarning>
       <body>
         <ThemeBootstrap />
         <CurrentUserProvider>

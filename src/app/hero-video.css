@@ -413,6 +413,29 @@ html[data-hero-theme="campfire"] {
   .hero-video {
     min-height: clamp(560px, 92vh, 820px);
   }
+  /* 모바일에서 글자 가시성 — video 더 어둡게 + copy panel 더 진하게 + veil 강화 */
+  .hero-video__video,
+  .hero-video__poster {
+    opacity: 0.62;
+    object-position: center 22%;
+  }
+  .hero-video__veil {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0.30), transparent 60%),
+      var(--theme-veil),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.55) 100%);
+  }
+  .hero-video__copy {
+    background: linear-gradient(160deg, rgba(6, 4, 12, 0.78) 0%, rgba(6, 4, 12, 0.55) 100%);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+  .hero-video__title {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85), 0 0 24px rgba(0, 0, 0, 0.55);
+  }
+  .hero-video__subtitle,
+  .hero-video__tagline {
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
+  }
   .hero-video__inner {
     grid-template-columns: 1fr;
     gap: var(--sp-5);
@@ -552,4 +575,67 @@ html[data-hero-theme="campfire"] .section__kicker {
 /* === 다른 페이지 (home 외) hero 가 없을 때 site-frame 만 보임 === */
 html[data-hero-theme] body {
   background: var(--site-bg);
+}
+
+/* ============================================================
+   HeroSlider — hero-video 와 톤 통일 (dark glass + theme accent)
+   기존 양피지 톤은 hero-video 와 충돌 + 싸구려 인상.
+   ============================================================ */
+html[data-hero-theme] .hero-slider {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04), transparent 60%),
+    linear-gradient(180deg, rgba(8, 6, 14, 0.92) 0%, rgba(6, 4, 12, 0.96) 100%);
+  border-bottom-color: var(--theme-accent-deep);
+}
+html[data-hero-theme] .hero-slider__track {
+  background:
+    radial-gradient(ellipse at 30% 0%, rgba(255, 255, 255, 0.03), transparent 55%),
+    linear-gradient(150deg, rgba(20, 16, 32, 0.88) 0%, rgba(8, 6, 14, 0.96) 100%);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+html[data-hero-theme] .hero-slider__slide--text .hero-slider__kicker {
+  color: var(--theme-accent-soft);
+  border-color: var(--theme-accent);
+  background: rgba(8, 6, 14, 0.55);
+  text-shadow: none;
+}
+html[data-hero-theme] .hero-slider__slide--text .hero-slider__title {
+  color: var(--theme-text-on-veil, #f5ecd2);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+html[data-hero-theme] .hero-slider__slide--text .hero-slider__body {
+  color: rgba(245, 236, 210, 0.82);
+}
+html[data-hero-theme] .hero-slider__slide--text .hero-slider__cta-hint {
+  color: var(--theme-accent-soft);
+}
+html[data-hero-theme] .hero-slider__nav {
+  background: rgba(8, 6, 14, 0.65);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--theme-accent-soft);
+  backdrop-filter: blur(4px);
+}
+html[data-hero-theme] .hero-slider__nav:hover {
+  border-color: var(--theme-accent);
+  color: var(--theme-accent-soft);
+  box-shadow: var(--theme-glow);
+}
+html[data-hero-theme] .hero-slider__dot {
+  background: rgba(255, 255, 255, 0.18);
+}
+html[data-hero-theme] .hero-slider__dot.is-active {
+  background: var(--theme-accent);
+  box-shadow: 0 0 8px var(--theme-accent);
+}
+html[data-hero-theme] .hero-slider__counter {
+  color: rgba(245, 236, 210, 0.6);
+}
+html[data-hero-theme] .hero-slider__counter strong {
+  color: var(--theme-accent-soft);
+}
+html[data-hero-theme] .hero-slider__source-tag {
+  color: rgba(245, 236, 210, 0.55);
+  background: rgba(8, 6, 14, 0.6);
+  border-color: rgba(255, 255, 255, 0.10);
 }
