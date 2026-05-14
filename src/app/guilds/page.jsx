@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { friendlyGuilds } from "@/lib/content";
+import { friendlyGuilds, host } from "@/lib/content";
 
 export const metadata = {
   title: "뉴비 친화 길드",
@@ -13,7 +13,7 @@ export default function GuildsPage() {
           <div>
             <h1 className="page-hero__title">뉴비 친화 길드</h1>
             <p className="page-hero__sub">
-              뉴비/복귀 환영. 길드 아지트 버프부터 즉시가입까지.
+              뉴비·복귀 환영. 길드 아지트 버프부터 즉시가입까지.
             </p>
           </div>
           <Link href="/about" className="btn btn--secondary btn--sm">
@@ -31,6 +31,9 @@ export default function GuildsPage() {
                 길드 목록
               </h2>
             </div>
+            <span className="section__more" aria-hidden="true">
+              총 {friendlyGuilds.length}개
+            </span>
           </header>
 
           <div className="guild-grid">
@@ -51,6 +54,29 @@ export default function GuildsPage() {
                 </a>
               </article>
             ))}
+
+            <article className="guild-card guild-card--invite">
+              <header>
+                <strong>여기에 길드를 걸어보세요</strong>
+                <small>길드장 · 직접 신청</small>
+              </header>
+              <p>
+                뉴비/복귀를 환영하는 길드라면 누구나 가능. 길드명·길마·간단한 소개·공식 페이지 링크를 운영자에게 보내주세요.
+              </p>
+              <ul className="guild-invite__list">
+                <li>아지트 만렙·버프 가능 길드 우선</li>
+                <li>가입 조건은 자유, 단 뉴비 무시·갈취 정책 길드는 제외</li>
+                <li>운영자 검토 후 등록 (보통 1~2일)</li>
+              </ul>
+              <a
+                className="btn btn--primary btn--sm"
+                href="https://open.kakao.com/o/gbsjsZ5g"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {host.nickname} 운영자에게 신청 →
+              </a>
+            </article>
           </div>
         </div>
       </section>

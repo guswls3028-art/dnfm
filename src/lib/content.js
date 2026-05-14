@@ -139,6 +139,47 @@ export const site = {
       cta: { label: "이벤트 보러가기", href: "/events" }
     }
   ],
+  // 정자 위에 걸어둔 게시판 같은 카드 슬라이더 fallback.
+  // backend hero_banners 가 비어 있거나 fetch 실패 시 화면 비지 않게 띄움.
+  // 어드민이 실 배너를 등록하면 자동으로 대체됨.
+  heroSliderFallback: [
+    {
+      id: "fb-welcome",
+      kicker: "환영합니다",
+      title: "공원 정자에 잠깐 앉아 가세요",
+      body: "뉴비 / 복귀 / 라이트 누구나. 위아래 없는 수평적 공간.",
+      accent: "amber",
+      href: "/about",
+      cta: "톡방 안내 보기"
+    },
+    {
+      id: "fb-join",
+      kicker: "카톡방",
+      title: "오픈채팅으로 바로 입장",
+      body: "운영자 시너지통 — 정보 부족으로 인한 뉴비 불이익을 막는 게 목적.",
+      accent: "olive",
+      href: "https://open.kakao.com/o/gbsjsZ5g",
+      cta: "오픈채팅 입장 →"
+    },
+    {
+      id: "fb-guide",
+      kicker: "오늘의 가이드",
+      title: "처음 시작 루트 한 장",
+      body: "직업·서버·초반 동선·일일 숙제 우선순위까지.",
+      accent: "mint",
+      href: "/guide",
+      cta: "가이드 보드"
+    },
+    {
+      id: "fb-event",
+      kicker: "이벤트",
+      title: "공식 + 톡방 이벤트 모음",
+      body: "보상 기간이 끊기지 않게 한 흐름으로.",
+      accent: "crimson",
+      href: "/events",
+      cta: "진행 이벤트 →"
+    }
+  ],
   actions: [
     { label: "카톡방 입장", url: "https://open.kakao.com/o/gbsjsZ5g", note: "뉴비훈련소 오픈채팅" },
     { label: "공식 홈페이지", url: "https://dnfm.nexon.com/", note: "이벤트 랜딩" },
@@ -497,28 +538,31 @@ export const site = {
     { postId: "b3", author: "신참", time: "15분 전", body: "정리 감사합니다 저장했어요" },
     { postId: "b2", author: "훈련소장", time: "방금", body: "지금은 어느 정도 솔플로 가도 무난해요. 끌리는 캐릭으로 가시고 후반에 파티 콘텐츠 들어갈 때 다시 봐도 됩니다." }
   ],
-  signupSteps: [
-    {
-      step: 1,
-      title: "기본 정보",
-      body: "아이디, 닉네임, 비밀번호를 입력합니다."
-    },
-    {
-      step: 2,
-      title: "던파 캐릭터 캡처 3종",
-      body: "캐릭터 정보 / 장비 / 모험단 화면 캡처를 업로드합니다. OCR 인식이 안 되면 운영자가 직접 확인합니다.",
-      captures: [
-        { id: "char", label: "캐릭터 정보", hint: "이름·직업·레벨이 보이는 캡처" },
-        { id: "gear", label: "장비 상세", hint: "착용 장비와 강화 단계가 보이는 캡처" },
-        { id: "guild", label: "모험단/서버", hint: "모험단 이름과 서버가 보이는 캡처" }
-      ]
-    },
-    {
-      step: 3,
-      title: "톡방 입장",
-      body: "인증이 끝나면 자동으로 톡방 입장 안내가 발송됩니다. 운영자 확인 후 닉네임도 톡방에 동기화됩니다."
-    }
-  ],
+  /** 간단 가입 — 아이디 + 비번 + 닉네임. 모험단 인증은 별 페이지(/profile/verify)에서 선택. */
+  signupBasics: {
+    title: "간단 가입",
+    body: "아이디 · 비밀번호 · 닉네임만 입력하면 끝. 모험단 인증은 가입 후에 원하시면 진행해주세요.",
+    fields: [
+      { key: "username", label: "아이디", hint: "영문/숫자/언더스코어 3~32자. 가입 후 변경 불가." },
+      { key: "password", label: "비밀번호", hint: "4자 이상. 너무 복잡하지 않게." },
+      { key: "displayName", label: "닉네임", hint: "톡방/사이트에 보일 이름. 자유롭게." }
+    ]
+  },
+  /** /profile/verify 의 모험단 인증 안내. */
+  verifyGuide: {
+    title: "모험단 인증 (선택)",
+    body: "캡처를 묶어서 한 번에 올리면 자동으로 모험단명·대표 캐릭터·캐릭 목록을 인식합니다.",
+    captures: [
+      { id: "basic_info", label: "모험단 기본정보", hint: "정보 → 모험단 → 기본정보 화면 1장." },
+      { id: "character_list", label: "보유 캐릭터 (선택)", hint: "모험단 → 보유캐릭터. 캐릭이 많으면 1~3장." },
+      { id: "character_select", label: "캐릭터 선택창", hint: "게임 로그인 직후 캐릭 선택 창 1장. 사칭 방지." }
+    ],
+    rules: [
+      "항마력은 수집하지 않습니다.",
+      "기본정보의 대표 캐릭이 캐릭터 선택창 목록에 있어야 인증 마크가 부여됩니다.",
+      "인증을 안 해도 가입은 유지되며, 나중에 언제든 다시 시도할 수 있습니다."
+    ]
+  },
   loginProviders: [
     { id: "local", label: "DNFM 계정으로 로그인", note: "아이디·비밀번호" },
     { id: "kakao", label: "카카오로 시작", note: "톡방과 같은 계정 권장", brand: "kakao" },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useCurrentUser } from "@/lib/use-current-user";
-import { API_BASE } from "@/lib/api-client";
+import { oauth } from "@/lib/api-client";
 import { site } from "@/lib/content";
 
 function providerClass(brand) {
@@ -43,23 +43,36 @@ function LoginShell({ loading }) {
   );
 }
 
+function oauthErrorMessage(code) {
+  if (!code) return null;
+  if (code === "oauth_state_mismatch") return "보안 검증에 실패했습니다. 다시 시도해 주세요.";
+  if (code === "oauth_token_failed" || code === "oauth_token_missing")
+    return "OAuth 제공자와의 토큰 교환에 실패했습니다.";
+  if (code === "oauth_userinfo_failed") return "OAuth 사용자 정보 조회에 실패했습니다.";
+  if (code === "account_inactive") return "계정이 비활성화 상태입니다. 운영자에게 문의하세요.";
+  return "소셜 로그인에 실패했습니다. 다시 시도해 주세요.";
+}
+
 function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = safeRedirect(params.get("next"));
+  // returnTo 가 oauth callback 에서 다시 실려옴 — next 와 동일 의미로 받음.
+  const next = safeRedirect(params.get("next") || params.get("returnTo"));
+  const oauthErrorCode = params.get("oauth_error");
   const { login, isAuthed, isLoading } = useCurrentUser();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(oauthErrorMessage(oauthErrorCode));
 
   // 이미 로그인된 사용자가 /login 진입 시 next 또는 / 로 보냄.
+  // 단 oauth_error 가 있으면 표시를 위해 redirect 안 함.
   useEffect(() => {
-    if (!isLoading && isAuthed) {
+    if (!isLoading && isAuthed && !oauthErrorCode) {
       router.replace(next);
     }
-  }, [isLoading, isAuthed, next, router]);
+  }, [isLoading, isAuthed, next, router, oauthErrorCode]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -87,8 +100,8 @@ function LoginInner() {
   }
 
   async function handleOAuth(provider) {
-    const back = encodeURIComponent(next);
-    const url = `${API_BASE}/auth/oauth/${provider}/start?next=${back}`;
+    const url =
+      provider === "kakao" ? oauth.kakaoStart(next) : oauth.googleStart(next);
     setError(null);
     try {
       const res = await fetch(url, { method: "GET", redirect: "manual" });

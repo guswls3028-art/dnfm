@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroSlider from "@/components/HeroSlider";
 import HeroStage from "@/components/HeroStage";
 import BoardRow from "@/components/BoardRow";
 import EventCard from "@/components/EventCard";
@@ -20,6 +21,7 @@ export default function HomePage() {
 
   return (
     <>
+      <HeroSlider />
       <HeroStage site={site} />
 
       <section className="section section--about" id="about" aria-labelledby="about-title">

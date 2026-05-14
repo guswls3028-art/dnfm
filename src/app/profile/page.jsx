@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import BoardRow from "@/components/BoardRow";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { apiFetch, ApiError } from "@/lib/api-client";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 function safeString(v) {
   if (v === null || v === undefined) return "";
@@ -18,11 +19,8 @@ export default function ProfilePage() {
   const [myPosts, setMyPosts] = useState(null);
   const [postsError, setPostsError] = useState(null);
 
-  useEffect(() => {
-    if (!isLoading && !isAuthed) {
-      router.replace("/login?next=/profile");
-    }
-  }, [isLoading, isAuthed, router]);
+  // 비로그인이라도 강제 redirect 하지 않고 안내 페이지 노출.
+  // 사용자가 "마이페이지가 뭔지" 미리 보고 가입을 결정할 수 있게.
 
   useEffect(() => {
     if (!isAuthed) return;
@@ -103,18 +101,65 @@ export default function ProfilePage() {
           <div className="content-wrap page-hero__inner">
             <div>
               <h1 className="page-hero__title">마이페이지</h1>
-              <p className="page-hero__sub">로그인 후 이용할 수 있어요.</p>
+              <p className="page-hero__sub">
+                로그인하면 톡방 닉네임 / 던파 캐릭터 / 내가 쓴 글을 한 자리에서 봅니다.
+              </p>
             </div>
-            <Link href="/login?next=/profile" className="btn btn--primary btn--sm">
-              로그인 →
-            </Link>
+            <div style={{ display: "flex", gap: "var(--sp-2)" }}>
+              <Link href="/signup" className="btn btn--primary btn--sm">
+                입소 신청 →
+              </Link>
+              <Link href="/login?next=/profile" className="btn btn--secondary btn--sm">
+                로그인
+              </Link>
+            </div>
           </div>
         </section>
         <section className="section">
-          <div className="content-wrap">
-            <p className="auth-msg auth-msg--info" style={{ margin: 0 }}>
-              잠시 후 로그인 화면으로 이동합니다.
-            </p>
+          <div className="content-wrap profile-grid">
+            <article className="profile-card">
+              <h2 className="profile-card__title">가입하면 뭐가 보이나요?</h2>
+              <ul className="profile-perk-list">
+                <li>
+                  <strong>회원 정보</strong>
+                  <span>닉네임 · 가입일 · 카톡방 닉 동기화 상태</span>
+                </li>
+                <li>
+                  <strong>던파 프로필</strong>
+                  <span>모험단 · 대표 캐릭터 · 캡처 인증 여부</span>
+                </li>
+                <li>
+                  <strong>내가 쓴 글 / 댓글</strong>
+                  <span>게시판 활동을 한 자리에서 추적</span>
+                </li>
+                <li>
+                  <strong>추천 · 알림</strong>
+                  <span>핫 게시글, 운영자 공지 알림 (예정)</span>
+                </li>
+              </ul>
+              <p className="auth-msg auth-msg--info" style={{ marginTop: "var(--sp-3)" }}>
+                가입 시 던파 모바일 캐릭터 캡처 인증을 받습니다. 톡방 닉네임 형식은
+                <strong> 자유 + 본캐 + 모험단</strong>.
+              </p>
+            </article>
+
+            <article className="profile-card">
+              <h2 className="profile-card__title">먼저 둘러볼까요?</h2>
+              <div style={{ display: "grid", gap: "var(--sp-3)" }}>
+                <Link href="/about" className="btn btn--secondary btn--sm">
+                  훈련소 안내 → 톡방 철학 / 규칙
+                </Link>
+                <Link href="/guide" className="btn btn--secondary btn--sm">
+                  가이드 보드 → 처음 시작 루트
+                </Link>
+                <Link href="/board" className="btn btn--secondary btn--sm">
+                  커뮤니티 → 질문 · 팁 · 잡담
+                </Link>
+                <Link href="/events" className="btn btn--secondary btn--sm">
+                  진행 이벤트 → 공식+톡방
+                </Link>
+              </div>
+            </article>
           </div>
         </section>
       </>
@@ -156,7 +201,10 @@ export default function ProfilePage() {
               <h2 className="profile-card__title">회원 정보</h2>
               <div className="profile-row">
                 <span className="profile-row__label">닉네임</span>
-                <span className="profile-row__value">{safeString(user.displayName)}</span>
+                <span className="profile-row__value">
+                  {safeString(user.displayName)}
+                  <VerifiedBadge verified={verifiedBySelect} size="md" />
+                </span>
               </div>
               <div className="profile-row">
                 <span className="profile-row__label">아이디</span>
@@ -201,8 +249,8 @@ export default function ProfilePage() {
                 </p>
               )}
               <div style={{ marginTop: "var(--sp-3)" }}>
-                <Link href="/signup" className="btn btn--secondary btn--sm">
-                  캐릭터 재인증 →
+                <Link href="/profile/verify" className="btn btn--secondary btn--sm">
+                  모험단 인증 / 캐릭 목록 갱신 →
                 </Link>
               </div>
             </article>
