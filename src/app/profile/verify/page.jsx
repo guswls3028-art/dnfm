@@ -246,6 +246,43 @@ function VerifyInner() {
               ))}
             </ul>
 
+            {guide?.classGrid ? (
+              <details
+                style={{
+                  background: "rgba(0,0,0,0.04)",
+                  borderRadius: 8,
+                  padding: "10px 14px",
+                  margin: "0 0 var(--sp-4)",
+                  border: "1px solid var(--ink-line, #ddd)",
+                }}
+              >
+                <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: "0.92rem" }}>
+                  {guide.classGrid.label}
+                </summary>
+                <p style={{ fontSize: "0.82rem", color: "var(--ink-muted, #888)", margin: "8px 0 10px" }}>
+                  {guide.classGrid.hint}
+                </p>
+                <div style={{ display: "grid", gap: 10 }}>
+                  {(guide.classGrid.images || []).map((src) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={src}
+                      src={src}
+                      alt="직업 변경 화면"
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: 6,
+                        border: "1px solid var(--ink-line, #ddd)",
+                        display: "block",
+                      }}
+                    />
+                  ))}
+                </div>
+              </details>
+            ) : null}
+
             <label
               className="verify-dropzone"
               onDragOver={handleDragOver}

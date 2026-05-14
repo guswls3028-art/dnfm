@@ -557,6 +557,11 @@ export const site = {
       { id: "character_list", label: "보유 캐릭터 (선택)", hint: "모험단 → 보유캐릭터. 캐릭이 많으면 1~3장.", imagePath: "/verify-examples/character_list.png" },
       { id: "character_select", label: "캐릭터 선택창", hint: "게임 로그인 직후 캐릭 선택 창 1장. 사칭 방지.", imagePath: "/verify-examples/character_select.png" }
     ],
+    classGrid: {
+      label: "직업이 헷갈리면 — 직업 변경 화면 캡처에서 매칭",
+      hint: "OCR 직업명이 잘못 인식되면 (메카닉 남/여 등) 캐릭터 직업 select 에서 바꿔주세요. 아이콘 매칭 참고용.",
+      images: ["/verify-examples/class_grid_1.png", "/verify-examples/class_grid_2.png"]
+    },
     rules: []
   },
   loginProviders: [
