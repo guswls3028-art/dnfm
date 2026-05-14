@@ -18,7 +18,7 @@ function ChangePasswordInner() {
   const router = useRouter();
   const params = useSearchParams();
   const required = params.get("required") === "1";
-  const { user, isLoading, isAuthed, logout } = useCurrentUser();
+  const { user, isLoading, isAuthed } = useCurrentUser();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -27,11 +27,14 @@ function ChangePasswordInner() {
   const [error, setError] = useState(null);
   const [done, setDone] = useState(false);
 
+  // submit 후엔 backend 가 tokenVersion bump + cookie clear 한 상태라 isAuthed=false 가 되지만,
+  // done 화면을 보여줘야 하므로 redirect 차단.
   useEffect(() => {
+    if (done || submitting) return;
     if (!isLoading && !isAuthed) {
       router.replace(`/login?next=${encodeURIComponent("/profile/password")}`);
     }
-  }, [isLoading, isAuthed, router]);
+  }, [isLoading, isAuthed, router, done, submitting]);
 
   const match = useMemo(() => {
     if (!newPassword || !newPassword2) return null;
@@ -53,12 +56,7 @@ function ChangePasswordInner() {
     setSubmitting(true);
     try {
       await auth.changePassword({ currentPassword, newPassword });
-      // backend 가 tokenVersion bump + cookie clear — client 도 비웁니다.
-      try {
-        await logout();
-      } catch {
-        /* 무시 */
-      }
+      // backend 가 tokenVersion bump + cookie clear 함. context refresh 호출 없이 done 만 표시.
       setDone(true);
     } catch (err) {
       const msg =

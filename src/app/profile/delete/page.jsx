@@ -16,11 +16,13 @@ export default function DeleteAccountPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  // 탈퇴 진행 중/완료 시 redirect 차단 — handler 가 직접 router.push 처리.
   useEffect(() => {
+    if (submitting) return;
     if (!isLoading && !isAuthed) {
       router.replace(`/login?next=${encodeURIComponent("/profile/delete")}`);
     }
-  }, [isLoading, isAuthed, router]);
+  }, [isLoading, isAuthed, router, submitting]);
 
   const isLocal = Boolean(user?.username);
   const requiredConfirm = "탈퇴합니다";
@@ -37,7 +39,8 @@ export default function DeleteAccountPage() {
     setSubmitting(true);
     try {
       await auth.deleteAccount({ password: isLocal ? password : undefined });
-      await refresh();
+      // refresh() 호출 시 context isAuthed=false 가 되어 useEffect 가 /login 으로 redirect 함.
+      // 직접 / 로 redirect 후 router.refresh — context 는 다음 페이지에서 재초기화.
       router.push("/?bye=1");
       router.refresh();
     } catch (err) {
