@@ -172,8 +172,19 @@ export const auth = {
       json: { fileUrl },
     });
   },
+  /** 통합 OCR — 여러 파일을 한 번에 올리면 backend 가 자동 분류·머지. */
+  ocrAuto: (files) => {
+    const fd = new FormData();
+    files.forEach((f, i) => fd.append(`image${i + 1}`, f));
+    return apiFetch("/auth/dnf-profile/ocr/auto", {
+      method: "POST",
+      form: fd,
+      timeoutMs: 90000,
+    });
+  },
   confirmDnfProfile: (data) =>
     apiFetch("/auth/dnf-profile/confirm", { method: "POST", json: data }),
+  updateMe: (data) => apiFetch("/auth/me", { method: "PATCH", json: data }),
 };
 
 /* ---------- Posts (board) ---------- */
@@ -187,14 +198,40 @@ export const posts = {
       query: { categoryId, flair, postType, bestOnly, q, page, pageSize, sort },
     }),
   detail: (id) => apiFetch(sitePath(`/posts/${id}`)),
-  create: ({ categoryId, categorySlug, title, body, bodyFormat, flair, postType, attachmentR2Keys }) =>
+  create: ({
+    categoryId,
+    categorySlug,
+    title,
+    body,
+    bodyFormat,
+    flair,
+    postType,
+    attachmentR2Keys,
+    guestNickname,
+    guestPassword,
+  }) =>
     apiFetch(sitePath("/posts"), {
       method: "POST",
-      json: { categoryId, categorySlug, title, body, bodyFormat, flair, postType, attachmentR2Keys },
+      json: {
+        categoryId,
+        categorySlug,
+        title,
+        body,
+        bodyFormat,
+        flair,
+        postType,
+        attachmentR2Keys,
+        guestNickname,
+        guestPassword,
+      },
     }),
   update: (id, input) =>
     apiFetch(sitePath(`/posts/${id}`), { method: "PATCH", json: input }),
-  remove: (id) => apiFetch(sitePath(`/posts/${id}`), { method: "DELETE" }),
+  remove: (id, { guestPassword } = {}) =>
+    apiFetch(sitePath(`/posts/${id}`), {
+      method: "DELETE",
+      json: { guestPassword },
+    }),
   // voteType: "recommend" | "downvote" (backend postVoteTypes enum)
   vote: (id, voteType) =>
     apiFetch(sitePath(`/posts/${id}/vote`), { method: "POST", json: { voteType } }),
@@ -205,14 +242,42 @@ export const posts = {
 export const comments = {
   list: (postId, { page, pageSize } = {}) =>
     apiFetch(sitePath(`/posts/${postId}/comments`), { query: { page, pageSize } }),
-  create: (postId, { body, parentId }) =>
+  mine: ({ page, pageSize } = {}) =>
+    apiFetch(sitePath("/me/comments"), { query: { page, pageSize } }),
+  create: (postId, { body, parentId, guestNickname, guestPassword }) =>
     apiFetch(sitePath(`/posts/${postId}/comments`), {
       method: "POST",
-      json: { body, parentId },
+      json: { body, parentId, guestNickname, guestPassword },
     }),
-  update: (id, { body }) =>
-    apiFetch(sitePath(`/comments/${id}`), { method: "PATCH", json: { body } }),
-  remove: (id) => apiFetch(sitePath(`/comments/${id}`), { method: "DELETE" }),
+  update: (id, { body, guestPassword } = {}) =>
+    apiFetch(sitePath(`/comments/${id}`), {
+      method: "PATCH",
+      json: { body, guestPassword },
+    }),
+  remove: (id, { guestPassword } = {}) =>
+    apiFetch(sitePath(`/comments/${id}`), {
+      method: "DELETE",
+      json: { guestPassword },
+    }),
+};
+
+/* ---------- Reports (신고) ---------- */
+
+export const reports = {
+  create: ({ targetType, targetId, reason, detail }) =>
+    apiFetch(sitePath("/reports"), {
+      method: "POST",
+      json: { targetType, targetId, reason, detail },
+    }),
+  list: ({ status, targetType, page, pageSize } = {}) =>
+    apiFetch(sitePath("/reports"), {
+      query: { status, targetType, page, pageSize },
+    }),
+  update: (id, { status, resolution, resolutionNote, moderatorMemo }) =>
+    apiFetch(sitePath(`/reports/${id}`), {
+      method: "PATCH",
+      json: { status, resolution, resolutionNote, moderatorMemo },
+    }),
 };
 
 /* ---------- Uploads (R2 presigned PUT) ----------

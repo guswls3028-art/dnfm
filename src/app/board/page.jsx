@@ -2,33 +2,40 @@
 
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import BoardRow from "@/components/BoardRow";
 import Pagination from "@/components/Pagination";
-import { apiFetch, ApiError } from "@/lib/api-client";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
 import { site } from "@/lib/content";
 
 const PAGE_SIZE = 20;
 
+const SORTS = [
+  { value: "recent", label: "최신순" },
+  { value: "best", label: "추천순" },
+  { value: "views", label: "조회순" },
+];
+
 function normalizePost(p) {
-  // 백엔드 응답 모양이 확정되기 전까지 방어적으로 매핑.
   if (!p) return null;
+  const author = p.authorId
+    ? p.authorName || p.user?.displayName || "회원"
+    : `${p.authorNickname || "ㅇㅇ"}${p.anonymousMarker ? `(${p.anonymousMarker})` : ""}`;
   return {
-    id: p.id || p.postId || p.slug,
-    label: p.categoryName || p.categoryLabel || p.label || (p.category ? p.category : "글"),
-    categoryId: p.categorySlug || p.categoryId || p.category || "talk",
+    id: p.id || p.postId,
+    label: p.categoryName || p.categoryLabel || p.label || "글",
+    categoryId: p.categorySlug || p.categoryId || "talk",
     title: p.title || "(제목 없음)",
-    author: p.authorName || p.author || p.user?.displayName || "익명",
-    time: p.timeAgo || p.time || p.createdAtLabel || p.createdAt || "",
+    author,
+    time: p.createdAt || p.time || "",
     views: typeof p.views === "number" ? p.views : (p.viewCount ?? 0),
-    likes: typeof p.likes === "number" ? p.likes : (p.likeCount ?? 0),
+    likes: typeof p.likes === "number" ? p.likes : (p.recommendCount ?? p.likeCount ?? 0),
     comments:
       typeof p.comments === "number"
         ? p.comments
         : (p.commentCount ?? (Array.isArray(p.comments) ? p.comments.length : 0)),
     pinned: Boolean(p.pinned),
-    hot: Boolean(p.hot),
+    hot: p.postType === "best" || Boolean(p.hot),
     body: p.body || p.content || "",
   };
 }
@@ -52,26 +59,69 @@ function BoardLoading() {
 }
 
 function BoardInner() {
+  const router = useRouter();
   const params = useSearchParams();
   const activeCat = params.get("category") || "all";
   const pageParam = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
-  const { isAuthed } = useCurrentUser();
+  const sortParam = params.get("sort") || "recent";
+  const qParam = params.get("q") || "";
 
-  const [posts, setPosts] = useState(null); // null = loading
+  const [searchText, setSearchText] = useState(qParam);
+  useEffect(() => setSearchText(qParam), [qParam]);
+
+  const fallbackCats = useMemo(() => site.boardCategories || [], []);
+  const [categories, setCategories] = useState(fallbackCats);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const data = await postsApi.categories();
+        const items = Array.isArray(data) ? data : data?.items || [];
+        if (!alive || items.length === 0) return;
+        const cats = [
+          { id: "all", label: "전체" },
+          ...items.map((c) => ({ id: c.slug, label: c.name })),
+        ];
+        setCategories(cats);
+      } catch {
+        /* fallback */
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const [posts, setPosts] = useState(null);
   const [total, setTotal] = useState(0);
-  const [error, setError] = useState(null);
+  const [source, setSource] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     setPosts(null);
-    setError(null);
 
     const qs = new URLSearchParams({
       page: String(pageParam),
       pageSize: String(PAGE_SIZE),
-      sort: "recent",
+      sort: sortParam,
     });
-    if (activeCat !== "all") qs.set("category", activeCat);
+    if (activeCat !== "all") qs.set("categorySlug", activeCat);
+    if (qParam) qs.set("q", qParam);
+
+    const applyFallback = () => {
+      const all = (site.boardPosts || []).map(normalizePost).filter(Boolean);
+      const filtered =
+        activeCat === "all" ? all : all.filter((p) => p.categoryId === activeCat);
+      const searched = qParam
+        ? filtered.filter(
+            (p) => p.title.includes(qParam) || (p.body || "").includes(qParam),
+          )
+        : filtered;
+      setPosts(searched);
+      setTotal(searched.length);
+      setSource("fallback");
+    };
 
     (async () => {
       try {
@@ -84,6 +134,10 @@ function BoardInner() {
             : Array.isArray(data)
               ? data
               : [];
+        if (list.length === 0 && !qParam && activeCat === "all") {
+          applyFallback();
+          return;
+        }
         setPosts(list.map(normalizePost).filter(Boolean));
         const t =
           typeof data?.total === "number"
@@ -92,44 +146,59 @@ function BoardInner() {
               ? list.length
               : 0;
         setTotal(t);
+        setSource("api");
       } catch (err) {
         if (cancelled) return;
         if (typeof console !== "undefined") {
-          // 실제 에러 사항은 콘솔로. 사용자에겐 친근한 카피만.
           console.warn("[board] posts fetch failed:", err);
         }
-        const friendly =
-          err instanceof ApiError && err.status >= 500
-            ? "게시판 서버가 잠시 응답하지 않아요. 잠시 후 새로고침 해주세요."
-            : "지금은 게시글을 가져올 수 없어요. 잠시 후 다시 시도해 주세요.";
-        setError(friendly);
-        setPosts([]);
-        setTotal(0);
+        applyFallback();
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [activeCat, pageParam]);
+  }, [activeCat, pageParam, sortParam, qParam]);
 
   const sorted = useMemo(() => {
     if (!posts) return null;
-    // pinned 우선 정렬은 같은 페이지 안에서만. (서버가 이미 pinned DESC + createdAt DESC)
-    return [...posts].sort(
-      (a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)),
-    );
+    return [...posts].sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)));
   }, [posts]);
 
-  const catLabel = site.boardCategories.find((c) => c.id === activeCat)?.label || "전체";
+  const catLabel =
+    categories.find((c) => c.id === activeCat)?.label ||
+    fallbackCats.find((c) => c.id === activeCat)?.label ||
+    "전체";
+
+  function pushQuery(next) {
+    const qs = new URLSearchParams();
+    const cat = next.category ?? activeCat;
+    const sort = next.sort ?? sortParam;
+    const q = next.q ?? qParam;
+    const page = next.page ?? 1;
+    if (cat !== "all") qs.set("category", cat);
+    if (sort !== "recent") qs.set("sort", sort);
+    if (q) qs.set("q", q);
+    if (page > 1) qs.set("page", String(page));
+    const s = qs.toString();
+    router.push(s ? `/board?${s}` : "/board");
+  }
 
   const buildPageHref = (n) => {
     const qs = new URLSearchParams();
     if (activeCat !== "all") qs.set("category", activeCat);
+    if (sortParam !== "recent") qs.set("sort", sortParam);
+    if (qParam) qs.set("q", qParam);
     if (n > 1) qs.set("page", String(n));
     const s = qs.toString();
     return s ? `/board?${s}` : "/board";
   };
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    pushQuery({ q: searchText.trim(), page: 1 });
+  }
 
   return (
     <>
@@ -138,69 +207,108 @@ function BoardInner() {
           <div>
             <h1 className="page-hero__title">훈련소 커뮤니티</h1>
             <p className="page-hero__sub">
-              질문·팁·잡담을 한 게시판에서. 카톡방 톤 그대로.
+              질문·팁·잡담을 한 게시판에서. 비회원도 글 쓸 수 있어요.
             </p>
           </div>
-          {isAuthed ? (
-            <Link href="/board/new" className="btn btn--primary">
-              글쓰기
-            </Link>
-          ) : (
-            <Link
-              href="/login?next=/board/new"
-              className="btn btn--secondary"
-              title="로그인 후 글쓰기 가능"
-            >
-              로그인 후 글쓰기
-            </Link>
-          )}
+          <Link href="/board/new" className="btn btn--primary">
+            글쓰기
+          </Link>
         </div>
       </section>
 
       <section className="section">
         <div className="content-wrap">
           <div className="tabs" role="tablist" aria-label="게시판 카테고리">
-            {site.boardCategories.map((cat) => {
+            {categories.map((cat) => {
               const isActive = cat.id === activeCat;
-              const href = cat.id === "all" ? "/board" : `/board?category=${cat.id}`;
               return (
-                <Link
+                <button
                   key={cat.id}
-                  href={href}
+                  type="button"
                   className={`tab${isActive ? " is-active" : ""}`}
                   role="tab"
                   aria-selected={isActive}
+                  onClick={() => pushQuery({ category: cat.id, page: 1 })}
                 >
                   {cat.label}
-                </Link>
+                </button>
               );
             })}
           </div>
 
-          <div className="board" style={{ marginTop: "var(--sp-5)" }}>
+          <div
+            className="board-toolbar"
+            style={{
+              display: "flex",
+              gap: "var(--sp-2)",
+              alignItems: "center",
+              marginTop: "var(--sp-4)",
+              flexWrap: "wrap",
+            }}
+          >
+            <form
+              onSubmit={handleSearchSubmit}
+              style={{ display: "flex", gap: "var(--sp-2)", flex: 1, minWidth: 240 }}
+            >
+              <input
+                type="search"
+                className="input"
+                placeholder="제목·본문 검색"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <button type="submit" className="btn btn--secondary btn--sm">
+                검색
+              </button>
+              {qParam ? (
+                <button
+                  type="button"
+                  className="btn btn--ghost btn--sm"
+                  onClick={() => pushQuery({ q: "", page: 1 })}
+                >
+                  지움
+                </button>
+              ) : null}
+            </form>
+            <div style={{ display: "flex", gap: "var(--sp-1)" }} aria-label="정렬">
+              {SORTS.map((s) => (
+                <button
+                  key={s.value}
+                  type="button"
+                  className={`btn btn--sm ${sortParam === s.value ? "btn--primary" : "btn--ghost"}`}
+                  onClick={() => pushQuery({ sort: s.value, page: 1 })}
+                  aria-pressed={sortParam === s.value}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="board" style={{ marginTop: "var(--sp-4)" }}>
             <div className="board__head">
               <h2>
-                {catLabel} ·{" "}
+                {catLabel}
+                {qParam ? ` · 검색 "${qParam}"` : ""} ·{" "}
                 {sorted
                   ? total > 0
                     ? `총 ${total}건${total > PAGE_SIZE ? ` · ${pageParam} 페이지` : ""}`
-                    : `${sorted.length}건`
+                    : `0건`
                   : "불러오는 중…"}
               </h2>
-              {isAuthed ? (
-                <Link className="card__action" href="/board/new">
-                  글쓰기 →
-                </Link>
-              ) : (
-                <Link className="card__action" href="/login?next=/board/new">
-                  로그인 →
-                </Link>
-              )}
+              <Link className="card__action" href="/board/new">
+                글쓰기 →
+              </Link>
             </div>
 
-            {error ? (
-              <p className="auth-msg auth-msg--error" role="alert" style={{ margin: "var(--sp-3)" }}>
-                {error}
+            {source === "fallback" && sorted && sorted.length > 0 ? (
+              <p
+                className="board__preview-hint"
+                role="note"
+                style={{ margin: "var(--sp-3) var(--sp-4) 0" }}
+              >
+                미리보기 글입니다 — 게시판이 열리면 실제 글로 교체돼요.
               </p>
             ) : null}
 
@@ -213,20 +321,20 @@ function BoardInner() {
                   </span>
                   <span className="board-row__meta">잠시만 기다려주세요</span>
                 </div>
-              ) : sorted.length === 0 && !error ? (
+              ) : sorted.length === 0 ? (
                 <div className="board-row">
                   <span className="board-row__label">안내</span>
                   <span className="board-row__title">
-                    <strong>이 카테고리에는 아직 글이 없습니다.</strong>
+                    <strong>
+                      {qParam ? "검색 결과가 없습니다." : "이 카테고리에는 아직 글이 없습니다."}
+                    </strong>
                   </span>
                   <span className="board-row__meta">
-                    <span>첫 글의 주인이 되어보세요</span>
+                    <Link href="/board/new">첫 글 쓰기 →</Link>
                   </span>
                 </div>
               ) : (
-                sorted.map((post) => (
-                  <BoardRow key={post.id} post={post} />
-                ))
+                sorted.map((post) => <BoardRow key={post.id} post={post} />)
               )}
             </div>
 

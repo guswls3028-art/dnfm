@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch, ApiError } from "@/lib/api-client";
+import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
 
 /**
  * AdminPostMenu — board/[id] 헤더의 운영 드롭다운.
@@ -75,9 +75,7 @@ export default function AdminPostMenu({ postId, pinned, onChange }) {
     setBusy(true);
     setMsg(null);
     try {
-      await apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}`, {
-        method: "DELETE",
-      });
+      await postsApi.remove(postId);
       router.push("/board");
     } catch (err) {
       const m =

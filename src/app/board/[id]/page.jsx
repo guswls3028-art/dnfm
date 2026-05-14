@@ -1,40 +1,83 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { apiFetch, ApiError } from "@/lib/api-client";
+import {
+  apiFetch,
+  ApiError,
+  comments as commentsApi,
+  posts as postsApi,
+} from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { isSiteAdmin } from "@/lib/permissions";
 import AdminPostMenu from "@/components/AdminPostMenu";
+import ReportButton from "@/components/ReportButton";
+
+/**
+ * 게시글 상세.
+ *
+ * 동작:
+ *  - GET /sites/newb/posts/:id     → 글 + meta
+ *  - GET /sites/newb/posts/:id/comments → 댓글
+ *  - POST 댓글 (회원/비회원)
+ *  - 추천 (회원만)
+ *  - 신고 (회원/비회원)
+ *  - 본인 글/댓글 수정·삭제 (회원: 인증 / 비회원: 비번 일치)
+ *  - 관리자 도구 (pin / delete)
+ *
+ * 비회원 마커: authorNickname + anonymousMarker(IP 앞자리) 결합.
+ */
 
 function normalizePost(p) {
   if (!p) return null;
   return {
     id: p.id || p.postId,
-    label: p.categoryName || p.categoryLabel || p.label || p.category || "글",
+    categoryName: p.categoryName || p.categoryLabel || p.label || p.category || "글",
+    categorySlug: p.categorySlug || null,
     title: p.title || "(제목 없음)",
-    author: p.authorName || p.author || p.user?.displayName || "익명",
-    time: p.timeAgo || p.time || p.createdAt || "",
-    views: typeof p.views === "number" ? p.views : (p.viewCount ?? 0),
-    likes: typeof p.likes === "number" ? p.likes : (p.likeCount ?? 0),
-    commentsCount:
-      typeof p.commentsCount === "number"
-        ? p.commentsCount
-        : (p.commentCount ?? (Array.isArray(p.comments) ? p.comments.length : 0)),
     body: p.body || p.content || "",
+    flair: p.flair || null,
+    authorId: p.authorId || null,
+    authorName:
+      p.authorName ||
+      p.user?.displayName ||
+      (p.authorId
+        ? p.author || "회원"
+        : `${p.authorNickname || "ㅇㅇ"}${p.anonymousMarker ? `(${p.anonymousMarker})` : ""}`),
+    createdAt: p.createdAt || p.time || "",
+    viewCount: p.viewCount ?? p.views ?? 0,
+    recommendCount: p.recommendCount ?? p.likes ?? 0,
+    commentCount: p.commentCount ?? p.commentsCount ?? 0,
     pinned: Boolean(p.pinned),
-    hot: Boolean(p.hot),
+    locked: Boolean(p.locked),
+    postType: p.postType || "normal",
   };
 }
 
 function normalizeComment(c, i) {
   return {
     id: c.id || c.commentId || `c-${i}`,
-    author: c.authorName || c.author || c.user?.displayName || "익명",
-    time: c.timeAgo || c.time || c.createdAt || "",
+    parentId: c.parentId || null,
     body: c.body || c.content || "",
+    authorId: c.authorId || null,
+    authorName: c.authorId
+      ? c.authorName || c.user?.displayName || "회원"
+      : `${c.authorNickname || "ㅇㅇ"}${c.anonymousMarker ? `(${c.anonymousMarker})` : ""}`,
+    createdAt: c.createdAt || c.time || "",
   };
+}
+
+function formatTime(iso) {
+  if (!iso) return "";
+  const t = new Date(iso);
+  if (Number.isNaN(t.getTime())) return iso;
+  const diffSec = Math.floor((Date.now() - t.getTime()) / 1000);
+  if (diffSec < 60) return "방금";
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}분 전`;
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}시간 전`;
+  if (diffSec < 86400 * 7) return `${Math.floor(diffSec / 86400)}일 전`;
+  return t.toLocaleDateString("ko-KR");
 }
 
 export default function PostDetailPage() {
@@ -49,21 +92,32 @@ export default function PostDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [commentText, setCommentText] = useState("");
-  const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [commentBody, setCommentBody] = useState("");
+  const [commentNickname, setCommentNickname] = useState("");
+  const [commentPassword, setCommentPassword] = useState("");
+  const [commentBusy, setCommentBusy] = useState(false);
+  const [actionMsg, setActionMsg] = useState(null);
   const [voteBusy, setVoteBusy] = useState(false);
-  const [voteMsg, setVoteMsg] = useState(null);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingBody, setEditingBody] = useState("");
+  const [replyParentId, setReplyParentId] = useState(null);
+  const [replyBody, setReplyBody] = useState("");
+  const [replyNickname, setReplyNickname] = useState("");
+  const [replyPassword, setReplyPassword] = useState("");
+  const [replyBusy, setReplyBusy] = useState(false);
 
   const load = useCallback(async () => {
     if (!postId) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}`);
-      const p = normalizePost(data?.post || data);
-      setPost(p);
-      const rawComments = data?.comments || data?.post?.comments || [];
-      setComments(rawComments.map(normalizeComment));
+      const [pData, cData] = await Promise.all([
+        apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}`),
+        apiFetch(`/sites/newb/posts/${encodeURIComponent(postId)}/comments`).catch(() => null),
+      ]);
+      setPost(normalizePost(pData?.post || pData));
+      const list = cData?.items || cData?.comments || [];
+      setComments(list.map(normalizeComment));
     } catch (err) {
       const msg =
         err instanceof ApiError
@@ -87,16 +141,13 @@ export default function PostDetailPage() {
       return;
     }
     setVoteBusy(true);
-    setVoteMsg(null);
+    setActionMsg(null);
     try {
-      await apiFetch(`/sites/newb/posts/${encodeURIComponent(post.id)}/vote`, {
-        method: "POST",
-        json: { voteType: "recommend" },
-      });
-      setVoteMsg("추천했어요!");
+      await postsApi.vote(post.id, "recommend");
+      setActionMsg({ ok: true, text: "추천 반영됨" });
       await load();
     } catch (err) {
-      setVoteMsg(err?.message || "추천 처리에 실패했습니다.");
+      setActionMsg({ ok: false, text: err?.message || "추천 실패" });
     } finally {
       setVoteBusy(false);
     }
@@ -104,25 +155,159 @@ export default function PostDetailPage() {
 
   async function handleCommentSubmit(e) {
     e.preventDefault();
-    if (commentSubmitting || !post) return;
-    const body = commentText.trim();
+    if (commentBusy || !post) return;
+    const body = commentBody.trim();
     if (!body) return;
-    if (!isAuthed) {
-      router.push(`/login?next=/board/${encodeURIComponent(post.id)}`);
-      return;
-    }
-    setCommentSubmitting(true);
+    setCommentBusy(true);
+    setActionMsg(null);
     try {
-      await apiFetch(`/sites/newb/posts/${encodeURIComponent(post.id)}/comments`, {
-        method: "POST",
-        json: { body },
-      });
-      setCommentText("");
+      const payload = { body };
+      if (!isAuthed) {
+        if (commentNickname.trim()) payload.guestNickname = commentNickname.trim();
+        if (commentPassword) {
+          if (commentPassword.length < 4) {
+            setActionMsg({ ok: false, text: "비밀번호는 4자 이상이어야 합니다." });
+            setCommentBusy(false);
+            return;
+          }
+          payload.guestPassword = commentPassword;
+        }
+      }
+      await commentsApi.create(post.id, payload);
+      setCommentBody("");
+      setCommentPassword("");
       await load();
     } catch (err) {
-      setVoteMsg(err?.message || "댓글 등록에 실패했습니다.");
+      setActionMsg({ ok: false, text: err?.message || "댓글 등록 실패" });
     } finally {
-      setCommentSubmitting(false);
+      setCommentBusy(false);
+    }
+  }
+
+  // 댓글을 tree로 그룹화 — top-level 댓글 + 그 자식 답글.
+  const commentsTree = useMemo(() => {
+    const tops = [];
+    const childMap = new Map();
+    for (const c of comments) {
+      if (c.parentId) {
+        if (!childMap.has(c.parentId)) childMap.set(c.parentId, []);
+        childMap.get(c.parentId).push(c);
+      } else {
+        tops.push(c);
+      }
+    }
+    return tops.map((t) => ({ ...t, replies: childMap.get(t.id) || [] }));
+  }, [comments]);
+
+  const canDeletePostAsAuthor = useMemo(() => {
+    if (!post) return false;
+    if (isAdmin) return true;
+    if (post.authorId && user?.id === post.authorId) return true;
+    if (!post.authorId) return true;
+    return false;
+  }, [post, user, isAdmin]);
+
+  async function handleDeletePost() {
+    if (!post) return;
+    const isOwnMember = post.authorId && user?.id === post.authorId;
+    let guestPassword;
+    if (!isAdmin && !isOwnMember && !post.authorId) {
+      const pw = window.prompt("비회원 글 — 작성 시 비밀번호를 입력하세요.");
+      if (!pw) return;
+      guestPassword = pw;
+    }
+    if (!window.confirm("정말 삭제할까요?")) return;
+    try {
+      await postsApi.remove(post.id, { guestPassword });
+      router.push("/board");
+    } catch (err) {
+      setActionMsg({ ok: false, text: err?.message || "삭제 실패" });
+    }
+  }
+
+  function startReply(c) {
+    setReplyParentId(c.id);
+    setReplyBody("");
+    setReplyNickname("");
+    setReplyPassword("");
+  }
+
+  function cancelReply() {
+    setReplyParentId(null);
+    setReplyBody("");
+  }
+
+  async function submitReply() {
+    if (!replyParentId || replyBusy) return;
+    const body = replyBody.trim();
+    if (!body) return;
+    setReplyBusy(true);
+    try {
+      const payload = { body, parentId: replyParentId };
+      if (!isAuthed) {
+        if (replyNickname.trim()) payload.guestNickname = replyNickname.trim();
+        if (replyPassword) {
+          if (replyPassword.length < 4) {
+            setActionMsg({ ok: false, text: "비밀번호는 4자 이상이어야 합니다." });
+            setReplyBusy(false);
+            return;
+          }
+          payload.guestPassword = replyPassword;
+        }
+      }
+      await commentsApi.create(post.id, payload);
+      cancelReply();
+      await load();
+    } catch (err) {
+      setActionMsg({ ok: false, text: err?.message || "답글 등록 실패" });
+    } finally {
+      setReplyBusy(false);
+    }
+  }
+
+  function startEditComment(c) {
+    setEditingCommentId(c.id);
+    setEditingBody(c.body || "");
+  }
+
+  function cancelEditComment() {
+    setEditingCommentId(null);
+    setEditingBody("");
+  }
+
+  async function saveEditComment(c) {
+    const body = editingBody.trim();
+    if (!body) return;
+    const isOwnMember = c.authorId && user?.id === c.authorId;
+    let guestPassword;
+    if (!isAdmin && !isOwnMember && !c.authorId) {
+      const pw = window.prompt("비회원 댓글 — 작성 시 비밀번호를 입력하세요.");
+      if (!pw) return;
+      guestPassword = pw;
+    }
+    try {
+      await commentsApi.update(c.id, { body, guestPassword });
+      cancelEditComment();
+      await load();
+    } catch (err) {
+      setActionMsg({ ok: false, text: err?.message || "댓글 수정 실패" });
+    }
+  }
+
+  async function handleDeleteComment(c) {
+    const isOwnMember = c.authorId && user?.id === c.authorId;
+    let guestPassword;
+    if (!isAdmin && !isOwnMember && !c.authorId) {
+      const pw = window.prompt("비회원 댓글 — 작성 시 비밀번호를 입력하세요.");
+      if (!pw) return;
+      guestPassword = pw;
+    }
+    if (!window.confirm("정말 삭제할까요?")) return;
+    try {
+      await commentsApi.remove(c.id, { guestPassword });
+      await load();
+    } catch (err) {
+      setActionMsg({ ok: false, text: err?.message || "댓글 삭제 실패" });
     }
   }
 
@@ -144,10 +329,7 @@ export default function PostDetailPage() {
             <div>
               <h1 className="page-hero__title">게시글</h1>
               <p className="page-hero__sub">
-                <Link
-                  href="/board"
-                  style={{ color: "var(--color-gold)", fontWeight: 800 }}
-                >
+                <Link href="/board" style={{ color: "var(--color-gold)", fontWeight: 800 }}>
                   ← 게시판 목록
                 </Link>
               </p>
@@ -172,23 +354,14 @@ export default function PostDetailPage() {
           <div>
             <h1 className="page-hero__title">게시글</h1>
             <p className="page-hero__sub">
-              <Link
-                href="/board"
-                style={{ color: "var(--color-gold)", fontWeight: 800 }}
-              >
+              <Link href="/board" style={{ color: "var(--color-gold)", fontWeight: 800 }}>
                 ← 게시판 목록
               </Link>
             </p>
           </div>
-          {isAuthed ? (
-            <Link href="/board/new" className="btn btn--secondary btn--sm">
-              글쓰기
-            </Link>
-          ) : (
-            <Link href="/login?next=/board/new" className="btn btn--secondary btn--sm">
-              로그인 후 글쓰기
-            </Link>
-          )}
+          <Link href="/board/new" className="btn btn--secondary btn--sm">
+            글쓰기
+          </Link>
         </div>
       </section>
 
@@ -196,48 +369,104 @@ export default function PostDetailPage() {
         <div className="content-wrap" style={{ display: "grid", gap: "var(--sp-4)" }}>
           <article>
             <header className="post-head">
-              <div className="post-head__top">
-                <span className="badge badge--soft">{post.label}</span>
-                {isAdmin ? (
-                  <AdminPostMenu
-                    postId={post.id}
-                    pinned={post.pinned}
-                    onChange={load}
-                  />
-                ) : null}
+              <div
+                className="post-head__top"
+                style={{
+                  display: "flex",
+                  gap: "var(--sp-2)",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <span className="badge badge--soft">{post.categoryName}</span>
+                {post.flair ? <span className="badge badge--soft">[{post.flair}]</span> : null}
+                {post.postType === "best" ? <span className="badge badge--solid">BEST</span> : null}
+                <div style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-2)" }}>
+                  {isAdmin ? (
+                    <AdminPostMenu postId={post.id} pinned={post.pinned} onChange={load} />
+                  ) : null}
+                  <ReportButton targetType="post" targetId={post.id} />
+                  {canDeletePostAsAuthor ? (
+                    <Link
+                      href={`/board/${encodeURIComponent(post.id)}/edit`}
+                      className="btn btn--ghost btn--sm"
+                    >
+                      ✏ 수정
+                    </Link>
+                  ) : null}
+                  {canDeletePostAsAuthor ? (
+                    <button
+                      type="button"
+                      className="btn btn--ghost btn--sm"
+                      onClick={handleDeletePost}
+                    >
+                      🗑 삭제
+                    </button>
+                  ) : null}
+                </div>
               </div>
-              <h1 className="post-head__title">
+              <h1 className="post-head__title" style={{ marginTop: "var(--sp-2)" }}>
                 {post.pinned ? "📌 " : ""}
                 {post.title}
-                {post.hot ? " · HOT" : ""}
               </h1>
-              <div className="post-head__meta">
-                <span>{post.author}</span>
-                {post.time ? <span>{post.time}</span> : null}
-                <span>조회 {post.views}</span>
-                <span>추천 {post.likes}</span>
-                <span>댓글 {post.commentsCount}</span>
+              <div
+                className="post-head__meta"
+                style={{
+                  display: "flex",
+                  gap: "var(--sp-3)",
+                  color: "var(--muted)",
+                  fontSize: "var(--fs-sm)",
+                }}
+              >
+                <span>{post.authorName}</span>
+                <span>{formatTime(post.createdAt)}</span>
+                <span>조회 {post.viewCount}</span>
+                <span>추천 {post.recommendCount}</span>
+                <span>댓글 {post.commentCount}</span>
               </div>
             </header>
-            <div className="post-body">{post.body || "본문이 없습니다."}</div>
-            <div className="post-actions">
+            <div
+              className="post-body"
+              style={{ whiteSpace: "pre-wrap", marginTop: "var(--sp-4)" }}
+            >
+              {post.body || "본문이 없습니다."}
+            </div>
+            <div
+              className="post-actions"
+              style={{
+                display: "flex",
+                gap: "var(--sp-2)",
+                marginTop: "var(--sp-5)",
+                flexWrap: "wrap",
+              }}
+            >
               <button
                 type="button"
-                className="btn btn--secondary btn--sm"
+                className="btn btn--primary btn--sm"
                 onClick={handleVote}
                 disabled={voteBusy}
                 title={isAuthed ? "추천" : "로그인 후 추천 가능"}
               >
-                {voteBusy ? "처리 중…" : `추천 (${post.likes})`}
+                {voteBusy ? "처리 중…" : `👍 추천 ${post.recommendCount}`}
               </button>
               <Link href="/board" className="btn btn--ghost btn--sm">
                 목록으로
               </Link>
-              {voteMsg ? <span style={{ alignSelf: "center", fontSize: "var(--fs-sm)" }}>{voteMsg}</span> : null}
+              {actionMsg ? (
+                <span
+                  className={
+                    actionMsg.ok ? "auth-msg auth-msg--info" : "auth-msg auth-msg--error"
+                  }
+                  style={{ alignSelf: "center" }}
+                  role="status"
+                >
+                  {actionMsg.text}
+                </span>
+              ) : null}
             </div>
           </article>
 
-          <section aria-labelledby="comments-title">
+          <section aria-labelledby="comments-title" style={{ marginTop: "var(--sp-5)" }}>
             <header className="section__head">
               <div>
                 <span className="section__kicker">COMMENTS</span>
@@ -247,65 +476,304 @@ export default function PostDetailPage() {
               </div>
             </header>
 
-            <div className="comments">
-              {comments.length === 0 ? (
+            <div
+              className="comments"
+              style={{ display: "grid", gap: "var(--sp-3)", marginTop: "var(--sp-3)" }}
+            >
+              {commentsTree.length === 0 ? (
                 <div className="comment">
                   <p className="comment__body">
                     아직 댓글이 없습니다. 첫 댓글을 남겨주세요.
                   </p>
                 </div>
               ) : (
-                comments.map((c) => (
-                  <div className="comment" key={c.id}>
-                    <div className="comment__meta">
-                      <strong>{c.author}</strong>
-                      {c.time ? <span>{c.time}</span> : null}
-                    </div>
-                    <p className="comment__body">{c.body}</p>
-                  </div>
-                ))
+                commentsTree.flatMap((top) => {
+                  const rows = [renderCommentRow(top, false)];
+                  for (const reply of top.replies) {
+                    rows.push(renderCommentRow(reply, true));
+                  }
+                  if (replyParentId === top.id) {
+                    rows.push(
+                      <div
+                        key={`reply-form-${top.id}`}
+                        className="comment"
+                        style={{
+                          marginLeft: "var(--sp-6)",
+                          borderLeft: "2px solid var(--color-gold, #ccaa55)",
+                          paddingLeft: "var(--sp-3)",
+                        }}
+                      >
+                        <strong style={{ fontSize: "var(--fs-sm)" }}>
+                          ↳ {top.authorName} 에게 답글
+                        </strong>
+                        {!isAuthed ? (
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: "var(--sp-2)",
+                              marginTop: "var(--sp-2)",
+                            }}
+                          >
+                            <input
+                              className="input"
+                              placeholder="닉네임 (선택)"
+                              value={replyNickname}
+                              maxLength={32}
+                              onChange={(e) => setReplyNickname(e.target.value)}
+                            />
+                            <input
+                              className="input"
+                              type="password"
+                              placeholder="비번 (선택, 4자+)"
+                              value={replyPassword}
+                              maxLength={128}
+                              onChange={(e) => setReplyPassword(e.target.value)}
+                            />
+                          </div>
+                        ) : null}
+                        <textarea
+                          className="textarea"
+                          rows={2}
+                          value={replyBody}
+                          onChange={(e) => setReplyBody(e.target.value)}
+                          placeholder="답글 작성…"
+                          style={{ marginTop: "var(--sp-2)" }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "var(--sp-2)",
+                            justifyContent: "flex-end",
+                            marginTop: "var(--sp-2)",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className="btn btn--ghost btn--xs"
+                            onClick={cancelReply}
+                          >
+                            취소
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn--primary btn--xs"
+                            onClick={submitReply}
+                            disabled={replyBusy || !replyBody.trim()}
+                          >
+                            {replyBusy ? "등록 중…" : "답글 등록"}
+                          </button>
+                        </div>
+                      </div>,
+                    );
+                  }
+                  return rows;
+                })
               )}
             </div>
 
-            <form
-              className="comment-form"
-              aria-label="댓글 작성"
-              onSubmit={handleCommentSubmit}
-            >
-              <textarea
-                className="textarea"
-                placeholder={
-                  isAuthed
-                    ? "댓글을 입력하세요. 운영 규칙을 지켜주세요."
-                    : "댓글은 로그인 후 작성 가능합니다."
-                }
-                rows={3}
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                disabled={!isAuthed || commentSubmitting}
-              />
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--sp-2)" }}>
+            {post.locked ? (
+              <p
+                className="auth-msg auth-msg--info"
+                role="note"
+                style={{ marginTop: "var(--sp-3)" }}
+              >
+                잠긴 글입니다. 댓글을 달 수 없습니다.
+              </p>
+            ) : (
+              <form
+                className="comment-form"
+                aria-label="댓글 작성"
+                onSubmit={handleCommentSubmit}
+                style={{ display: "grid", gap: "var(--sp-2)", marginTop: "var(--sp-4)" }}
+              >
                 {!isAuthed ? (
-                  <Link
-                    href={`/login?next=/board/${encodeURIComponent(post.id)}`}
-                    className="btn btn--secondary btn--sm"
+                  <div
+                    style={{
+                      display: "grid",
+                      gap: "var(--sp-2)",
+                      gridTemplateColumns: "1fr 1fr",
+                    }}
                   >
-                    로그인 후 댓글 →
-                  </Link>
-                ) : (
+                    <input
+                      className="input"
+                      placeholder="닉네임 (선택, 기본 ㅇㅇ)"
+                      maxLength={32}
+                      value={commentNickname}
+                      onChange={(e) => setCommentNickname(e.target.value)}
+                    />
+                    <input
+                      className="input"
+                      type="password"
+                      placeholder="비밀번호 (선택, 4자+)"
+                      maxLength={128}
+                      value={commentPassword}
+                      onChange={(e) => setCommentPassword(e.target.value)}
+                    />
+                  </div>
+                ) : null}
+                <textarea
+                  className="textarea"
+                  placeholder={
+                    isAuthed
+                      ? "댓글을 입력하세요."
+                      : "댓글을 입력하세요. 비회원도 작성 가능합니다."
+                  }
+                  rows={3}
+                  value={commentBody}
+                  onChange={(e) => setCommentBody(e.target.value)}
+                  disabled={commentBusy}
+                />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <button
                     type="submit"
                     className="btn btn--primary btn--sm"
-                    disabled={commentSubmitting || !commentText.trim()}
+                    disabled={commentBusy || !commentBody.trim()}
                   >
-                    {commentSubmitting ? "등록 중…" : "댓글 등록"}
+                    {commentBusy ? "등록 중…" : "댓글 등록"}
                   </button>
-                )}
-              </div>
-            </form>
+                </div>
+              </form>
+            )}
           </section>
         </div>
       </section>
     </>
   );
+
+  function renderCommentRow(c, isReply) {
+    {
+      // legacy block — never executes (kept as marker)
+    }
+    return (
+      <CommentRow
+        key={c.id}
+        c={c}
+        isReply={isReply}
+        user={user}
+        isAdmin={isAdmin}
+        editingCommentId={editingCommentId}
+        editingBody={editingBody}
+        setEditingBody={setEditingBody}
+        startEditComment={startEditComment}
+        cancelEditComment={cancelEditComment}
+        saveEditComment={saveEditComment}
+        startReply={startReply}
+        handleDeleteComment={handleDeleteComment}
+        formatTime={formatTime}
+      />
+    );
+  }
 }
+
+function CommentRow({
+  c,
+  isReply,
+  user,
+  isAdmin,
+  editingCommentId,
+  editingBody,
+  setEditingBody,
+  startEditComment,
+  cancelEditComment,
+  saveEditComment,
+  startReply,
+  handleDeleteComment,
+  formatTime,
+}) {
+  const isOwn = c.authorId && user?.id === c.authorId;
+  const canEditDelete = isAdmin || isOwn || !c.authorId;
+  const isEditing = editingCommentId === c.id;
+  return (
+    <div
+      className="comment"
+      style={
+        isReply
+          ? {
+              marginLeft: "var(--sp-6)",
+              borderLeft: "2px solid var(--color-gold, #ccaa55)",
+              paddingLeft: "var(--sp-3)",
+            }
+          : undefined
+      }
+    >
+      <div
+        className="comment__meta"
+        style={{ display: "flex", gap: "var(--sp-2)", alignItems: "center" }}
+      >
+        {isReply ? <span style={{ color: "var(--muted)" }}>↳</span> : null}
+        <strong>{c.authorName}</strong>
+        <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)" }}>
+          {formatTime(c.createdAt)}
+        </span>
+        <span style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-1)" }}>
+          <ReportButton targetType="comment" targetId={c.id} small />
+          {!isReply && !isEditing ? (
+            <button
+              type="button"
+              className="btn btn--ghost btn--xs"
+              onClick={() => startReply(c)}
+              title="답글"
+            >
+              ↳
+            </button>
+          ) : null}
+          {canEditDelete && !isEditing ? (
+            <button
+              type="button"
+              className="btn btn--ghost btn--xs"
+              onClick={() => startEditComment(c)}
+              title="댓글 수정"
+            >
+              ✏
+            </button>
+          ) : null}
+          {canEditDelete ? (
+            <button
+              type="button"
+              className="btn btn--ghost btn--xs"
+              onClick={() => handleDeleteComment(c)}
+              title="댓글 삭제"
+            >
+              🗑
+            </button>
+          ) : null}
+        </span>
+      </div>
+      {isEditing ? (
+        <div style={{ display: "grid", gap: "var(--sp-2)" }}>
+          <textarea
+            className="textarea"
+            rows={3}
+            value={editingBody}
+            onChange={(e) => setEditingBody(e.target.value)}
+          />
+          <div
+            style={{ display: "flex", gap: "var(--sp-2)", justifyContent: "flex-end" }}
+          >
+            <button
+              type="button"
+              className="btn btn--ghost btn--xs"
+              onClick={cancelEditComment}
+            >
+              취소
+            </button>
+            <button
+              type="button"
+              className="btn btn--primary btn--xs"
+              onClick={() => saveEditComment(c)}
+              disabled={!editingBody.trim()}
+            >
+              저장
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="comment__body" style={{ whiteSpace: "pre-wrap" }}>
+          {c.body}
+        </p>
+      )}
+    </div>
+  );
+}
+
