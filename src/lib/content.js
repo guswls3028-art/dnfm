@@ -179,7 +179,7 @@ export const site = {
       id: "fb-newb-kakao",
       kind: "image",
       src: "/배경사진.jpg",
-      label: "뉴비훈련소 카톡방 입장 — 군복 지급, 정자 환영",
+      label: "뉴비훈련소 카톡방 입장",
       href: "https://open.kakao.com/o/gbsjsZ5g"
     },
     {
