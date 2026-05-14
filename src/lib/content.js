@@ -12,6 +12,38 @@ export const host = {
   contact: { type: "kakao_dm", reason: "톡방 방장 프로필 1:1 대화" },
 };
 
+// 메인 히어로 배경 테마 — mp4 배경 + 분위기.
+// 사용자가 hero 우측 칩으로 즉시 전환. localStorage 에 마지막 선택 보존.
+export const heroThemes = [
+  {
+    id: "moonlight",
+    label: "달빛주점",
+    subLabel: "보랏빛 밤 · 호박 등불",
+    kicker: "MOONLIT TAVERN",
+    tagline: "달빛 너머, 한 잔 들고 정자에 앉다",
+    videoSrc: "/themes/moonlight.mp4",
+    posterSrc: "/themes/moonlight.jpg",
+  },
+  {
+    id: "elvenguard",
+    label: "엘븐가드",
+    subLabel: "고요한 숲 · 신성한 빛",
+    kicker: "ELVEN GUARD",
+    tagline: "오래된 숲의 결, 잠든 빛 사이를 걷다",
+    videoSrc: "/themes/elvenguard.mp4",
+    posterSrc: "/themes/elvenguard.jpg",
+  },
+  {
+    id: "campfire",
+    label: "캠프파이어",
+    subLabel: "장작 · 뜨거운 그림자",
+    kicker: "CAMPFIRE",
+    tagline: "타닥타닥 — 누군가 옆에 와서 앉는다",
+    videoSrc: "/themes/campfire.mp4",
+    posterSrc: "/themes/campfire.jpg",
+  },
+];
+
 // 톡방 핵심 철학 — 운영자 직접 명시.
 export const philosophy = {
   oneLiner: "정보부족으로 인한 뉴비의 불이익 예방 + 자유로운 소통.",

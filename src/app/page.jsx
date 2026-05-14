@@ -1,6 +1,6 @@
 import Link from "next/link";
 import HeroSlider from "@/components/HeroSlider";
-import HeroStage from "@/components/HeroStage";
+import HeroVideoStage from "@/components/HeroVideoStage";
 import BoardRow from "@/components/BoardRow";
 import EventCard from "@/components/EventCard";
 import GuideCard from "@/components/GuideCard";
@@ -21,8 +21,8 @@ export default function HomePage() {
 
   return (
     <>
+      <HeroVideoStage site={site} />
       <HeroSlider />
-      <HeroStage site={site} />
 
       <section className="section section--about" id="about" aria-labelledby="about-title">
         <div className="content-wrap">

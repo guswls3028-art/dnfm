@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./hero-video.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { CurrentUserProvider } from "@/lib/use-current-user";
@@ -37,7 +38,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko" data-hero-theme="moonlight" suppressHydrationWarning>
       <body>
         <CurrentUserProvider>
           <div className="site-frame" data-theme={site.theme}>
