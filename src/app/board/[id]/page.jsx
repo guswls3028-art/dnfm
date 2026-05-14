@@ -396,8 +396,8 @@ export default function PostDetailPage() {
 
       <section className="section">
         <div className="content-wrap" style={{ display: "grid", gap: "var(--sp-4)" }}>
-          <article>
-            <header className="post-head">
+          <article style={{ minWidth: 0 }}>
+            <header className="post-head" style={{ minWidth: 0 }}>
               <div
                 className="post-head__top"
                 style={{
@@ -405,12 +405,21 @@ export default function PostDetailPage() {
                   gap: "var(--sp-2)",
                   alignItems: "center",
                   flexWrap: "wrap",
+                  rowGap: "var(--sp-2)",
                 }}
               >
                 <span className="badge badge--soft">{post.categoryName}</span>
                 {post.flair ? <span className="badge badge--soft">[{post.flair}]</span> : null}
                 {post.postType === "best" ? <span className="badge badge--solid">BEST</span> : null}
-                <div style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-2)" }}>
+                <div
+                  style={{
+                    marginLeft: "auto",
+                    display: "flex",
+                    gap: "var(--sp-2)",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-end",
+                  }}
+                >
                   {isAdmin ? (
                     <AdminPostMenu
                       postId={post.id}
@@ -439,7 +448,14 @@ export default function PostDetailPage() {
                   ) : null}
                 </div>
               </div>
-              <h1 className="post-head__title" style={{ marginTop: "var(--sp-2)" }}>
+              <h1
+                className="post-head__title"
+                style={{
+                  marginTop: "var(--sp-2)",
+                  wordBreak: "keep-all",
+                  overflowWrap: "anywhere",
+                }}
+              >
                 {post.pinned ? "📌 " : ""}
                 {post.title}
               </h1>
@@ -450,6 +466,8 @@ export default function PostDetailPage() {
                   gap: "var(--sp-3)",
                   color: "var(--muted)",
                   fontSize: "var(--fs-sm)",
+                  flexWrap: "wrap",
+                  rowGap: "var(--sp-1)",
                 }}
               >
                 <span>{post.authorName}</span>
@@ -761,12 +779,13 @@ export default function PostDetailPage() {
                         borderRadius: 8,
                         textDecoration: "none",
                         color: "inherit",
+                        minWidth: 0,
                       }}
                     >
                       <span className="badge badge--soft" style={{ flexShrink: 0 }}>
                         {np.categoryName || post.categoryName}
                       </span>
-                      <span style={{ flex: 1, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span style={{ flex: 1, minWidth: 0, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {np.title || "(제목 없음)"}
                       </span>
                       <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
