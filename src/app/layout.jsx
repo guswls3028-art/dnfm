@@ -2,6 +2,7 @@ import "./globals.css";
 import "./hero-video.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import ThemeBootstrap from "@/components/ThemeBootstrap";
 import { CurrentUserProvider } from "@/lib/use-current-user";
 import { site } from "@/lib/content";
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko" data-hero-theme="moonlight" suppressHydrationWarning>
       <body>
+        <ThemeBootstrap />
         <CurrentUserProvider>
           <div className="site-frame" data-theme={site.theme}>
             <SiteHeader site={site} />

@@ -467,16 +467,89 @@ html {
   }
 }
 
-/* === sitewide accent — hero theme 가 일부 chrome 에 옅게 입혀짐 === */
-html[data-hero-theme] .section__kicker {
-  position: relative;
+/* ============================================================
+   사이트 chrome — site-frame / header / footer / fab / kicker
+   각 테마 분위기를 사이트 전체에 옅게 주입.
+   ============================================================ */
+
+:root {
+  --site-bg:
+    radial-gradient(ellipse at 28% 0%, rgba(48, 32, 96, 0.32), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(230, 185, 107, 0.12), transparent 60%),
+    linear-gradient(180deg, #0c0a1a 0%, #060414 100%);
 }
+
+html[data-hero-theme="moonlight"] {
+  --site-bg:
+    radial-gradient(ellipse at 28% 0%, rgba(48, 32, 96, 0.34), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(230, 185, 107, 0.14), transparent 60%),
+    linear-gradient(180deg, #0c0a1c 0%, #060416 100%);
+}
+
+html[data-hero-theme="elvenguard"] {
+  --site-bg:
+    radial-gradient(ellipse at 22% 0%, rgba(60, 96, 140, 0.30), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(159, 231, 224, 0.10), transparent 60%),
+    linear-gradient(180deg, #08161e 0%, #040c14 100%);
+}
+
+html[data-hero-theme="campfire"] {
+  --site-bg:
+    radial-gradient(ellipse at 30% 0%, rgba(112, 26, 12, 0.30), transparent 55%),
+    radial-gradient(ellipse at 84% 100%, rgba(255, 154, 74, 0.16), transparent 60%),
+    linear-gradient(180deg, #160a06 0%, #0a0402 100%);
+}
+
+html[data-hero-theme] .site-frame {
+  background: var(--site-bg);
+  transition: background 0.6s ease;
+}
+
+/* === site-footer — 분리선 + brand mark + 헤더 텍스트 === */
+html[data-hero-theme] .site-footer {
+  border-top-color: var(--theme-accent-deep, var(--color-line-strong));
+}
+html[data-hero-theme] .site-footer__brand-mark {
+  background: linear-gradient(140deg, var(--theme-accent), var(--theme-accent-deep));
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35), var(--theme-glow);
+}
+html[data-hero-theme] .site-footer__brand strong,
+html[data-hero-theme] .site-footer__col-title {
+  color: var(--theme-accent-soft);
+}
+html[data-hero-theme] .site-footer__col a:hover {
+  color: var(--theme-accent-soft);
+}
+html[data-hero-theme] .site-footer__bottom {
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+/* === board floating action button === */
+html[data-hero-theme] .board-fab__btn {
+  border-color: var(--theme-accent-deep);
+  color: var(--theme-accent-soft);
+}
+html[data-hero-theme] .board-fab__btn--write {
+  background: linear-gradient(140deg, var(--theme-accent), var(--theme-accent-deep));
+  color: #0c0700;
+  border-color: var(--theme-accent-deep);
+}
+html[data-hero-theme] .board-fab__btn:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), var(--theme-glow);
+}
+
+/* === section kicker — 미묘한 글로우 === */
 html[data-hero-theme="moonlight"] .section__kicker {
-  text-shadow: 0 0 12px rgba(230, 185, 107, 0.18);
+  text-shadow: 0 0 14px rgba(230, 185, 107, 0.22);
 }
 html[data-hero-theme="elvenguard"] .section__kicker {
-  text-shadow: 0 0 12px rgba(159, 231, 224, 0.20);
+  text-shadow: 0 0 14px rgba(159, 231, 224, 0.24);
 }
 html[data-hero-theme="campfire"] .section__kicker {
-  text-shadow: 0 0 12px rgba(255, 154, 74, 0.22);
+  text-shadow: 0 0 14px rgba(255, 154, 74, 0.26);
+}
+
+/* === 다른 페이지 (home 외) hero 가 없을 때 site-frame 만 보임 === */
+html[data-hero-theme] body {
+  background: var(--site-bg);
 }
