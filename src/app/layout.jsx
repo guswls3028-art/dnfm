@@ -20,7 +20,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/banner.jpg",
+        url: "/배경사진.jpg",
         width: 768,
         height: 768,
         alt: "던파 모바일 뉴비 훈련소 — 군복 배너"
@@ -31,7 +31,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "던파 모바일 뉴비 훈련소",
     description: "가이드 + 카톡방 + 게시판",
-    images: ["/banner.jpg"]
+    images: ["/배경사진.jpg"]
   }
 };
 

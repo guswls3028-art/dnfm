@@ -6,8 +6,9 @@
 export const host = {
   nickname: "시너지통",
   role: "방장 / 운영자 / 개발자",
-  avatarSrc: "/banner.jpg",
-  bannerSrc: "/host-avatar.jpg",
+  // 파일명 = 용도. avatarSrc = 호스트 카드 작은 원형 (피규어 프사), bannerSrc = hero 큰 배너 (군복 일러스트).
+  avatarSrc: "/프로필사진.jpg",
+  bannerSrc: "/배경사진.jpg",
   contact: { type: "kakao_dm", reason: "톡방 방장 프로필 1:1 대화" },
 };
 
