@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { host, heroThemes } from "@/lib/content";
+import { Lantern, OwnerStamp, EaveLine } from "./PavilionAccent";
 
 const STORAGE_KEY = "dnfm.hero.theme";
 const DEFAULT_THEME = "moonlight";
@@ -91,6 +92,10 @@ export default function HeroVideoStage({ site }) {
       aria-labelledby="hero-video-title"
       data-theme={themeId}
     >
+      <Lantern className="hero-lantern hero-lantern--left" size={56} />
+      <Lantern className="hero-lantern hero-lantern--right" size={56} />
+      <OwnerStamp className="hero-stamp" size={84} label={`훈련소
+시너지통`} />
       <div className="hero-video__media" aria-hidden="true">
         {!reduced ? (
           <video
@@ -222,6 +227,7 @@ export default function HeroVideoStage({ site }) {
           </div>
         </fieldset>
       </div>
+      <EaveLine className="hero-eave" />
     </section>
   );
 }
