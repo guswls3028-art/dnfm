@@ -6,12 +6,14 @@ import { useParams, useRouter } from "next/navigation";
 import {
   apiFetch,
   ApiError,
+  buildApiUrl,
   comments as commentsApi,
   posts as postsApi,
 } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { isSiteAdmin } from "@/lib/permissions";
 import AdminPostMenu from "@/components/AdminPostMenu";
+import AuthorCard from "@/components/AuthorCard";
 import ReportButton from "@/components/ReportButton";
 
 /**
@@ -52,6 +54,7 @@ function normalizePost(p) {
     pinned: Boolean(p.pinned),
     locked: Boolean(p.locked),
     postType: p.postType || "normal",
+    attachmentR2Keys: Array.isArray(p.attachmentR2Keys) ? p.attachmentR2Keys : [],
   };
 }
 
@@ -431,6 +434,45 @@ export default function PostDetailPage() {
             >
               {post.body || "본문이 없습니다."}
             </div>
+
+            {post.attachmentR2Keys && post.attachmentR2Keys.length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: "var(--sp-2)",
+                  marginTop: "var(--sp-4)",
+                }}
+              >
+                {post.attachmentR2Keys.map((key, i) => (
+                  <a
+                    key={`${key}-${i}`}
+                    href={buildApiUrl(`/uploads/r2/${encodeURIComponent(key)}`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "block",
+                      border: "1px solid var(--muted, #8a7e60)",
+                      borderRadius: 6,
+                      overflow: "hidden",
+                      background: "rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    <img
+                      src={buildApiUrl(`/uploads/r2/${encodeURIComponent(key)}`)}
+                      alt=""
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        display: "block",
+                        objectFit: "cover",
+                      }}
+                      loading="lazy"
+                    />
+                  </a>
+                ))}
+              </div>
+            ) : null}
             <div
               className="post-actions"
               style={{
@@ -464,6 +506,15 @@ export default function PostDetailPage() {
                 </span>
               ) : null}
             </div>
+
+            {post.author ? (
+              <AuthorCard
+                author={{
+                  displayName: post.author.displayName || post.authorName,
+                  dnfProfile: post.author.dnfProfile,
+                }}
+              />
+            ) : null}
           </article>
 
           <section aria-labelledby="comments-title" style={{ marginTop: "var(--sp-5)" }}>

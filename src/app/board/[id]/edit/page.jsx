@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ApiError, posts as postsApi } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { isSiteAdmin } from "@/lib/permissions";
+import ImageUploader from "@/components/ImageUploader";
 
 /**
  * 글 수정 — 작성자 본인 / 비회원(비번) / admin.
@@ -38,6 +39,7 @@ export default function PostEditPage() {
   const [pinned, setPinned] = useState(false);
   const [locked, setLocked] = useState(false);
   const [guestPassword, setGuestPassword] = useState("");
+  const [attachmentR2Keys, setAttachmentR2Keys] = useState([]);
 
   const [categoryFlairs, setCategoryFlairs] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -56,6 +58,7 @@ export default function PostEditPage() {
       setFlair(p.flair || "");
       setPinned(Boolean(p.pinned));
       setLocked(Boolean(p.locked));
+      setAttachmentR2Keys(Array.isArray(p.attachmentR2Keys) ? p.attachmentR2Keys : []);
       // 카테고리 flair 목록 fetch — 말머리 select 옵션용
       try {
         const cats = await postsApi.categories();
@@ -100,6 +103,7 @@ export default function PostEditPage() {
         title: title.trim(),
         body: body.trim(),
         flair: flair || null,
+        attachmentR2Keys,
       };
       if (isAdmin) {
         payload.pinned = pinned;
@@ -226,6 +230,17 @@ export default function PostEditPage() {
                   onChange={(e) => setBody(e.target.value)}
                 />
               </div>
+
+              {isAuthed || isOwnMember || isAdmin ? (
+                <div className="field">
+                  <label className="field__label">첨부 이미지</label>
+                  <ImageUploader
+                    value={attachmentR2Keys}
+                    onChange={setAttachmentR2Keys}
+                    max={5}
+                  />
+                </div>
+              ) : null}
 
               {needsGuestPw ? (
                 <div className="field">

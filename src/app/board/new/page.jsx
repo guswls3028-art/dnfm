@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { site } from "@/lib/content";
+import ImageUploader from "@/components/ImageUploader";
 
 /**
  * 글쓰기 — 회원/비회원 모두 작성 가능 (2026-05-14 정책).
@@ -56,6 +57,7 @@ function NewPostInner() {
   const [body, setBody] = useState("");
   const [guestNickname, setGuestNickname] = useState("");
   const [guestPassword, setGuestPassword] = useState("");
+  const [attachmentR2Keys, setAttachmentR2Keys] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -124,6 +126,7 @@ function NewPostInner() {
     try {
       const payload = { categorySlug, title: t, body: b };
       if (flair) payload.flair = flair;
+      if (attachmentR2Keys.length > 0) payload.attachmentR2Keys = attachmentR2Keys;
       if (!isAuthed) {
         if (guestNickname.trim()) payload.guestNickname = guestNickname.trim();
         if (guestPassword) payload.guestPassword = guestPassword;
@@ -286,6 +289,17 @@ function NewPostInner() {
                   onChange={(e) => setBody(e.target.value)}
                 />
               </div>
+
+              {isAuthed ? (
+                <div className="field">
+                  <label className="field__label">첨부 이미지 (선택)</label>
+                  <ImageUploader
+                    value={attachmentR2Keys}
+                    onChange={setAttachmentR2Keys}
+                    max={5}
+                  />
+                </div>
+              ) : null}
 
               {error ? (
                 <p className="auth-msg auth-msg--error" role="alert">
