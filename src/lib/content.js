@@ -184,10 +184,12 @@ export const site = {
     },
     {
       id: "fb-hurock-contest",
-      kind: "image",
-      src: "/hurock-banner.png",
-      label: "허락 — 룩 콘테스트 이벤트 페이지",
-      href: "https://hurock.dnfm.kr/"
+      kicker: "허락공대 ↗",
+      title: "아바타 콘테스트 1회",
+      body: "5개 부문 코디 자랑 + 사용자 투표 + 허락 심사. 6/13(토) 19시 마감.",
+      accent: "violet",
+      href: "https://hurock.dnfm.kr/contests",
+      cta: "콘테스트 보러가기 →"
     },
     {
       id: "fb-dnf-update",
