@@ -49,6 +49,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko" data-hero-theme="moonlight" className={notoSansKr.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var v=localStorage.getItem("dnfm.hero.theme");if(v==="moonlight"||v==="elvenguard"||v==="campfire"){document.documentElement.setAttribute("data-hero-theme",v)}}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         <ThemeBootstrap />
         <CurrentUserProvider>

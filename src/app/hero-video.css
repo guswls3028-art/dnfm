@@ -627,6 +627,11 @@ html[data-hero-theme] body {
   background: var(--site-bg);
 }
 
+/* image 슬라이드 — 정사각 이미지 사용 시 인물 얼굴 잘림 방지 */
+.hero-slider__img {
+  object-position: center 22% !important;
+}
+
 /* ============================================================
    HeroSlider — hero-video 와 톤 통일 (dark glass + theme accent)
    기존 양피지 톤은 hero-video 와 충돌 + 싸구려 인상.
