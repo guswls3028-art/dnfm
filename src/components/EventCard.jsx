@@ -24,7 +24,7 @@ export default function EventCard({ event }) {
 
   const categorySlug =
     event.category === "공식" ? "official"
-    : event.category === "톡방" ? "talk"
+    : event.category === "톡방" || event.category === "운영" ? "talk"
     : "other";
 
   return (
