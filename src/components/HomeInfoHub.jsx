@@ -28,10 +28,10 @@ export default function HomeInfoHub({ site }) {
       <div className="content-wrap">
         <div className="home-hub__layout">
           <div className="home-hub__boards" aria-label="훈련소 게시판">
-            <article className="board home-board" aria-label="운영 공지">
+            <article className="board home-board home-board--notice" aria-label="운영 공지">
               <div className="board__head">
                 <div>
-                  <span className="home-board__eyebrow">운영자가 올린 글</span>
+                  <span className="home-board__eyebrow">달빛 주점 공지판</span>
                   <h2>공지</h2>
                 </div>
                 <Link className="card__action" href="/board?category=notice">
@@ -41,10 +41,10 @@ export default function HomeInfoHub({ site }) {
               <HomeNoticeBoard />
             </article>
 
-            <article className="board home-board" aria-label="커뮤니티 최신글">
+            <article className="board home-board home-board--community" aria-label="커뮤니티 최신글">
               <div className="board__head">
                 <div>
-                  <span className="home-board__eyebrow">질문 · 팁 · 잡담</span>
+                  <span className="home-board__eyebrow">엘븐가드 모험가 게시판</span>
                   <h2>커뮤니티 게시판</h2>
                 </div>
                 <Link className="card__action" href="/board">
@@ -57,6 +57,10 @@ export default function HomeInfoHub({ site }) {
 
           <aside className="official-rail" aria-labelledby="official-rail-title">
             <div className="home-cta-panel" aria-label="주요 행동">
+              <div className="home-cta-panel__head">
+                <span>캠프파이어 집결</span>
+                <strong>바로 움직이기</strong>
+              </div>
               {site.homeCtas.map((action, index) => (
                 <SmartLink
                   key={action.label}
@@ -71,8 +75,8 @@ export default function HomeInfoHub({ site }) {
             </div>
 
             <div className="official-rail__head">
-              <span className="section__kicker">OFFICIAL FEED</span>
-              <h3 id="official-rail-title">공식 정보 바로가기</h3>
+              <span className="section__kicker">OFFICIAL COURIER</span>
+              <h3 id="official-rail-title">공식 전령</h3>
             </div>
             <div className="official-rail__grid">
               {site.officialChannels.map((item) => (
@@ -90,7 +94,7 @@ export default function HomeInfoHub({ site }) {
             </div>
 
             <div className="community-shortcuts" aria-label="게시판 빠른 이동">
-              <span className="community-shortcuts__label">게시판 카테고리</span>
+              <span className="community-shortcuts__label">빠른 이동</span>
               <div className="community-shortcuts__links">
                 {site.communityShortcuts.map((item) => (
                   <Link key={item.label} href={item.href}>
