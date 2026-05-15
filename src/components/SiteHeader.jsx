@@ -131,21 +131,24 @@ export default function SiteHeader({ site }) {
               <span className="site-topbar__user-name">{displayName}</span>
             </Link>
           ) : (
-            <>
-              <Link href="/login" className="site-topbar__login">
-                로그인
-              </Link>
-              <Link
-                href="/signup"
-                className="site-topbar__signup"
-                aria-label="입소 신청"
-              >
-                입소
-              </Link>
-            </>
+            <Link href="/login" className="site-topbar__login">
+              로그인
+            </Link>
           )}
         </div>
       </header>
+
+      <nav className="site-mobile-tabs" aria-label="모바일 빠른 메뉴">
+        {site.navItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className={isActive(item.href) ? "is-active" : ""}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
 
       {/* 백드롭 (모바일 슬라이드 인 상태) */}
       <button

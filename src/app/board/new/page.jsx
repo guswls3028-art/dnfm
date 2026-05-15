@@ -61,6 +61,21 @@ function NewPostInner() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  function insertBodyTemplate(type) {
+    const templates = {
+      question:
+        "레벨:\n직업:\n항마력:\n막힌 콘텐츠:\n현재 장비/상황:\n궁금한 점:",
+      gear:
+        "캐릭터/직업:\n현재 장비:\n목표 콘텐츠:\n보유 재화/재료:\n고민 중인 선택지:",
+    };
+    const next = templates[type] || "";
+    if (!next) return;
+    setBody((current) => {
+      const trimmed = current.trim();
+      return trimmed ? `${current}\n\n${next}` : next;
+    });
+  }
+
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -284,12 +299,20 @@ function NewPostInner() {
                     본문
                   </label>
                   <div className="composer__toolbar" aria-label="작성 도구">
-                    <span className="composer__chip" title="질문 템플릿 삽입">
-                      💬 질문 템플릿
-                    </span>
-                    <span className="composer__chip" title="장비 템플릿 삽입">
-                      🛡 장비 템플릿
-                    </span>
+                    <button
+                      type="button"
+                      className="composer__chip"
+                      onClick={() => insertBodyTemplate("question")}
+                    >
+                      질문 양식
+                    </button>
+                    <button
+                      type="button"
+                      className="composer__chip"
+                      onClick={() => insertBodyTemplate("gear")}
+                    >
+                      장비 양식
+                    </button>
                   </div>
                 </div>
                 <textarea

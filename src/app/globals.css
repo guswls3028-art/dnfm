@@ -520,16 +520,62 @@ button {
   transform: translateY(1px);
 }
 
+.site-mobile-tabs {
+  position: sticky;
+  top: 56px;
+  z-index: calc(var(--z-header) - 1);
+  display: flex;
+  gap: var(--sp-1);
+  padding: 8px var(--sp-4);
+  overflow-x: auto;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 22%, transparent);
+  background:
+    linear-gradient(180deg, rgba(17, 20, 13, 0.94), rgba(17, 20, 13, 0.88)),
+    radial-gradient(ellipse at 18% 50%, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 14%, transparent), transparent 54%);
+  scrollbar-width: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.site-mobile-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.site-mobile-tabs a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 var(--sp-3);
+  border: 1px solid rgba(245, 236, 210, 0.12);
+  border-radius: var(--radius-pill);
+  color: rgba(245, 236, 210, 0.82);
+  font-size: var(--fs-xs);
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.site-mobile-tabs a:hover,
+.site-mobile-tabs a:focus-visible,
+.site-mobile-tabs a.is-active {
+  border-color: var(--theme-accent, var(--color-gold));
+  color: var(--theme-accent-soft, var(--color-gold-soft));
+  background: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 12%, transparent);
+}
+
 @media (min-width: 1024px) {
   .site-topbar__user-zone {
     display: none;
   }
 }
 
-/* 좁은 폭에선 입소 chip만 (로그인은 햄버거 메뉴로) */
 @media (max-width: 480px) {
   .site-topbar__login {
-    display: none;
+    min-width: 64px;
+    justify-content: center;
+    padding: 0 var(--sp-3);
   }
 }
 
@@ -544,6 +590,10 @@ button {
 
 @media (min-width: 1024px) {
   .site-topbar {
+    display: none;
+  }
+
+  .site-mobile-tabs {
     display: none;
   }
 }
@@ -3136,7 +3186,20 @@ button {
   font-weight: 700;
   color: var(--color-paper-soft);
   background: rgba(212, 162, 76, 0.04);
-  cursor: default;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.08s ease;
+}
+
+.composer__chip:hover,
+.composer__chip:focus-visible {
+  border-color: var(--theme-accent, var(--color-gold));
+  color: var(--theme-accent-soft, var(--color-gold-soft));
+  background: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 12%, transparent);
+}
+
+.composer__chip:active {
+  transform: translateY(1px);
 }
 
 .composer__body {
@@ -6229,6 +6292,148 @@ main > section {
   .board-page .board-row__meta span + span::before {
     margin-right: var(--sp-2);
   }
+}
+
+/* ============================================================
+   Community polish — 3테마와 맞는 게시판 밀도
+   ============================================================ */
+
+.board-page--newb .tabs {
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 18%, transparent);
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 245, 0.035), rgba(0, 0, 0, 0.04)),
+    color-mix(in srgb, var(--theme-accent, var(--color-gold)) 5%, transparent);
+}
+
+.board-page--newb .tab {
+  min-height: 36px;
+  border-color: transparent;
+}
+
+.board-page--newb .tab.is-active {
+  border-color: var(--theme-accent, var(--color-gold));
+  color: var(--color-text-on-gold);
+  background: linear-gradient(135deg, var(--theme-accent, var(--color-gold)), var(--theme-accent-deep, var(--color-gold-deep)));
+  box-shadow: var(--theme-glow, 0 0 20px rgba(212, 162, 76, 0.26));
+}
+
+.board-page--newb .board-toolbar {
+  padding: var(--sp-3);
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 16%, transparent);
+  border-radius: var(--radius-md);
+  background: rgba(17, 20, 13, 0.38);
+}
+
+.board-page--newb .board {
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 34%, transparent);
+  background:
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, rgba(255, 252, 240, 0.96), rgba(239, 230, 208, 0.93));
+  background-blend-mode: multiply, normal;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.34),
+    0 0 0 1px color-mix(in srgb, var(--theme-accent, var(--color-gold)) 18%, transparent);
+}
+
+.board-page--newb .board__head {
+  border-bottom-color: rgba(31, 35, 26, 0.16);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 14%, rgba(255, 253, 245, 0.96)), rgba(255, 253, 245, 0.78));
+}
+
+.board-page--newb .board-row {
+  position: relative;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(230px, auto);
+  border-top-color: rgba(31, 35, 26, 0.12);
+  background: rgba(255, 253, 245, 0.48);
+}
+
+.board-page--newb .board-row:hover,
+.board-page--newb .board-row:focus-visible {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 13%, rgba(255, 253, 245, 0.75)), rgba(255, 253, 245, 0.58));
+}
+
+.board-page--newb .board-row__label {
+  min-width: 72px;
+  height: 26px;
+  border-width: 1px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.board-page--newb .board-row__title {
+  font-size: var(--fs-md);
+  color: rgba(31, 35, 26, 0.94);
+}
+
+.board-page--newb .board-row__meta {
+  justify-content: flex-end;
+  color: rgba(31, 35, 26, 0.56);
+}
+
+@media (max-width: 720px) {
+  .board-page--newb .tabs {
+    border-radius: 0;
+    border-inline: 0;
+    background: rgba(17, 20, 13, 0.42);
+  }
+
+  .board-page--newb .board-toolbar {
+    margin-top: var(--sp-3);
+    padding: var(--sp-3);
+  }
+
+  .board-page--newb .board-row {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--sp-4);
+    background: rgba(255, 253, 245, 0.58);
+  }
+
+  .board-page--newb .board-row + .board-row {
+    border-top-color: rgba(31, 35, 26, 0.16);
+  }
+
+  .board-page--newb .board-row__label {
+    min-width: 0;
+  }
+
+  .board-page--newb .board-row__meta {
+    justify-content: flex-start;
+    font-size: 0.76rem;
+  }
+}
+
+.composer {
+  border-color: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 26%, transparent);
+  background:
+    radial-gradient(ellipse at 14% 0%, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 12%, transparent), transparent 54%),
+    rgba(17, 20, 13, 0.60);
+}
+
+.post-head {
+  border-color: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 30%, transparent);
+  background:
+    radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 10%, transparent), transparent 62%),
+    rgba(17, 20, 13, 0.56);
+}
+
+.post-body {
+  border-color: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 44%, var(--color-gold-deep));
+}
+
+.comments .comment,
+.comment-form {
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 18%, transparent);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 245, 0.045), rgba(0, 0, 0, 0.025));
+}
+
+.comment-form {
+  padding: var(--sp-4);
 }
 
 
