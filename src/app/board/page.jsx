@@ -198,7 +198,7 @@ function BoardInner() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section board-page board-page--newb">
         <div className="content-wrap">
           <div className="tabs" role="tablist" aria-label="게시판 카테고리">
             {categories.map((cat) => {
@@ -220,17 +220,10 @@ function BoardInner() {
 
           <div
             className="board-toolbar"
-            style={{
-              display: "flex",
-              gap: "var(--sp-2)",
-              alignItems: "center",
-              marginTop: "var(--sp-4)",
-              flexWrap: "wrap",
-            }}
           >
             <form
               onSubmit={handleSearchSubmit}
-              style={{ display: "flex", gap: "var(--sp-2)", flex: 1, minWidth: 240 }}
+              className="board-toolbar__search"
             >
               <input
                 type="search"
@@ -238,7 +231,6 @@ function BoardInner() {
                 placeholder="제목·본문 검색"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                style={{ flex: 1 }}
               />
               <button type="submit" className="btn btn--secondary btn--sm">
                 검색
@@ -253,7 +245,7 @@ function BoardInner() {
                 </button>
               ) : null}
             </form>
-            <div style={{ display: "flex", gap: "var(--sp-1)" }} aria-label="정렬">
+            <div className="board-toolbar__sort" aria-label="정렬">
               {SORTS.map((s) => (
                 <button
                   key={s.value}
