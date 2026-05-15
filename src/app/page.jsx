@@ -89,12 +89,12 @@ export default function HomePage() {
                   <span>처음 시작 루트</span>
                 </li>
                 <li>
-                  <span className="guide-cmd__example-key">/가이드ㅡ직업</span>
-                  <span>직업 선택 기준</span>
+                  <span className="guide-cmd__example-key">/가이드 모음</span>
+                  <span>가이드 목록</span>
                 </li>
                 <li>
-                  <span className="guide-cmd__example-key">/가이드ㅡ파티</span>
-                  <span>파티 예절 / 준비물</span>
+                  <span className="guide-cmd__example-key">/가이드ㅡ기본ㅡ시즌가이드</span>
+                  <span>톡방 공지 기준</span>
                 </li>
               </ul>
               <small className="guide-cmd__author">작성: {guideCommand.author}</small>
@@ -136,14 +136,14 @@ export default function HomePage() {
               ))}
               <article className="guild-card guild-card--invite">
                 <header>
-                  <strong>여기에 길드를 걸어보세요</strong>
-                  <small>뉴비/복귀 환영 길드 · 운영자 검토 1~2일</small>
+                  <strong>길드 정보 입력 예정</strong>
+                  <small>운영자가 확인한 길드만 표시</small>
                 </header>
                 <p>
-                  아지트 만렙·버프 가능 / 뉴비 무시·갈취 정책 없음. 길드명·길마·소개·공식 페이지 링크를 운영자에게 보내주세요.
+                  길드명, 길마, 가입 조건, 공식 페이지 링크는 운영자가 확인한 뒤 채웁니다.
                 </p>
                 <Link className="btn btn--primary btn--sm" href="/guilds">
-                  등록 안내 보기 →
+                  길드 페이지 →
                 </Link>
               </article>
             </div>

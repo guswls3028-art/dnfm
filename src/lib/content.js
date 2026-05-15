@@ -48,36 +48,24 @@ export const heroThemes = [
 export const philosophy = {
   oneLiner: "정보부족으로 인한 뉴비의 불이익 예방 + 자유로운 소통.",
   bullets: [
-    "이 방은 뉴비 / 복귀 / 초보 / 라이트 유저를 돕고자 개설한 방입니다.",
-    "저스펙·무과금·소과금·라이트 유저를 무시하거나 조롱하지 않습니다.",
-    "상위 컨텐츠 진입을 위한 성장 과정은 도와드리지만, 컨텐츠를 대신 깨드리는 방은 아닙니다.",
-    "각자의 과금 수준, 플레이 속도, 목표를 존중해주세요.",
-    "싸우지 말고 사이좋게 지내주세요. 가장 중요한 규칙입니다.",
+    "모르는 내용을 물어보는 것만으로도 괜찮은 톡방입니다.",
+    "뉴비가 진짜 몰라서 묻는 상황에서 과금이 필수처럼 전달되지 않도록 조심합니다.",
+    "처음에는 같이 게임하는 사람끼리 도움을 주고받는 공간으로 시작했고, 지금은 공공장소처럼 운영합니다.",
+    "세부 가이드와 수치는 운영자가 확인한 뒤 채웁니다.",
   ],
 };
 
-// 톡방 인원 분포 — 운영자 대화 기준 추정. 표현은 안정형(월 단위) 유지.
+// 톡방 인원 분포 — 운영자가 직접 채울 때까지 비움.
 export const demographics = {
-  asOf: "2026년 5월",
-  bars: [
-    { label: "생뉴비", pct: 37, accent: "gold" },
-    { label: "뉴비 & 복귀", pct: 22, accent: "amber" },
-    { label: "초보졸업", pct: 17, accent: "mint" },
-    { label: "중수/실전러", pct: 13, accent: "blue" },
-    { label: "준고인물", pct: 8, accent: "violet" },
-    { label: "고인물", pct: 4, accent: "crimson" },
-  ],
+  asOf: "운영자 입력 예정",
+  bars: [],
 };
 
-// 톡방 기본 규칙 — 운영자 명시.
+// 톡방 기본 규칙 — 확인된 운영 철학만 유지. 세부 규칙은 운영자가 채움.
 export const rules = [
-  { title: "싸우지 않기", body: "제일 중요한 규칙입니다." },
-  { title: "서로 존중하기", body: "스펙·과금·숙련도·게임이해도·플레이 방식으로 사람을 무시하지 않습니다." },
-  { title: "계정 거래 관련 질문 금지", body: "이 방은 뉴비 가이드 방입니다. 게임 정책위반 관련은 금지." },
-  { title: "게임과 무관한 광고/홍보 금지", body: "스팸성 홍보는 제재될 수 있습니다." },
-  { title: "타톡방/방송/길드 등 홍보는 자유", body: "단, 과도한 반복 홍보나 분쟁 유도는 삼가주세요." },
-  { title: "들낙 자유", body: "필요할 때 들어오고, 필요 없으시면 나가셔도 됩니다." },
-  { title: "질문 환영", body: "단순한 질문도 괜찮습니다. 부끄러워하지 말고 아무거나 질문해도 됩니다." },
+  { title: "질문 가능", body: "모르면 질문만 해도 됩니다." },
+  { title: "과금 필수처럼 말하지 않기", body: "뉴비가 모르는 상태에서 과금이 필수처럼 전달되지 않게 조심합니다." },
+  { title: "세부 정보는 확인 후 반영", body: "직업·장비·컷 정보는 운영자가 확인한 것만 사이트에 올립니다." },
 ];
 
 // 닉네임 가이드 — 닉네임은 자유. 가입 시 본캐 캐릭명/모험단명 함께 입력.
@@ -102,20 +90,13 @@ export const nicknameGuide = {
 
 // 가이드 명령어 — 톡방 채팅창에서.
 export const guideCommand = {
-  trigger: "/가이드ㅡ*",
+  trigger: "/가이드ㅡ시작",
   author: "@맑남",
-  note: "톡방 채팅창에 입력 시 가이드 카드가 자동으로 뜹니다.",
+  note: "톡방 채팅창에 입력하면 시작 루트 카드가 자동으로 뜹니다.",
 };
 
-// 뉴비 친화 길드.
-export const friendlyGuilds = [
-  {
-    leader: "잭터",
-    name: "잭터님의 즉시가입 길드",
-    description: "길드 아지트 만렙 — 모든 던전에서 유용한 버프 요리를 매일 지급. 뉴비/복귀 환영.",
-    url: "https://dnfm.nexon.com/Community/Guild/View/3243836",
-  },
-];
+// 뉴비 친화 길드 — 운영자가 직접 채움.
+export const friendlyGuilds = [];
 
 export const site = {
   id: "training",
@@ -157,18 +138,18 @@ export const site = {
     {
       id: "hero-onboard",
       kicker: "입소 안내",
-      title: "처음 온 모험가가 길을 잃지 않게",
-      body: "톡방 링크, 추천 직업, 오늘의 숙제까지 한 화면에서.",
+      title: "서버는 카인, 직업은 끌리는 거",
+      body: "막히면 톡방에서 묻고, 채팅에 /가이드ㅡ시작 입력.",
       accent: "amber",
-      cta: { label: "입소 시작", href: "/signup" }
+      cta: { label: "가이드 보기", href: "/guide" }
     },
     {
-      id: "hero-event",
-      kicker: "진행중 이벤트",
-      title: "이번 주 보상 일정 한 번에",
-      body: "공식 이벤트와 톡방 이벤트를 같은 시간선으로 정리합니다.",
+      id: "hero-news",
+      kicker: "새소식",
+      title: "공지와 업데이트는 따로 모아보기",
+      body: "운영자가 확인한 글과 공식 링크를 먼저 보여줍니다.",
       accent: "crimson",
-      cta: { label: "이벤트 보러가기", href: "/events" }
+      cta: { label: "새소식 보기", href: "/news" }
     }
   ],
   // 정자 위에 걸어둔 게시판 같은 카드 슬라이더 fallback.
@@ -181,15 +162,6 @@ export const site = {
       src: "/배경사진.jpg",
       label: "뉴비훈련소 카톡방 입장",
       href: "https://open.kakao.com/o/gbsjsZ5g"
-    },
-    {
-      id: "fb-hurock-contest",
-      kicker: "허락공대 ↗",
-      title: "아바타 콘테스트 1회",
-      body: "5개 부문 코디 자랑 + 사용자 투표 + 허락 심사. 6/13(토) 19시 마감.",
-      accent: "violet",
-      href: "https://hurock.dnfm.kr/contests",
-      cta: "콘테스트 보러가기 →"
     },
     {
       id: "fb-dnf-update",
@@ -264,26 +236,26 @@ export const site = {
     {
       step: "01",
       tone: "gold",
-      title: "카톡방 입장",
-      body: "먼저 오픈채팅에 들어오고, 상단 공지와 닉네임 안내만 확인하면 됩니다.",
-      primary: { label: "오픈채팅 입장", href: "https://open.kakao.com/o/gbsjsZ5g" },
-      secondary: { label: "간단 가입", href: "/signup" }
+      title: "서버는 카인",
+      body: "대부분 유저가 카인 서버. 일단 여기서 시작 → 친구 만나기 쉬움.",
+      primary: { label: "가이드 보기", href: "/guide" },
+      secondary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" }
     },
     {
       step: "02",
       tone: "mint",
-      title: "막힌 지점 질문",
-      body: "직업, 레벨, 항마력, 막힌 콘텐츠를 같이 적으면 톡방과 게시판에서 답이 빨라집니다.",
-      primary: { label: "질문 남기기", href: "/board/new?category=question" },
-      secondary: { label: "질문글 보기", href: "/board?category=question" }
+      title: "직업은 끌리는 거",
+      body: "초반엔 어느 직업이든 메인 퀘스트로 키울 수 있어요. 직업별 차이는 30레벨 이후.",
+      primary: { label: "가이드 보기", href: "/guide" },
+      secondary: { label: "질문 남기기", href: "/board/new?category=question" }
     },
     {
       step: "03",
       tone: "crimson",
-      title: "오늘 할 일 확인",
-      body: "공식 공지, 이벤트, 반복 질문 가이드를 확인하고 필요한 링크만 챙기면 됩니다.",
-      primary: { label: "새소식 보기", href: "#news-board" },
-      secondary: { label: "가이드 보기", href: "/guide" }
+      title: "막히면 톡방에서 묻기",
+      body: "채팅에 /가이드ㅡ시작 입력하면 시작 루트 카드 자동. 또는 그냥 질문.",
+      primary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" },
+      secondary: { label: "질문 남기기", href: "/board/new?category=question" }
     }
   ],
   eventSlides: [
@@ -297,7 +269,7 @@ export const site = {
   featureCards: [
     {
       title: "처음 시작 루트",
-      body: "설치 후 초반 진행, 직업 선택, 성장 기준을 한 장으로 정리합니다.",
+      body: "카인 서버, 끌리는 직업, 막히면 톡방 질문. 세부 정보는 운영자가 확인 후 채웁니다.",
       accent: "gold"
     },
     {
@@ -324,23 +296,13 @@ export const site = {
     },
     {
       id: "e2",
-      badge: "NEW",
-      category: "운영",
-      title: "뉴비 훈련소 가입 / 모험단 인증",
-      period: "상시",
-      body: "사이트 가입 후 모험단 캡처를 인증하면 게시판과 톡방 안내를 더 편하게 이용할 수 있습니다.",
-      url: "/signup",
-      status: "진행중"
-    },
-    {
-      id: "e3",
       badge: null,
-      category: "허락공대",
-      title: "허락공대 콘테스트",
-      period: "허락공대에서 진행",
-      body: "허락공대 쪽에서 열리는 코디 콘테스트와 결과 발표를 확인합니다.",
-      url: "https://hurock.dnfm.kr/contests",
-      status: "진행중"
+      category: "운영",
+      title: "톡방 자체 이벤트",
+      period: "운영자 입력 예정",
+      body: "운영자가 실제 공지한 이벤트만 이곳에 올립니다.",
+      url: "/board?category=notice",
+      status: "준비중"
     }
   ],
   guideCards: [
@@ -348,33 +310,17 @@ export const site = {
       id: "g1",
       category: "시작",
       title: "처음 시작 루트",
-      body: "설치 → 서버 선택(카인 추천) → 직업 결정(끌리는 것) → 메인 퀘스트 따라가기. 톡방 채팅창에 `/가이드ㅡ시작` 입력하면 시작 루트 카드를 자동 발송합니다.",
+      body: "서버는 카인. 직업은 끌리는 거. 막히면 톡방에서 묻기.",
       linkLabel: "톡방 입장 후 명령어로 보기",
       url: "https://open.kakao.com/o/gbsjsZ5g"
     },
     {
       id: "g2",
-      category: "공식",
-      title: "신규 모험가 공식 가이드",
-      body: "넥슨 공식 사이트의 추천 가이드. 직업·콘텐츠·이벤트 기준 공식 자료.",
-      linkLabel: "공식 추천 가이드",
-      url: "https://dnfm.nexon.com/Guide/Recommand"
-    },
-    {
-      id: "g3",
-      category: "장비",
-      title: "장비 질문 받는 법",
-      body: "캐릭터 정보 창 + 현재 강화 단계 + 다음에 하고 싶은 콘텐츠를 함께 적어주세요. 정보가 부족하면 답이 어렵습니다.",
-      linkLabel: "장비 게시판 이동",
-      url: "/board?category=equip"
-    },
-    {
-      id: "g4",
-      category: "파티",
-      title: "파티와 레이드 예절",
-      body: "포션·무기 강화·항마력 확인 후 파티 신청. 모르는 용어는 부담 없이 톡방에 질문 — 거의 항상 누군가 알려줍니다.",
-      linkLabel: "파티 게시판 이동",
-      url: "/board?category=party"
+      category: "명령어",
+      title: "가이드 명령어",
+      body: "시작 루트는 /가이드ㅡ시작. 톡방 공지에는 /가이드ㅡ* 형식의 가이드 안내가 있습니다.",
+      linkLabel: "가이드 페이지",
+      url: "/guide"
     }
   ],
   stats: [
@@ -390,7 +336,7 @@ export const site = {
     },
     {
       title: "뉴비 질문 흐름",
-      body: "레벨, 직업, 항마력, 현재 막힌 콘텐츠를 먼저 묻고 같은 질문은 가이드 카드로 회수합니다.",
+      body: "막히면 톡방에서 질문. 확인되지 않은 세부 수치는 사이트에 적지 않습니다.",
       accent: "amber"
     },
     {
@@ -402,17 +348,16 @@ export const site = {
   checklistKey: "dnfm-training-checklist",
   checklistTitle: "오늘 훈련소 체크",
   checklist: [
-    "공식 공지와 점검 안내 확인",
-    "진행 이벤트 보상 기간 확인",
-    "톡방 상단 공지 갱신",
-    "반복 질문 1개를 가이드 후보로 기록"
+    "서버는 카인으로 시작",
+    "직업은 끌리는 것으로 선택",
+    "막히면 /가이드ㅡ시작 또는 톡방 질문"
   ],
   guideFilters: ["전체", "시작", "성장", "장비", "파티", "공식"],
   guides: [
     {
       title: "처음 시작 루트",
       category: "시작",
-      body: "설치 → 카인 서버 권장 → 끌리는 직업 → 메인 퀘스트. 톡방 `/가이드ㅡ시작` 명령어로 즉시 카드.",
+      body: "서버는 카인. 직업은 끌리는 거. 막히면 톡방에서 묻기.",
       linkLabel: "톡방 입장",
       url: "https://open.kakao.com/o/gbsjsZ5g"
     },
@@ -426,14 +371,14 @@ export const site = {
     {
       title: "장비 질문 받는 법",
       category: "장비",
-      body: "캐릭터 정보 창 + 현재 강화 단계 + 다음 목표를 함께 적으면 답이 빠릅니다.",
+      body: "세부 장비 정보는 운영자가 확인한 뒤 채웁니다. 지금은 톡방 질문을 우선합니다.",
       linkLabel: "장비 게시판",
       url: "/board?category=equip"
     },
     {
       title: "파티와 레이드 예절",
       category: "파티",
-      body: "포션·무기 강화·항마력 확인 후 파티 신청. 용어는 부담 없이 톡방에 질문.",
+      body: "파티 관련 세부 기준은 운영자가 확인한 뒤 채웁니다. 지금은 톡방 질문을 우선합니다.",
       linkLabel: "파티 게시판",
       url: "/board?category=party"
     },
@@ -445,9 +390,9 @@ export const site = {
       url: "https://dnfm.nexon.com/Community/Tip"
     },
     {
-      title: "복귀자 점검표",
+      title: "운영자 입력 예정",
       category: "성장",
-      body: "복귀 후 확인 — (1) 시즌 보상 (2) 장비 등급 (3) 일일 피로도 (4) 주간 콘텐츠. 막막하면 톡방 질문 환영.",
+      body: "성장 세부 정보는 운영자가 확인한 내용만 채웁니다.",
       linkLabel: "톡방 입장",
       url: "https://open.kakao.com/o/gbsjsZ5g"
     }
@@ -467,14 +412,13 @@ export const site = {
       title: "운영 채널",
       links: [
         { label: "카톡방 입장", url: "https://open.kakao.com/o/gbsjsZ5g" },
-        { label: "가이드 제보 — 팁 글로", url: "/board/new?category=tip" },
-        { label: "운영 문의", url: "mailto:admin@dnfm.kr" }
+        { label: "가이드 제보 — 팁 글로", url: "/board/new?category=tip" }
       ]
     }
   ],
   navItems: [
     { label: "홈", href: "/" },
-    { label: "새소식", href: "/#news-board" },
+    { label: "새소식", href: "/news" },
     { label: "커뮤니티", href: "/board" },
     { label: "가이드", href: "/guide" },
     { label: "이벤트", href: "/events" },

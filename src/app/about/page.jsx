@@ -13,7 +13,7 @@ export default function AboutPage() {
           <div>
             <h1 className="page-hero__title">톡방 소개와 규칙</h1>
             <p className="page-hero__sub">
-              방장이 직접 쓴 운영 철학, 인원 분포, 7가지 기본 규칙.
+              방장이 확인한 운영 철학과 기본 안내만 표시합니다.
             </p>
           </div>
           <Link href="/signup" className="btn btn--primary btn--sm">
@@ -43,23 +43,26 @@ export default function AboutPage() {
             ))}
           </ul>
 
-          <div
-            className="demographics"
-            aria-label={`톡방 인원 분포 (${demographics.asOf} 기준)`}
-          >
+          <div className="demographics" aria-label={`톡방 정보 (${demographics.asOf})`}>
             <div className="demographics__head">
               <strong>인원 분포</strong>
-              <small>{demographics.asOf} 대화 기준 추정</small>
+              <small>{demographics.asOf}</small>
             </div>
-            {demographics.bars.map((bar) => (
-              <div className="demographics__row" key={bar.label}>
-                <span className="demographics__label">{bar.label}</span>
-                <span className="demographics__bar" data-accent={bar.accent}>
-                  <span style={{ width: `${bar.pct * 2}%` }} />
-                </span>
-                <span className="demographics__pct">{bar.pct}%</span>
-              </div>
-            ))}
+            {demographics.bars.length ? (
+              demographics.bars.map((bar) => (
+                <div className="demographics__row" key={bar.label}>
+                  <span className="demographics__label">{bar.label}</span>
+                  <span className="demographics__bar" data-accent={bar.accent}>
+                    <span style={{ width: `${bar.pct * 2}%` }} />
+                  </span>
+                  <span className="demographics__pct">{bar.pct}%</span>
+                </div>
+              ))
+            ) : (
+              <p className="md-empty" style={{ margin: 0 }}>
+                운영자가 직접 확인한 뒤 채웁니다.
+              </p>
+            )}
           </div>
         </div>
       </section>

@@ -31,7 +31,7 @@ export default async function EventsPage({ searchParams }) {
           <div>
             <h1 className="page-hero__title">이벤트</h1>
             <p className="page-hero__sub">
-              공식 이벤트와 톡방 자체 이벤트를 한 보드에서 확인합니다.
+              공식 이벤트와 운영자가 확인한 톡방 이벤트만 표시합니다.
             </p>
           </div>
         </div>
@@ -88,9 +88,9 @@ export default async function EventsPage({ searchParams }) {
               gap: "var(--sp-2)",
             }}
           >
-            <strong style={{ color: "var(--color-gold)" }}>톡방 자체 이벤트는 카톡방에서</strong>
+            <strong style={{ color: "var(--color-gold)" }}>톡방 자체 이벤트는 운영자 확인 후</strong>
             <p style={{ margin: 0, lineHeight: 1.7 }}>
-              운영자가 진행하는 깜짝 이벤트·경품 추첨은 오픈채팅에서 공지합니다. 사이트에는 종료 후 결과만 정리.
+              아직 확인되지 않은 이벤트 정보는 사이트에 임의로 채우지 않습니다.
             </p>
             <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
               <a

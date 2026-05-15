@@ -59,7 +59,7 @@ export default function SiteFooter({ site }) {
                 <Link href="/board/new?category=tip">가이드 제보(팁 글)</Link>
               </li>
               <li>
-                <a href="mailto:admin@dnfm.kr">운영 문의 — admin@dnfm.kr</a>
+                <Link href="/board/new?category=question">운영 문의 글쓰기</Link>
               </li>
               <li>
                 <Link href="/admin/reports">신고 처리(운영자)</Link>

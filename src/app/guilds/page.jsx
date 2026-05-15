@@ -13,7 +13,7 @@ export default function GuildsPage() {
           <div>
             <h1 className="page-hero__title">뉴비 친화 길드</h1>
             <p className="page-hero__sub">
-              뉴비·복귀 환영. 길드 아지트 버프부터 즉시가입까지.
+              운영자가 확인한 길드 정보만 표시합니다.
             </p>
           </div>
           <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
@@ -67,16 +67,15 @@ export default function GuildsPage() {
 
             <article className="guild-card guild-card--invite">
               <header>
-                <strong>여기에 길드를 걸어보세요</strong>
-                <small>길드장 · 직접 신청</small>
+                <strong>길드 정보 입력 예정</strong>
+                <small>운영자 확인 후 등록</small>
               </header>
               <p>
-                뉴비/복귀를 환영하는 길드라면 누구나 가능. 길드명·길마·간단한 소개·공식 페이지 링크를 운영자에게 보내주세요.
+                길드명, 길마, 가입 조건, 공식 페이지 링크는 운영자가 확인한 내용만 채웁니다.
               </p>
               <ul className="guild-invite__list">
-                <li>아지트 만렙·버프 가능 길드 우선</li>
-                <li>가입 조건은 자유, 단 뉴비 무시·갈취 정책 길드는 제외</li>
-                <li>운영자 검토 후 등록 (보통 1~2일)</li>
+                <li>확인되지 않은 길드 조건은 표시하지 않습니다.</li>
+                <li>신청/수정은 톡방에서 운영자에게 전달합니다.</li>
               </ul>
               <a
                 className="btn btn--primary btn--sm"
@@ -92,10 +91,10 @@ export default function GuildsPage() {
               <article className="guild-card guild-card--slot" key={`slot-${i}`} aria-hidden="true">
                 <header>
                   <strong>비어있는 자리</strong>
-                  <small>검토중인 길드가 채워집니다</small>
+                  <small>운영자 입력 예정</small>
                 </header>
-                <p>운영자 검토를 통과한 뉴비 친화 길드가 이 자리에 표시됩니다.</p>
-                <span className="action-disabled" aria-disabled="true">접수 대기</span>
+                <p>확인된 길드만 이 자리에 표시됩니다.</p>
+                <span className="action-disabled" aria-disabled="true">입력 예정</span>
               </article>
             ))}
           </div>
@@ -103,9 +102,9 @@ export default function GuildsPage() {
           <article className="guild-policy">
             <h3 className="guild-policy__title">운영 정책</h3>
             <ul>
-              <li><strong>등록 기준</strong> — 뉴비 무시·갈취 정책 0건, 가입 조건 명시</li>
-              <li><strong>심사 기간</strong> — 보통 1~2일 (사용자가 톡방에 신청)</li>
-              <li><strong>해제 기준</strong> — 운영 방침 위반 시 사전 안내 후 해제</li>
+              <li><strong>등록 기준</strong> — 운영자가 확인한 정보만 등록</li>
+              <li><strong>수정 기준</strong> — 길드 조건이 바뀌면 운영자 확인 후 수정</li>
+              <li><strong>미확인 정보</strong> — 추측으로 채우지 않음</li>
             </ul>
           </article>
         </div>
