@@ -63,6 +63,7 @@ function LoginInner() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(oauthErrorMessage(oauthErrorCode));
 
@@ -91,7 +92,7 @@ function LoginInner() {
 
     setSubmitting(true);
     try {
-      const data = await login({ username: username.trim(), password });
+      const data = await login({ username: username.trim(), password, rememberMe });
       const must = data?.user?.mustChangePassword;
       router.push(must ? "/profile/password?required=1" : next);
       router.refresh();
@@ -107,7 +108,9 @@ function LoginInner() {
 
   async function handleOAuth(provider) {
     const url =
-      provider === "kakao" ? oauth.kakaoStart(next) : oauth.googleStart(next);
+      provider === "kakao"
+        ? oauth.kakaoStart(next, { rememberMe })
+        : oauth.googleStart(next, { rememberMe });
     setError(null);
     try {
       const res = await fetch(url, { method: "GET", redirect: "manual" });
@@ -166,6 +169,23 @@ function LoginInner() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              fontSize: "0.92rem",
+              fontWeight: 800,
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              style={{ width: 18, height: 18, accentColor: "var(--color-gold)" }}
+            />
+            자동 로그인 유지
+          </label>
 
           {error ? (
             <p className="auth-msg auth-msg--error" role="alert">

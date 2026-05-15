@@ -34,6 +34,13 @@ export function CurrentUserProvider({ children }) {
         setError(null);
         return data.user;
       }
+      const refreshed = await apiFetch("/auth/refresh", { method: "POST" });
+      if (refreshed && refreshed.user) {
+        setUser(refreshed.user);
+        setState(STATE.USER);
+        setError(null);
+        return refreshed.user;
+      }
       setUser(null);
       setState(STATE.ANON);
       return null;
@@ -57,10 +64,10 @@ export function CurrentUserProvider({ children }) {
   }, [refresh]);
 
   const login = useCallback(
-    async ({ username, password }) => {
+    async ({ username, password, rememberMe = true }) => {
       const data = await apiFetch("/auth/login/local", {
         method: "POST",
-        json: { username, password },
+        json: { username, password, rememberMe },
       });
       if (data && data.user) {
         setUser(data.user);

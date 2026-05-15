@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BoardRow from "@/components/BoardRow";
 import { useCurrentUser } from "@/lib/use-current-user";
-import { apiFetch, ApiError } from "@/lib/api-client";
+import { apiFetch, ApiError, auth, oauth } from "@/lib/api-client";
 import VerifiedBadge from "@/components/VerifiedBadge";
 
 function safeString(v) {
@@ -13,14 +13,37 @@ function safeString(v) {
   return String(v);
 }
 
+function oauthLinkErrorMessage(code) {
+  if (!code) return null;
+  if (code === "oauth_account_already_linked") return "이미 다른 계정에 연동된 소셜 계정입니다.";
+  if (code === "oauth_provider_already_linked") return "이미 같은 소셜 제공자가 연동되어 있습니다.";
+  if (code === "oauth_link_login_required") return "로그인 후 다시 연동해 주세요.";
+  if (code === "last_auth_method") return "마지막 로그인 수단은 해제할 수 없습니다.";
+  return "소셜 계정 연동에 실패했어요. 다시 시도해 주세요.";
+}
+
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthed, isLoading, logout } = useCurrentUser();
+  const { user, isAuthed, isLoading, logout, refresh } = useCurrentUser();
   const [myPosts, setMyPosts] = useState(null);
   const [postsError, setPostsError] = useState(null);
+  const [linkBusy, setLinkBusy] = useState(null);
+  const [linkError, setLinkError] = useState(null);
 
   // 비로그인이라도 강제 redirect 하지 않고 안내 페이지 노출.
   // 사용자가 "마이페이지가 뭔지" 미리 보고 가입을 결정할 수 있게.
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("oauth_error");
+    if (code) setLinkError(oauthLinkErrorMessage(code));
+    if (code || params.get("linked")) {
+      params.delete("oauth_error");
+      params.delete("linked");
+      const next = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
+      window.history.replaceState(null, "", next);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isAuthed) return;
@@ -67,6 +90,39 @@ export default function ProfilePage() {
     await logout();
     router.push("/");
     router.refresh();
+  }
+
+  async function handleUnlink(provider) {
+    setLinkBusy(provider);
+    setLinkError(null);
+    try {
+      await auth.unlinkOAuth(provider);
+      await refresh();
+    } catch (err) {
+      const friendly =
+        err instanceof ApiError
+          ? err.message
+          : "소셜 연동 해제에 실패했어요. 잠시 후 다시 시도해 주세요.";
+      setLinkError(friendly);
+    } finally {
+      setLinkBusy(null);
+    }
+  }
+
+  async function handleLink(provider) {
+    const url = provider === "kakao" ? oauth.kakaoLink("/profile") : oauth.googleLink("/profile");
+    setLinkError(null);
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "manual" });
+      if (res.status === 503) {
+        const label = provider === "kakao" ? "카카오" : "구글";
+        setLinkError(`${label} 연동은 아직 준비 중입니다. OAuth 설정을 확인해 주세요.`);
+        return;
+      }
+    } catch {
+      /* redirect 시도 */
+    }
+    window.location.href = url;
   }
 
   if (isLoading) {
@@ -165,6 +221,13 @@ export default function ProfilePage() {
 
   const dnf = user.dnfProfile || {};
   const verifiedBySelect = Boolean(user.verifiedBySelectScreen || dnf.verifiedBySelectScreen);
+  const authProviders = user.authProviders || {
+    local: Boolean(user.username),
+    oauth: [],
+  };
+  const oauthAccounts = Array.isArray(authProviders.oauth) ? authProviders.oauth : [];
+  const authMethodCount = (authProviders.local ? 1 : 0) + oauthAccounts.length;
+  const isLinked = (provider) => oauthAccounts.some((item) => item.provider === provider);
 
   return (
     <>
@@ -248,6 +311,53 @@ export default function ProfilePage() {
                   </span>
                 </div>
               ) : null}
+            </article>
+
+            <article className="profile-card">
+              <h2 className="profile-card__title">로그인 연동</h2>
+              {linkError ? (
+                <p className="auth-msg auth-msg--error" role="alert">
+                  {linkError}
+                </p>
+              ) : null}
+              <div className="profile-row">
+                <span className="profile-row__label">자체 계정</span>
+                <span className="profile-row__value">
+                  {authProviders.local ? "연결됨" : "없음"}
+                </span>
+              </div>
+              {["google", "kakao"].map((provider) => {
+                const linked = isLinked(provider);
+                const label = provider === "google" ? "Google" : "Kakao";
+                const cannotUnlinkLast = linked && authMethodCount <= 1;
+                return (
+                  <div className="profile-row" key={provider}>
+                    <span className="profile-row__label">{label}</span>
+                    <span className="profile-row__value" style={{ gap: 10, flexWrap: "wrap" }}>
+                      {linked ? "연결됨" : "미연동"}
+                      {linked ? (
+                        <button
+                          type="button"
+                          className="btn btn--ghost btn--sm"
+                          onClick={() => handleUnlink(provider)}
+                          disabled={linkBusy === provider || cannotUnlinkLast}
+                        >
+                          {linkBusy === provider ? "해제 중…" : "해제"}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn--secondary btn--sm"
+                          onClick={() => handleLink(provider)}
+                          disabled={Boolean(linkBusy)}
+                        >
+                          연동
+                        </button>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
             </article>
 
             <article className="profile-card">
