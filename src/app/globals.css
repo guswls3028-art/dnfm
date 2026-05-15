@@ -454,8 +454,14 @@ button {
 
 .site-brand__wordmark strong {
   font-size: var(--fs-lg);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.02em;
   color: var(--color-gold);
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+.site-brand__wordmark small {
+  letter-spacing: 0.08em;
 }
 
 .site-brand__wordmark small {

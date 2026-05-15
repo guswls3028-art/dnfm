@@ -19,8 +19,8 @@ export default function SiteFooter({ site }) {
             <div className="site-footer__brand">
               <span className="site-footer__brand-mark" aria-hidden="true">D</span>
               <div>
-                <strong>{site.brandMark}</strong>
-                <small>{site.shortTitle}</small>
+                <strong>{site.shortTitle}</strong>
+                <small>{site.brandMark}</small>
               </div>
             </div>
             <p className="site-footer__tagline">{site.subtitle}</p>

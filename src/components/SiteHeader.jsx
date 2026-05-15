@@ -66,7 +66,7 @@ export default function SiteHeader({ site }) {
         </button>
         <Link href="/" className="site-topbar__brand" aria-label={`${site.title} 홈`}>
           <span className="site-brand__seal" aria-hidden="true">D</span>
-          <strong>{site.brandMark}</strong>
+          <strong>{site.shortTitle}</strong>
         </Link>
         <div className="site-topbar__spacer" aria-hidden="true" />
         <div className="site-topbar__user-zone">
@@ -120,8 +120,8 @@ export default function SiteHeader({ site }) {
           <Link href="/" className="site-brand" aria-label={`${site.title} 홈`}>
             <span className="site-brand__seal" aria-hidden="true">D</span>
             <span className="site-brand__wordmark">
-              <strong>{site.brandMark}</strong>
-              <small>{site.shortTitle}</small>
+              <strong>{site.shortTitle}</strong>
+              <small>{site.brandMark}</small>
             </span>
           </Link>
         </div>
