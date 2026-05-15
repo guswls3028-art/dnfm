@@ -20,5 +20,6 @@ Thumbs.db
 
 이미지/
 
-# Agent 작업 worktree (자동 생성, prune 후 사라짐)
-.claude/worktrees/
+# Local agent / QA scratch files
+.claude/
+_qa*.mjs

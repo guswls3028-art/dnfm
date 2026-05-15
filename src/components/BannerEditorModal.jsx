@@ -229,7 +229,7 @@ export default function BannerEditorModal({ banners, onClose, onChanged }) {
         <section className="banner-modal__section">
           <h3 className="banner-modal__subtitle">현재 배너 ({banners.length}개)</h3>
           {banners.length === 0 ? (
-            <p className="banner-modal__hint">아직 등록된 배너가 없어요. 등록 전에는 fallback 슬라이드가 보입니다.</p>
+            <p className="banner-modal__hint">아직 등록된 배너가 없어요. 기본 홈 배너가 표시됩니다.</p>
           ) : (
             <ul className="banner-modal__list" role="list">
               {banners.map((b) => (

@@ -69,11 +69,7 @@ export default async function EventDetailPage({ params }) {
                   자세히 →
                 </Link>
               )
-            ) : (
-              <button type="button" className="btn btn--secondary" disabled title="링크 등록 전">
-                준비중
-              </button>
-            )}
+            ) : null}
             <Link href="/events" className="btn btn--ghost">
               목록으로
             </Link>

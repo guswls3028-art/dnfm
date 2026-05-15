@@ -77,7 +77,7 @@ export default function GuideCard({ guide }) {
   ) : (
     <span className="guide-card__pending" aria-disabled="true">
       <span className="guide-card__pending-dot" aria-hidden="true" />
-      운영자가 채울 자리예요
+      링크 준비 중
     </span>
   );
 

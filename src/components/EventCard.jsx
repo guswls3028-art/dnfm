@@ -50,7 +50,7 @@ export default function EventCard({ event }) {
           )
         ) : (
           <span className="action-disabled" aria-disabled="true">
-            준비중
+            상세 없음
           </span>
         )}
       </div>

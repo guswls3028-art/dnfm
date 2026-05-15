@@ -233,12 +233,6 @@ export default function HeroSlider() {
             })}
           </div>
 
-          {!isApiBanners ? (
-            <span className="hero-slider__source-tag" aria-hidden="true">
-              미리보기 · 어드민이 배너를 등록하면 자동 교체
-            </span>
-          ) : null}
-
           <span className="hero-slider__counter" aria-hidden="true">
             <strong>{String(idx + 1).padStart(2, "0")}</strong>
             <span>/</span>

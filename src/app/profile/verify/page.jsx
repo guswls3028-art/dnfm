@@ -132,6 +132,12 @@ function VerifyInner() {
   async function handleSaveAuth() {
     if (saving || !merged) return;
     setError(null);
+    const adventurerName = edited.adventurerName?.trim();
+    const mainCharacterName = edited.mainCharacterName?.trim();
+    if (!adventurerName || !mainCharacterName) {
+      setError("모험단 기본정보 화면에서 모험단명과 대표 캐릭터명을 확인해야 저장할 수 있습니다. 인식값이 비어 있으면 직접 입력해 주세요.");
+      return;
+    }
     setSaving(true);
     try {
       const characterSelectNames = perImage
@@ -142,8 +148,8 @@ function VerifyInner() {
         .map((c) => ({ name: (c.name || "").trim(), klass: (c.klass || "").trim() }))
         .filter((c) => c.name);
       await auth.confirmDnfProfile({
-        adventurerName: edited.adventurerName?.trim() || undefined,
-        mainCharacterName: edited.mainCharacterName?.trim() || undefined,
+        adventurerName,
+        mainCharacterName,
         mainCharacterClass: edited.mainCharacterClass?.trim() || undefined,
         characters: cleanedCharacters.length ? cleanedCharacters : undefined,
         characterSelectNames: characterSelectNames.length ? characterSelectNames : undefined,
@@ -378,7 +384,7 @@ function VerifyInner() {
 
               {merged.verifiedBySelectScreen ? (
                 <p className="auth-msg auth-msg--success">
-                  ✓ 캐릭터 선택창과 매칭 — 인증 마크 부여 예정
+                  ✓ 캐릭터 선택창과 매칭 — 인증 마크가 부여됩니다
                 </p>
               ) : (
                 <p className="auth-msg auth-msg--info">

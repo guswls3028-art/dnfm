@@ -96,11 +96,12 @@ function BoardInner() {
 
   const [posts, setPosts] = useState(null);
   const [total, setTotal] = useState(0);
-  const [source, setSource] = useState(null);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     setPosts(null);
+    setLoadError(null);
 
     const qs = new URLSearchParams({
       page: String(pageParam),
@@ -109,20 +110,6 @@ function BoardInner() {
     });
     if (activeCat !== "all") qs.set("categorySlug", activeCat);
     if (qParam) qs.set("q", qParam);
-
-    const applyFallback = () => {
-      const all = (site.boardPosts || []).map(normalizePost).filter(Boolean);
-      const filtered =
-        activeCat === "all" ? all : all.filter((p) => p.categoryId === activeCat);
-      const searched = qParam
-        ? filtered.filter(
-            (p) => p.title.includes(qParam) || (p.body || "").includes(qParam),
-          )
-        : filtered;
-      setPosts(searched);
-      setTotal(searched.length);
-      setSource("fallback");
-    };
 
     (async () => {
       try {
@@ -135,10 +122,6 @@ function BoardInner() {
             : Array.isArray(data)
               ? data
               : [];
-        if (list.length === 0 && !qParam && activeCat === "all") {
-          applyFallback();
-          return;
-        }
         setPosts(list.map(normalizePost).filter(Boolean));
         const t =
           typeof data?.total === "number"
@@ -147,13 +130,11 @@ function BoardInner() {
               ? list.length
               : 0;
         setTotal(t);
-        setSource("api");
       } catch (err) {
         if (cancelled) return;
-        if (typeof console !== "undefined") {
-          console.warn("[board] posts fetch failed:", err);
-        }
-        applyFallback();
+        setPosts([]);
+        setTotal(0);
+        setLoadError(err instanceof ApiError ? err.message : err?.message || "네트워크 오류");
       }
     })();
 
@@ -287,6 +268,15 @@ function BoardInner() {
             </div>
           </div>
 
+          {loadError ? (
+            <div className="card card--parchment" style={{ marginTop: "var(--sp-4)", padding: "var(--sp-4)" }}>
+              <strong style={{ color: "var(--color-gold)" }}>게시글을 불러오지 못했어요</strong>
+              <p style={{ margin: "var(--sp-2) 0 0", opacity: 0.86 }}>
+                잠시 후 다시 시도해 주세요. ({loadError})
+              </p>
+            </div>
+          ) : null}
+
           <div className="board" style={{ marginTop: "var(--sp-4)" }}>
             <div className="board__head">
               <h2>
@@ -301,16 +291,6 @@ function BoardInner() {
                   : "불러오는 중…"}
               </span>
             </div>
-
-            {source === "fallback" && sorted && sorted.length > 0 ? (
-              <p
-                className="board__preview-hint"
-                role="note"
-                style={{ margin: "var(--sp-3) var(--sp-4) 0" }}
-              >
-                미리보기 글입니다 — 게시판이 열리면 실제 글로 교체돼요.
-              </p>
-            ) : null}
 
             <div className="board__rows">
               {sorted === null ? (

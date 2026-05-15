@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import BoardRow from "@/components/BoardRow";
 import { posts as postsApi } from "@/lib/api-client";
-import { site } from "@/lib/content";
 
 function normalize(p) {
   // backend list 응답에서 회원 글 = author: {id, displayName, dnfProfile}, 비회원 글 = author: null + authorNickname + anonymousMarker.
@@ -28,11 +27,8 @@ function normalize(p) {
   };
 }
 
-// API 실패 / 빈 응답 시 보여줄 정적 fallback (content.js 의 communityPosts).
-const FALLBACK_POSTS = (site.communityPosts || []).slice(0, 5);
-
 export default function HomeCommunityBoard() {
-  const [state, setState] = useState({ status: "loading", items: [], source: null });
+  const [state, setState] = useState({ status: "loading", items: [] });
 
   useEffect(() => {
     let alive = true;
@@ -47,13 +43,9 @@ export default function HomeCommunityBoard() {
             : Array.isArray(data)
               ? data
               : [];
-        if (list.length === 0) {
-          setState({ status: "fallback", items: FALLBACK_POSTS, source: "empty" });
-        } else {
-          setState({ status: "ready", items: list.map(normalize), source: "api" });
-        }
+        setState({ status: "ready", items: list.map(normalize) });
       } catch {
-        if (alive) setState({ status: "fallback", items: FALLBACK_POSTS, source: "error" });
+        if (alive) setState({ status: "error", items: [] });
       }
     })();
     return () => {
@@ -73,7 +65,8 @@ export default function HomeCommunityBoard() {
     return (
       <div className="board__rows">
         <p className="board__empty">
-          아직 등록된 글이 없습니다. <Link href="/board/new">첫 글 작성하기 →</Link>
+          {state.status === "error" ? "글 목록을 불러오지 못했어요." : "아직 등록된 글이 없습니다."}{" "}
+          <Link href="/board/new">첫 글 작성하기 →</Link>
         </p>
       </div>
     );
@@ -81,11 +74,6 @@ export default function HomeCommunityBoard() {
 
   return (
     <div className="board__rows">
-      {state.source !== "api" ? (
-        <p className="board__preview-hint" role="note">
-          미리보기 글입니다 — 게시판이 열리면 실제 글로 교체돼요.
-        </p>
-      ) : null}
       {state.items.map((post) => (
         <BoardRow key={post.id || post.title} post={post} />
       ))}

@@ -9,8 +9,7 @@ export const metadata = {
 const TABS = [
   { id: "all", label: "전체" },
   { id: "ongoing", label: "진행중" },
-  { id: "ended", label: "종료" },
-  { id: "winners", label: "당첨안내" }
+  { id: "ended", label: "종료" }
 ];
 
 export default async function EventsPage({ searchParams }) {
@@ -21,7 +20,6 @@ export default async function EventsPage({ searchParams }) {
   let list = site.eventCards;
   if (tab === "ongoing") list = list.filter((e) => e.status !== "종료");
   if (tab === "ended") list = list.filter((e) => e.status === "종료");
-  if (tab === "winners") list = []; // 추후 backend 연동
   if (q) {
     list = list.filter((e) => e.title.toLowerCase().includes(q) || e.body.toLowerCase().includes(q));
   }
@@ -69,26 +67,7 @@ export default async function EventsPage({ searchParams }) {
             </form>
           </div>
 
-          {tab === "winners" ? (
-            <div className="card card--ornate" style={{ padding: "var(--sp-7)", textAlign: "center", display: "grid", gap: "var(--sp-3)" }}>
-              <p style={{ margin: 0, color: "var(--color-gold)", fontWeight: 800 }}>
-                당첨안내는 톡방 이벤트가 끝난 뒤 이곳에 정리됩니다.
-              </p>
-              <p style={{ margin: 0, fontSize: "var(--fs-sm)", opacity: 0.85 }}>
-                실시간 당첨자 발표는 카톡방에서 진행됩니다.
-              </p>
-              <div>
-                <a
-                  className="btn btn--primary btn--sm"
-                  href="https://open.kakao.com/o/gbsjsZ5g"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  카톡방 입장 →
-                </a>
-              </div>
-            </div>
-          ) : list.length === 0 ? (
+          {list.length === 0 ? (
             <div className="card" style={{ padding: "var(--sp-7)", textAlign: "center" }}>
               <p style={{ margin: 0 }}>일치하는 이벤트가 없습니다.</p>
             </div>

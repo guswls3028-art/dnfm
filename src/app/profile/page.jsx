@@ -50,9 +50,6 @@ export default function ProfilePage() {
         );
       } catch (err) {
         if (cancelled) return;
-        if (typeof console !== "undefined") {
-          console.warn("[profile] my posts fetch failed:", err);
-        }
         const friendly =
           err instanceof ApiError && err.status >= 500
             ? "잠시 후 다시 시도해 주세요."
@@ -133,8 +130,8 @@ export default function ProfilePage() {
                   <span>게시판 활동을 한 자리에서 추적</span>
                 </li>
                 <li>
-                  <strong>추천 · 알림</strong>
-                  <span>핫 게시글, 운영자 공지 알림 (예정)</span>
+                  <strong>활동 기록</strong>
+                  <span>가입 후 내가 쓴 글을 바로 확인</span>
                 </li>
               </ul>
               <p className="auth-msg auth-msg--info" style={{ marginTop: "var(--sp-3)" }}>
