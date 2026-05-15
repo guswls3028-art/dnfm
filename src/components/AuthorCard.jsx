@@ -1,6 +1,13 @@
 "use client";
 
 import VerifiedBadge from "./VerifiedBadge";
+import { findFirstClassIcon } from "@/lib/dnf-classes";
+
+function avatarPublicUrl(r2Key) {
+  if (!r2Key) return null;
+  if (/^https?:\/\//i.test(r2Key)) return r2Key;
+  return `https://api.dnfm.kr/uploads/r2/${encodeURIComponent(r2Key)}`;
+}
 
 /**
  * 게시글 / 콘테스트 본문 끝에 들어가는 작성자 정보 카드.
@@ -27,23 +34,42 @@ export default function AuthorCard({ author }) {
   const klass = dnf.mainCharacterClass;
   const adv = dnf.adventurerName;
   const characters = Array.isArray(dnf.characters) ? dnf.characters : [];
+  const avatarUrl = avatarPublicUrl(author.avatarR2Key);
+  const mainIcon = findFirstClassIcon(klass);
+  const subCharacters = characters.filter((c) => c?.name && c.name !== main);
 
   return (
     <aside className="author-card" aria-label={`작성자 ${displayName} 정보`}>
-      <div className="author-card__head">
-        <span className="author-card__nick">{displayName}</span>
-        <VerifiedBadge verified={verified} size="md" />
-        <span className="author-card__sub">님의</span>
+      <div className="author-card__identity">
+        <span className="author-card__avatar" aria-hidden="true">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt="" />
+          ) : (
+            displayName?.[0] || "?"
+          )}
+        </span>
+        <div className="author-card__head">
+          <span className="author-card__nick">{displayName}</span>
+          <VerifiedBadge verified={verified} size="md" />
+          <span className="author-card__sub">님의</span>
+        </div>
       </div>
 
       {main || adv ? (
         <div className="author-card__body">
           {main ? (
-            <div className="author-card__row">
-              <span className="author-card__label">대표 캐릭터</span>
-              <span className="author-card__value">
+            <div className="author-card__main">
+              <span className="author-card__portrait" aria-hidden="true">
+                {mainIcon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={mainIcon} alt="" />
+                ) : null}
+              </span>
+              <span className="author-card__main-copy">
+                <span className="author-card__label">대표 캐릭터</span>
                 <strong>{main}</strong>
-                {klass ? <em> · {klass}</em> : null}
+                {klass ? <em>{klass}</em> : null}
               </span>
             </div>
           ) : null}
@@ -53,18 +79,25 @@ export default function AuthorCard({ author }) {
               <span className="author-card__value">{adv}</span>
             </div>
           ) : null}
-          {characters.length > 0 ? (
+          {subCharacters.length > 0 ? (
             <div className="author-card__row">
-              <span className="author-card__label">보유 캐릭터</span>
+              <span className="author-card__label">부캐</span>
               <span className="author-card__value author-card__value--list">
-                {characters.slice(0, 12).map((c, i) => (
+                {subCharacters.slice(0, 12).map((c, i) => {
+                  const icon = findFirstClassIcon(c.klass);
+                  return (
                   <span key={i} className="author-card__chip">
+                    {icon ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={icon} alt="" aria-hidden="true" />
+                    ) : null}
                     {c.name}
                     {c.klass ? <em> · {c.klass}</em> : null}
                   </span>
-                ))}
-                {characters.length > 12 ? (
-                  <span className="author-card__more">+{characters.length - 12}</span>
+                  );
+                })}
+                {subCharacters.length > 12 ? (
+                  <span className="author-card__more">+{subCharacters.length - 12}</span>
                 ) : null}
               </span>
             </div>

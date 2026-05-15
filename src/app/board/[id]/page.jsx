@@ -560,6 +560,7 @@ export default function PostDetailPage() {
               <AuthorCard
                 author={{
                   displayName: post.author.displayName || post.authorName,
+                  avatarR2Key: post.author.avatarR2Key,
                   dnfProfile: post.author.dnfProfile,
                 }}
               />
@@ -942,4 +943,3 @@ function CommentRow({
     </div>
   );
 }
-
