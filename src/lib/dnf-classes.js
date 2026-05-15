@@ -135,6 +135,19 @@ export function findFirstClassGroup(baseClass) {
   return "";
 }
 
+export function findUniqueClassGroup(baseClass) {
+  if (!baseClass) return "";
+  const groups = DNF_CLASSES_GROUPED.filter((g) =>
+    g.classes.some((c) => c.baseClass === baseClass)
+  );
+  return groups.length === 1 ? groups[0].group : "";
+}
+
+export function findUniqueClassIcon(baseClass) {
+  const group = findUniqueClassGroup(baseClass);
+  return group ? findClassIcon(group, baseClass) : null;
+}
+
 export function classOptionValue(group, baseClass) {
   return group && baseClass ? `${group}::${baseClass}` : "";
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import VerifiedBadge from "./VerifiedBadge";
-import { findClassIcon, findFirstClassIcon, formatClassText } from "@/lib/dnf-classes";
+import { findClassIcon, findUniqueClassIcon, formatClassText } from "@/lib/dnf-classes";
 
 function avatarPublicUrl(r2Key) {
   if (!r2Key) return null;
@@ -36,7 +36,7 @@ export default function AuthorCard({ author }) {
   const adv = dnf.adventurerName;
   const characters = Array.isArray(dnf.characters) ? dnf.characters : [];
   const avatarUrl = avatarPublicUrl(author.avatarR2Key);
-  const mainIcon = findClassIcon(mainClassGroup, klass) || findFirstClassIcon(klass);
+  const mainIcon = findClassIcon(mainClassGroup, klass) || findUniqueClassIcon(klass);
   const subCharacters = characters.filter((c) => c?.name && c.name !== main);
 
   return (
@@ -85,7 +85,7 @@ export default function AuthorCard({ author }) {
               <span className="author-card__label">부캐</span>
               <span className="author-card__value author-card__value--list">
                 {subCharacters.slice(0, 12).map((c, i) => {
-                  const icon = findClassIcon(c.classGroup, c.klass) || findFirstClassIcon(c.klass);
+                  const icon = findClassIcon(c.classGroup, c.klass) || findUniqueClassIcon(c.klass);
                   return (
                   <span key={i} className="author-card__chip">
                     {icon ? (
