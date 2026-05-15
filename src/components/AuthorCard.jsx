@@ -1,7 +1,7 @@
 "use client";
 
 import VerifiedBadge from "./VerifiedBadge";
-import { findFirstClassIcon } from "@/lib/dnf-classes";
+import { findClassIcon, findFirstClassIcon, formatClassText } from "@/lib/dnf-classes";
 
 function avatarPublicUrl(r2Key) {
   if (!r2Key) return null;
@@ -32,10 +32,11 @@ export default function AuthorCard({ author }) {
   const verified = !!dnf.verifiedBySelectScreen;
   const main = dnf.mainCharacterName;
   const klass = dnf.mainCharacterClass;
+  const mainClassGroup = dnf.mainCharacterClassGroup;
   const adv = dnf.adventurerName;
   const characters = Array.isArray(dnf.characters) ? dnf.characters : [];
   const avatarUrl = avatarPublicUrl(author.avatarR2Key);
-  const mainIcon = findFirstClassIcon(klass);
+  const mainIcon = findClassIcon(mainClassGroup, klass) || findFirstClassIcon(klass);
   const subCharacters = characters.filter((c) => c?.name && c.name !== main);
 
   return (
@@ -69,7 +70,7 @@ export default function AuthorCard({ author }) {
               <span className="author-card__main-copy">
                 <span className="author-card__label">대표 캐릭터</span>
                 <strong>{main}</strong>
-                {klass ? <em>{klass}</em> : null}
+                {klass ? <em>{formatClassText(mainClassGroup, klass)}</em> : null}
               </span>
             </div>
           ) : null}
@@ -84,7 +85,7 @@ export default function AuthorCard({ author }) {
               <span className="author-card__label">부캐</span>
               <span className="author-card__value author-card__value--list">
                 {subCharacters.slice(0, 12).map((c, i) => {
-                  const icon = findFirstClassIcon(c.klass);
+                  const icon = findClassIcon(c.classGroup, c.klass) || findFirstClassIcon(c.klass);
                   return (
                   <span key={i} className="author-card__chip">
                     {icon ? (
@@ -92,7 +93,7 @@ export default function AuthorCard({ author }) {
                       <img src={icon} alt="" aria-hidden="true" />
                     ) : null}
                     {c.name}
-                    {c.klass ? <em> · {c.klass}</em> : null}
+                    {c.klass ? <em> · {formatClassText(c.classGroup, c.klass)}</em> : null}
                   </span>
                   );
                 })}

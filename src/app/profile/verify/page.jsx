@@ -6,7 +6,14 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { apiFetch, ApiError, auth } from "@/lib/api-client";
 import { site } from "@/lib/content";
-import { DNF_CLASSES_GROUPED, findFirstClassIcon } from "@/lib/dnf-classes";
+import {
+  DNF_CLASSES_GROUPED,
+  classOptionValue,
+  findClassIcon,
+  findFirstClassGroup,
+  findFirstClassIcon,
+  parseClassOptionValue,
+} from "@/lib/dnf-classes";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
@@ -116,9 +123,14 @@ function VerifyInner() {
         adventurerName: m?.adventurerName ?? "",
         mainCharacterName: m?.mainCharacterName ?? "",
         mainCharacterClass: m?.mainCharacterClass ?? "",
+        mainCharacterClassGroup: m?.mainCharacterClassGroup ?? "",
       });
       setEditedCharacters(
-        (m?.characters || []).map((c) => ({ name: c.name || "", klass: c.klass || "" }))
+        (m?.characters || []).map((c) => ({
+          name: c.name || "",
+          klass: c.klass || "",
+          classGroup: c.classGroup || "",
+        }))
       );
       setRecognized(true);
     } catch (err) {
@@ -145,12 +157,20 @@ function VerifyInner() {
         .flatMap((p) => (p.characters || []).map((c) => c.name))
         .filter(Boolean);
       const cleanedCharacters = editedCharacters
-        .map((c) => ({ name: (c.name || "").trim(), klass: (c.klass || "").trim() }))
+        .map((c) => ({
+          name: (c.name || "").trim(),
+          klass: (c.klass || "").trim(),
+          classGroup: (c.classGroup || "").trim() || undefined,
+        }))
         .filter((c) => c.name);
+      const mainCharacterClassGroup =
+        edited.mainCharacterClassGroup?.trim() ||
+        cleanedCharacters.find((c) => c.name === mainCharacterName)?.classGroup;
       await auth.confirmDnfProfile({
         adventurerName,
         mainCharacterName,
         mainCharacterClass: edited.mainCharacterClass?.trim() || undefined,
+        mainCharacterClassGroup: mainCharacterClassGroup || undefined,
         characters: cleanedCharacters.length ? cleanedCharacters : undefined,
         characterSelectNames: characterSelectNames.length ? characterSelectNames : undefined,
       });
@@ -171,7 +191,7 @@ function VerifyInner() {
     setEditedCharacters((prev) => prev.filter((_, i) => i !== idx));
   }
   function addEmptyCharacter() {
-    setEditedCharacters((prev) => [...prev, { name: "", klass: "" }]);
+    setEditedCharacters((prev) => [...prev, { name: "", klass: "", classGroup: "" }]);
   }
 
   if (isLoading) {
@@ -429,7 +449,7 @@ function VerifyInner() {
                 </label>
                 <div style={{ display: "grid", gap: 6 }}>
                   {editedCharacters.map((c, i) => {
-                    const iconSrc = findFirstClassIcon(c.klass);
+                    const iconSrc = findClassIcon(c.classGroup, c.klass) || findFirstClassIcon(c.klass);
                     return (
                       <div
                         key={i}
@@ -464,15 +484,31 @@ function VerifyInner() {
                         />
                         <select
                           className="input"
-                          value={c.klass || ""}
-                          onChange={(e) => updateCharacter(i, { klass: e.target.value })}
+                          value={
+                            c.klass
+                              ? classOptionValue(
+                                  c.classGroup || findFirstClassGroup(c.klass),
+                                  c.klass,
+                                )
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const parsed = parseClassOptionValue(e.target.value);
+                            updateCharacter(i, {
+                              klass: parsed.baseClass,
+                              classGroup: parsed.classGroup,
+                            });
+                          }}
                           aria-label={`캐릭터 ${i + 1} 직업`}
                         >
                           <option value="">직업 선택</option>
                           {DNF_CLASSES_GROUPED.map((g) => (
                             <optgroup key={g.group} label={g.group}>
                               {g.classes.map((kls) => (
-                                <option key={`${g.group}::${kls.baseClass}`} value={kls.baseClass}>
+                                <option
+                                  key={`${g.group}::${kls.baseClass}`}
+                                  value={classOptionValue(g.group, kls.baseClass)}
+                                >
                                   {g.group} · {kls.baseClass}
                                 </option>
                               ))}

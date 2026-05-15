@@ -127,6 +127,36 @@ export function findFirstClassIcon(baseClass) {
   return null;
 }
 
+export function findFirstClassGroup(baseClass) {
+  if (!baseClass) return "";
+  for (const g of DNF_CLASSES_GROUPED) {
+    if (g.classes.some((c) => c.baseClass === baseClass)) return g.group;
+  }
+  return "";
+}
+
+export function classOptionValue(group, baseClass) {
+  return group && baseClass ? `${group}::${baseClass}` : "";
+}
+
+export function parseClassOptionValue(value) {
+  if (!value || !value.includes("::")) return { classGroup: "", baseClass: value || "" };
+  const [classGroup, ...rest] = value.split("::");
+  return { classGroup, baseClass: rest.join("::") };
+}
+
+function duplicateClassGroups(baseClass) {
+  return DNF_CLASSES_GROUPED.filter((g) => g.classes.some((c) => c.baseClass === baseClass));
+}
+
+export function formatClassText(classGroup, baseClass) {
+  if (!baseClass) return "";
+  const groups = duplicateClassGroups(baseClass);
+  if (groups.length <= 1 || !classGroup) return baseClass;
+  const gender = classGroup.match(/\((남|여)\)/)?.[1];
+  return gender ? `(${gender})${baseClass}` : `${classGroup} ${baseClass}`;
+}
+
 /**
  * 호환용 — DnfProfileForm 등 기존 컴포넌트가 사용.
  * Grouped 데이터에서 baseClass 만 평탄화 + 중복 제거.
