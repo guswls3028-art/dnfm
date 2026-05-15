@@ -8,7 +8,7 @@
  *   - 응답 envelope `{ data }` 자동 unwrap, `{ error: {code,message,details} }` → ApiError throw
  *   - timeout 15s (AbortController)
  *
- * 두 frontend (newb / allow) 모두 같은 backend (`api.dnfm.kr`) 호출 — wrapper shape 도 같게 유지.
+ * 두 frontend (newb / hurock) 모두 같은 backend (`api.dnfm.kr`) 호출 — wrapper shape 도 같게 유지.
  * 차이는 SITE 상수와 content.js (정적 콘텐츠 SSOT) 뿐.
  */
 
@@ -214,9 +214,9 @@ const sitePath = (path) => `/sites/${SITE}${path}`;
 
 export const posts = {
   categories: () => apiFetch(sitePath("/categories")),
-  list: ({ categoryId, flair, postType, bestOnly, q, page, pageSize, sort } = {}) =>
+  list: ({ categoryId, categorySlug, flair, postType, bestOnly, q, page, pageSize, sort } = {}) =>
     apiFetch(sitePath("/posts"), {
-      query: { categoryId, flair, postType, bestOnly, q, page, pageSize, sort },
+      query: { categoryId, categorySlug, flair, postType, bestOnly, q, page, pageSize, sort },
     }),
   detail: (id) => apiFetch(sitePath(`/posts/${id}`)),
   create: ({

@@ -50,6 +50,52 @@ export default function SiteHeader({ site }) {
 
   return (
     <>
+      <header className="site-desktop-header" aria-label="상단 메뉴">
+        <div className="site-desktop-header__inner">
+          <Link href="/" className="site-desktop-header__brand" aria-label={`${site.title} 홈`}>
+            <span className="site-brand__seal" aria-hidden="true">D</span>
+            <span>
+              <strong>{site.shortTitle}</strong>
+              <small>{site.brandMark}</small>
+            </span>
+          </Link>
+
+          <nav className="site-desktop-header__nav" aria-label="주 메뉴">
+            {site.navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={isActive(item.href) ? "is-active" : ""}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="site-desktop-header__actions">
+            <a
+              className="site-desktop-header__start"
+              href={site.actions?.[0]?.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              카톡방 입장
+            </a>
+            {isLoading ? (
+              <span className="site-desktop-header__auth" aria-hidden="true">…</span>
+            ) : isAuthed ? (
+              <Link className="site-desktop-header__auth" href="/profile" title={displayName}>
+                {displayName}
+              </Link>
+            ) : (
+              <Link className="site-desktop-header__auth" href="/login">
+                로그인
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
       {/* 모바일 전용 상단바 */}
       <header className="site-topbar" aria-label="모바일 헤더">
         <button
@@ -138,6 +184,24 @@ export default function SiteHeader({ site }) {
             </Link>
           ))}
         </nav>
+
+        {site.communityShortcuts?.length ? (
+          <div className="site-sidebar__section" aria-label="게시판 바로가기">
+            <span className="site-sidebar__section-title">게시판</span>
+            <div className="site-sidebar__quicklinks">
+              {site.communityShortcuts.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="site-sidebar__quicklink"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         <div className="site-sidebar__foot">
           {isLoading ? (

@@ -84,6 +84,7 @@ export default function HeroVideoStage({ site }) {
   const theme = heroThemes.find((t) => t.id === themeId) ?? heroThemes[0];
   const hero = site.hero;
   const primaryAction = site.actions?.find((a) => a.label === "카톡방 입장") ?? site.actions?.[0];
+  const slideItems = site.heroSlides?.length ? site.heroSlides : site.eventSlides;
 
   return (
     <section
@@ -221,6 +222,26 @@ export default function HeroVideoStage({ site }) {
             })}
           </div>
         </fieldset>
+      </div>
+
+      <div className="hero-video__carousel" aria-label="주요 배너">
+        <div className="hero-video__carousel-controls" aria-hidden="true">
+          <button type="button" tabIndex={-1}>‹</button>
+          <button type="button" tabIndex={-1}>›</button>
+          <button type="button" tabIndex={-1}>Ⅱ</button>
+          <button type="button" tabIndex={-1}>☰</button>
+        </div>
+        <ol className="hero-video__carousel-list">
+          {slideItems.slice(0, 5).map((item, index) => (
+            <li
+              key={item.id || item.index || item.title}
+              className={index === 0 ? "is-active" : ""}
+            >
+              <span>{index + 1}</span>
+              <strong>{item.title}</strong>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 // dnfm.kr (뉴비 훈련소) 정적 콘텐츠 SSOT
 // 외부 URL이 아직 확정되지 않은 경우 url: null + reason 으로 비활성 상태를 명시
-// 알 수 없는 값은 가짜 URL 만들지 말고 그대로 null + reason 유지
+// 알 수 없는 값은 임의 URL 만들지 말고 그대로 null + reason 유지
 
 // 톡방 운영자 (방장) — 사용자 본인.
 export const host = {
@@ -216,77 +216,83 @@ export const site = {
     { label: "공지사항", url: "https://dnfm.nexon.com/News/Notice", note: "점검, 오류, 공지" },
     { label: "진행 이벤트", url: "https://dnfm.nexon.com/News/Event", note: "보상 확인" }
   ],
+  homeCtas: [
+    { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g", note: "바로 질문하고 답 받기" },
+    { label: "질문 쓰기", href: "/board/new?category=question", note: "직업·장비·파티 질문" },
+    { label: "공지 확인", href: "/board?category=notice", note: "운영자가 올린 글" },
+    { label: "가이드 보기", href: "/guide", note: "반복 질문 모음" }
+  ],
+  officialChannels: [
+    {
+      id: "notice",
+      tag: "공지",
+      label: "공지사항",
+      body: "점검, 오류, 보상, 임시 안내",
+      href: "https://dnfm.nexon.com/News/Notice"
+    },
+    {
+      id: "update",
+      tag: "패치",
+      label: "패치노트 / 업데이트",
+      body: "신규 콘텐츠와 밸런스 변경",
+      href: "https://dnfm.nexon.com/News/Update"
+    },
+    {
+      id: "devnote",
+      tag: "개노",
+      label: "개발자 노트",
+      body: "패치 의도, 방향성, Q&A",
+      href: "https://dnfm.nexon.com/News/DevNote"
+    },
+    {
+      id: "event",
+      tag: "보상",
+      label: "진행 이벤트",
+      body: "출석, 성장 지원, 쿠폰성 보상",
+      href: "https://dnfm.nexon.com/News/Event"
+    }
+  ],
+  communityShortcuts: [
+    { label: "공지", href: "/board?category=notice" },
+    { label: "질문", href: "/board?category=question" },
+    { label: "팁", href: "/board?category=tip" },
+    { label: "파티", href: "/board?category=party" },
+    { label: "장비", href: "/board?category=equip" },
+    { label: "잡담", href: "/board?category=talk" }
+  ],
+  trainingFlow: [
+    {
+      step: "01",
+      tone: "gold",
+      title: "카톡방 입장",
+      body: "먼저 오픈채팅에 들어오고, 상단 공지와 닉네임 안내만 확인하면 됩니다.",
+      primary: { label: "오픈채팅 입장", href: "https://open.kakao.com/o/gbsjsZ5g" },
+      secondary: { label: "간단 가입", href: "/signup" }
+    },
+    {
+      step: "02",
+      tone: "mint",
+      title: "막힌 지점 질문",
+      body: "직업, 레벨, 항마력, 막힌 콘텐츠를 같이 적으면 톡방과 게시판에서 답이 빨라집니다.",
+      primary: { label: "질문 남기기", href: "/board/new?category=question" },
+      secondary: { label: "질문글 보기", href: "/board?category=question" }
+    },
+    {
+      step: "03",
+      tone: "crimson",
+      title: "오늘 할 일 확인",
+      body: "공식 공지, 이벤트, 반복 질문 가이드를 확인하고 필요한 링크만 챙기면 됩니다.",
+      primary: { label: "새소식 보기", href: "#news-board" },
+      secondary: { label: "가이드 보기", href: "/guide" }
+    }
+  ],
   eventSlides: [
     { index: "1", title: "입소 안내", body: "처음 온 모험가를 위한 성장 순서" },
     { index: "2", title: "공식 공지", body: "점검, 업데이트, 보상 링크" },
     { index: "3", title: "질문 루트", body: "직업, 장비, 파티 질문 정리" },
     { index: "4", title: "가이드 보드", body: "반복 질문을 한 장으로 회수" }
   ],
-  notices: [
-    { id: "n1", label: "공지", title: "공식 점검·업데이트 일정", url: "https://dnfm.nexon.com/News/Notice", meta: "공식" },
-    { id: "n2", label: "이벤트", title: "진행 이벤트와 보상 기간 확인", url: "https://dnfm.nexon.com/News/Event", meta: "공식" },
-    { id: "n3", label: "가이드", title: "신규 모험가 공식 추천 가이드", url: "https://dnfm.nexon.com/Guide/Recommand", meta: "공식" },
-    { id: "n4", label: "운영", title: "톡방 입장 — 뉴비 훈련소 오픈채팅", url: "https://open.kakao.com/o/gbsjsZ5g", meta: "내부" },
-    { id: "n5", label: "운영", title: "회원 가입 + 던파 캡처 인증 안내", url: "/signup", meta: "내부" }
-  ],
   noticesMoreUrl: "https://dnfm.nexon.com/News/Notice",
-  communityPosts: [
-    {
-      id: "p1",
-      label: "질문",
-      title: "직업 선택 전에 먼저 볼 기준이 뭐예요?",
-      meta: "뉴비 질문",
-      author: "초보모험가",
-      time: "방금",
-      views: 12,
-      comments: 3,
-      likes: 0
-    },
-    {
-      id: "p2",
-      label: "팁",
-      title: "피로도와 이벤트 숙제 체크 순서 정리",
-      meta: "성장 루트",
-      author: "훈련소장",
-      time: "1시간 전",
-      views: 142,
-      comments: 7,
-      likes: 12
-    },
-    {
-      id: "p3",
-      label: "파티",
-      title: "파티 입장 전 준비물과 용어 한 줄 정리",
-      meta: "협동 콘텐츠",
-      author: "팟장",
-      time: "오늘",
-      views: 88,
-      comments: 4,
-      likes: 5
-    },
-    {
-      id: "p4",
-      label: "장비",
-      title: "장비 스크린샷 질문할 때 같이 보내주실 정보",
-      meta: "답변 템플릿",
-      author: "운영진",
-      time: "어제",
-      views: 230,
-      comments: 11,
-      likes: 18
-    },
-    {
-      id: "p5",
-      label: "잡담",
-      title: "오늘 던파모바일 시작했어요 환영 부탁",
-      meta: "신규",
-      author: "신참",
-      time: "어제",
-      views: 41,
-      comments: 14,
-      likes: 9
-    }
-  ],
   communityMoreUrl: "/board",
   featureCards: [
     {
@@ -467,11 +473,13 @@ export const site = {
     }
   ],
   navItems: [
-    { label: "소개", href: "/about" },
+    { label: "홈", href: "/" },
+    { label: "새소식", href: "/#news-board" },
     { label: "커뮤니티", href: "/board" },
     { label: "가이드", href: "/guide" },
     { label: "이벤트", href: "/events" },
-    { label: "친화 길드", href: "/guilds" }
+    { label: "길드", href: "/guilds" },
+    { label: "소개", href: "/about" }
   ],
   boardCategories: [
     { id: "all", label: "전체" },
@@ -481,92 +489,6 @@ export const site = {
     { id: "party", label: "파티" },
     { id: "equip", label: "장비" },
     { id: "talk", label: "잡담" }
-  ],
-  boardPosts: [
-    {
-      id: "b1",
-      categoryId: "notice",
-      label: "공지",
-      title: "뉴비 훈련소 게시판 운영 규칙",
-      author: "운영진",
-      time: "어제",
-      views: 412,
-      comments: 8,
-      likes: 24,
-      body:
-        "톡방과 같은 톤으로 운영합니다. 인신공격 / 광고 / 외부 거래 글은 즉시 삭제됩니다. 질문은 본인 레벨·직업·항마력·막힌 콘텐츠를 함께 적어주시면 답변이 빨라요.",
-      pinned: true
-    },
-    {
-      id: "b2",
-      categoryId: "question",
-      label: "질문",
-      title: "직업 선택 전에 먼저 봐야 할 기준이 뭐예요?",
-      author: "초보모험가",
-      time: "방금",
-      views: 12,
-      comments: 3,
-      likes: 0,
-      body:
-        "오늘 처음 시작했습니다. 그냥 끌리는 캐릭으로 가도 되는지, 아니면 솔플 / 파티 어느 쪽 기준으로 골라야 하는지 궁금합니다."
-    },
-    {
-      id: "b3",
-      categoryId: "tip",
-      label: "팁",
-      title: "피로도와 이벤트 숙제 체크 순서 정리",
-      author: "훈련소장",
-      time: "1시간 전",
-      views: 142,
-      comments: 7,
-      likes: 12,
-      body:
-        "1) 출석 보상 → 2) 일일 던전 피로도 소모 → 3) 이벤트 일일 → 4) 주간 콘텐츠. 시간 부족하면 (1)(3) 만이라도 챙기세요.",
-      hot: true
-    },
-    {
-      id: "b4",
-      categoryId: "party",
-      label: "파티",
-      title: "파티 입장 전 준비물과 용어 한 줄 정리",
-      author: "팟장",
-      time: "오늘",
-      views: 88,
-      comments: 4,
-      likes: 5,
-      body: "포션, 무기 강화 확인, 항마력 확인 후 파티 신청. 용어는 댓글에 더 정리해둘게요."
-    },
-    {
-      id: "b5",
-      categoryId: "equip",
-      label: "장비",
-      title: "장비 스크린샷 질문할 때 같이 보내주실 정보",
-      author: "운영진",
-      time: "어제",
-      views: 230,
-      comments: 11,
-      likes: 18,
-      body:
-        "캐릭터 정보 창 + 현재 강화 단계 + 다음에 하고 싶은 콘텐츠를 함께 적어주시면 답이 정확해집니다.",
-      hot: true
-    },
-    {
-      id: "b6",
-      categoryId: "talk",
-      label: "잡담",
-      title: "오늘 던파모바일 시작했어요 환영 부탁",
-      author: "신참",
-      time: "어제",
-      views: 41,
-      comments: 14,
-      likes: 9,
-      body: "원작 던파 유저였는데 모바일은 처음입니다. 잘 부탁드려요."
-    }
-  ],
-  postComments: [
-    { postId: "b3", author: "모험가A", time: "30분 전", body: "출석 보상은 잊으면 너무 아까워요" },
-    { postId: "b3", author: "신참", time: "15분 전", body: "정리 감사합니다 저장했어요" },
-    { postId: "b2", author: "훈련소장", time: "방금", body: "지금은 어느 정도 솔플로 가도 무난해요. 끌리는 캐릭으로 가시고 후반에 파티 콘텐츠 들어갈 때 다시 봐도 됩니다." }
   ],
   /** 간단 가입 — 아이디 + 비번 + 닉네임. 모험단 인증은 별 페이지(/profile/verify)에서 선택. */
   signupBasics: {
@@ -611,20 +533,5 @@ export const site = {
     description: "친구 사이트, 별도 운영"
   },
   footerNote:
-    "DNFM.KR 은 던파 모바일 뉴비 훈련소 카톡방의 비공식 운영 허브입니다. 던전앤파이터 모바일 IP는 NEXON / NEOPLE 에 귀속됩니다.",
-  profileMock: {
-    nickname: "모험가닉네임",
-    joinedAt: "2026-04-21",
-    dnfCharacter: {
-      name: "캐릭이름",
-      job: "스트라이커",
-      level: 47,
-      adventure: "모험단이름",
-      server: "카인"
-    },
-    myPosts: [
-      { id: "b2", label: "질문", title: "직업 선택 전에 먼저 봐야 할 기준이 뭐예요?", time: "방금", comments: 3 },
-      { id: "b6", label: "잡담", title: "오늘 던파모바일 시작했어요 환영 부탁", time: "어제", comments: 14 }
-    ]
-  }
+    "DNFM.KR 은 던파 모바일 뉴비 훈련소 카톡방의 비공식 운영 허브입니다. 던전앤파이터 모바일 IP는 NEXON / NEOPLE 에 귀속됩니다."
 };
