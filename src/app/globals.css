@@ -6436,6 +6436,173 @@ main > section {
   padding: var(--sp-4);
 }
 
+/* 게시물 상세 — 본문/작성자/댓글을 하나의 읽기 흐름으로 묶음 */
+.thread-wrap {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.thread-card {
+  position: relative;
+  min-width: 0;
+  padding: var(--sp-4);
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 24%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse at 14% 0%, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 12%, transparent), transparent 58%),
+    linear-gradient(180deg, rgba(17, 20, 13, 0.74), rgba(17, 20, 13, 0.52));
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.thread-label {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--sp-3);
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 46%, transparent);
+  border-radius: var(--radius-pill);
+  background: rgba(17, 20, 13, 0.62);
+  color: var(--color-gold-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.thread-card--post {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.thread-card--post .post-head,
+.thread-card--post .post-body {
+  margin-top: 0 !important;
+}
+
+.thread-card--post .post-body,
+.thread-card--comments .comment-form {
+  box-shadow: none;
+}
+
+.thread-post-actions {
+  padding-top: var(--sp-1);
+  border-top: 1px solid rgba(255, 253, 245, 0.08);
+}
+
+.thread-author-slot {
+  padding-top: var(--sp-3);
+  border-top: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 20%, transparent);
+}
+
+.thread-subsection-label {
+  margin-bottom: var(--sp-2);
+  color: var(--color-gold-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+.thread-author-slot .author-card {
+  margin-top: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 245, 0.06), rgba(255, 253, 245, 0.035));
+}
+
+.thread-card--comments {
+  padding-top: var(--sp-4);
+}
+
+.thread-card--comments .section__head {
+  margin-bottom: 0;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 20%, transparent);
+}
+
+.thread-comment-list {
+  margin-top: var(--sp-3) !important;
+}
+
+.thread-comment,
+.thread-reply-form,
+.thread-comment-empty {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.thread-comment-meta {
+  flex-wrap: wrap;
+  row-gap: var(--sp-1);
+}
+
+.thread-comment-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.thread-reply-form,
+.thread-comment--reply {
+  max-width: calc(100% - var(--sp-6));
+  background:
+    linear-gradient(180deg, rgba(212, 162, 76, 0.08), rgba(255, 253, 245, 0.035));
+}
+
+.thread-comment-form {
+  margin-top: var(--sp-4) !important;
+}
+
+.thread-comment-guest-fields,
+.thread-comment-guest-fields .input {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .thread-card {
+    padding: var(--sp-3);
+    border-radius: var(--radius-md);
+  }
+
+  .thread-label {
+    margin-bottom: var(--sp-2);
+  }
+
+  .thread-post-head {
+    padding: var(--sp-4);
+  }
+
+  .thread-post-actions .btn {
+    flex: 1 1 128px;
+    min-height: 40px;
+  }
+
+  .thread-reply-form,
+  .thread-comment--reply {
+    max-width: 100%;
+    margin-left: 0 !important;
+    padding-left: var(--sp-4) !important;
+  }
+
+  .thread-comment-meta {
+    align-items: flex-start !important;
+  }
+
+  .thread-comment-actions {
+    width: 100%;
+    margin-left: 0 !important;
+    justify-content: flex-start;
+  }
+
+  .thread-comment-guest-fields {
+    grid-template-columns: 1fr !important;
+  }
+
+  .next-posts__link {
+    flex-wrap: wrap;
+  }
+}
+
 
 /* ============================================================
    Home CTA Flow — hero 아래 실제 시작 동선

@@ -37,13 +37,13 @@ export default function GuidePage() {
           <ol className="quickstart">
             <li className="quickstart__step" data-step="1">
               <span className="quickstart__num">01</span>
-              <strong>서버는 카인</strong>
-              <p>대부분 유저가 카인 서버. 일단 여기서 시작 → 친구 만나기 쉬움.</p>
+              <strong>공식 기준 먼저 확인</strong>
+              <p>직업·성장·콘텐츠 정보는 던파 모바일 공식 공지와 현재 패치 기준으로 확인합니다.</p>
             </li>
             <li className="quickstart__step" data-step="2">
               <span className="quickstart__num">02</span>
-              <strong>직업은 끌리는 거</strong>
-              <p>초반엔 어느 직업이든 메인 퀘스트로 키울 수 있어요. 직업별 차이는 30레벨 이후.</p>
+              <strong>내 상황을 같이 적기</strong>
+              <p>질문할 때 레벨, 직업, 막힌 콘텐츠, 장비 상태를 함께 적으면 답변이 빨라집니다.</p>
             </li>
             <li className="quickstart__step" data-step="3">
               <span className="quickstart__num">03</span>

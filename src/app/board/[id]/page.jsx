@@ -395,9 +395,10 @@ export default function PostDetailPage() {
       </section>
 
       <section className="section">
-        <div className="content-wrap" style={{ display: "grid", gap: "var(--sp-4)" }}>
-          <article style={{ minWidth: 0 }}>
-            <header className="post-head" style={{ minWidth: 0 }}>
+        <div className="content-wrap thread-wrap thread-wrap--newb">
+          <article className="thread-card thread-card--post">
+            <div className="thread-label">게시물</div>
+            <header className="post-head thread-post-head" style={{ minWidth: 0 }}>
               <div
                 className="post-head__top"
                 style={{
@@ -478,7 +479,7 @@ export default function PostDetailPage() {
               </div>
             </header>
             <div
-              className="post-body"
+              className="post-body thread-post-body"
               style={{ marginTop: "var(--sp-4)" }}
             >
               <MarkdownBody source={post.body} format={post.bodyFormat} />
@@ -523,7 +524,7 @@ export default function PostDetailPage() {
               </div>
             ) : null}
             <div
-              className="post-actions"
+              className="post-actions thread-post-actions"
               style={{
                 display: "flex",
                 gap: "var(--sp-2)",
@@ -557,17 +558,21 @@ export default function PostDetailPage() {
             </div>
 
             {post.author ? (
-              <AuthorCard
-                author={{
-                  displayName: post.author.displayName || post.authorName,
-                  avatarR2Key: post.author.avatarR2Key,
-                  dnfProfile: post.author.dnfProfile,
-                }}
-              />
+              <div className="thread-author-slot">
+                <div className="thread-subsection-label">작성자</div>
+                <AuthorCard
+                  author={{
+                    displayName: post.author.displayName || post.authorName,
+                    avatarR2Key: post.author.avatarR2Key,
+                    dnfProfile: post.author.dnfProfile,
+                  }}
+                />
+              </div>
             ) : null}
           </article>
 
-          <section aria-labelledby="comments-title" style={{ marginTop: "var(--sp-5)" }} id="comments">
+          <section className="thread-card thread-card--comments" aria-labelledby="comments-title" id="comments">
+            <div className="thread-label thread-label--comments">댓글</div>
             <header className="section__head">
               <div>
                 <span className="section__kicker">COMMENTS</span>
@@ -578,11 +583,11 @@ export default function PostDetailPage() {
             </header>
 
             <div
-              className="comments"
+              className="comments thread-comment-list"
               style={{ display: "grid", gap: "var(--sp-3)", marginTop: "var(--sp-3)" }}
             >
               {commentsTree.length === 0 ? (
-                <div className="comment">
+                <div className="comment thread-comment-empty">
                   <p className="comment__body">
                     아직 댓글이 없습니다. 첫 댓글을 남겨주세요.
                   </p>
@@ -597,7 +602,7 @@ export default function PostDetailPage() {
                     rows.push(
                       <div
                         key={`reply-form-${top.id}`}
-                        className="comment"
+                        className="comment thread-reply-form"
                         style={{
                           marginLeft: "var(--sp-6)",
                           borderLeft: "2px solid var(--color-gold, #ccaa55)",
@@ -683,7 +688,7 @@ export default function PostDetailPage() {
               </p>
             ) : (
               <form
-                className="comment-form"
+                className="comment-form thread-comment-form"
                 aria-label="댓글 작성"
                 onSubmit={handleCommentSubmit}
                 style={{ display: "grid", gap: "var(--sp-2)", marginTop: "var(--sp-4)" }}
@@ -700,6 +705,7 @@ export default function PostDetailPage() {
                 </p>
                 {!isAuthed ? (
                   <div
+                    className="thread-comment-guest-fields"
                     style={{
                       display: "grid",
                       gap: "var(--sp-2)",
@@ -853,7 +859,7 @@ function CommentRow({
   const isEditing = editingCommentId === c.id;
   return (
     <div
-      className="comment"
+      className={`comment thread-comment${isReply ? " thread-comment--reply" : ""}`}
       style={
         isReply
           ? {
@@ -865,7 +871,7 @@ function CommentRow({
       }
     >
       <div
-        className="comment__meta"
+        className="comment__meta thread-comment-meta"
         style={{ display: "flex", gap: "var(--sp-2)", alignItems: "center" }}
       >
         {isReply ? <span style={{ color: "var(--muted)" }}>↳</span> : null}
@@ -873,7 +879,7 @@ function CommentRow({
         <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)" }}>
           {formatTime(c.createdAt)}
         </span>
-        <span style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-1)" }}>
+        <span className="thread-comment-actions" style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-1)" }}>
           <ReportButton targetType="comment" targetId={c.id} small />
           {!isReply && !isEditing ? (
             <button

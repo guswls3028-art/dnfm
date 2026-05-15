@@ -138,8 +138,8 @@ export const site = {
     {
       id: "hero-onboard",
       kicker: "입소 안내",
-      title: "서버는 카인, 직업은 끌리는 거",
-      body: "막히면 톡방에서 묻고, 채팅에 /가이드ㅡ시작 입력.",
+      title: "처음 시작은 공식 기준 확인부터",
+      body: "던파 모바일 최신 공지와 톡방 확인 내용을 기준으로 안내합니다. 막히면 바로 질문.",
       accent: "amber",
       cta: { label: "가이드 보기", href: "/guide" }
     },
@@ -236,16 +236,16 @@ export const site = {
     {
       step: "01",
       tone: "gold",
-      title: "서버는 카인",
-      body: "대부분 유저가 카인 서버. 일단 여기서 시작 → 친구 만나기 쉬움.",
+      title: "공식 기준 먼저 확인",
+      body: "직업·성장·콘텐츠 정보는 던파 모바일 공식 공지와 현재 패치 기준으로 확인합니다.",
       primary: { label: "가이드 보기", href: "/guide" },
       secondary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" }
     },
     {
       step: "02",
       tone: "mint",
-      title: "직업은 끌리는 거",
-      body: "초반엔 어느 직업이든 메인 퀘스트로 키울 수 있어요. 직업별 차이는 30레벨 이후.",
+      title: "내 상황을 같이 적기",
+      body: "질문할 때 레벨, 직업, 막힌 콘텐츠, 장비 상태를 함께 적으면 답변이 빨라집니다.",
       primary: { label: "가이드 보기", href: "/guide" },
       secondary: { label: "질문 남기기", href: "/board/new?category=question" }
     },
@@ -269,7 +269,7 @@ export const site = {
   featureCards: [
     {
       title: "처음 시작 루트",
-      body: "카인 서버, 끌리는 직업, 막히면 톡방 질문. 세부 정보는 운영자가 확인 후 채웁니다.",
+      body: "공식 공지와 톡방 확인 내용을 기준으로 시작 루트를 정리합니다. 세부 정보는 운영자가 채웁니다.",
       accent: "gold"
     },
     {
@@ -310,7 +310,7 @@ export const site = {
       id: "g1",
       category: "시작",
       title: "처음 시작 루트",
-      body: "서버는 카인. 직업은 끌리는 거. 막히면 톡방에서 묻기.",
+      body: "던파 모바일 최신 기준으로 확인한 시작 루트만 정리합니다. 막히면 톡방에서 묻기.",
       linkLabel: "톡방 입장 후 명령어로 보기",
       url: "https://open.kakao.com/o/gbsjsZ5g"
     },
@@ -348,8 +348,8 @@ export const site = {
   checklistKey: "dnfm-training-checklist",
   checklistTitle: "오늘 훈련소 체크",
   checklist: [
-    "서버는 카인으로 시작",
-    "직업은 끌리는 것으로 선택",
+    "공식 공지·진행 이벤트 확인",
+    "레벨·직업·막힌 콘텐츠 정리",
     "막히면 /가이드ㅡ시작 또는 톡방 질문"
   ],
   guideFilters: ["전체", "시작", "성장", "장비", "파티", "공식"],
@@ -357,7 +357,7 @@ export const site = {
     {
       title: "처음 시작 루트",
       category: "시작",
-      body: "서버는 카인. 직업은 끌리는 거. 막히면 톡방에서 묻기.",
+      body: "던파 모바일 최신 기준으로 확인한 시작 루트만 정리합니다. 막히면 톡방에서 묻기.",
       linkLabel: "톡방 입장",
       url: "https://open.kakao.com/o/gbsjsZ5g"
     },
