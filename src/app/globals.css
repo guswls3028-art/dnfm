@@ -312,10 +312,15 @@ button {
 }
 
 .site-desktop-header__nav a:hover,
-.site-desktop-header__nav a:focus-visible,
 .site-desktop-header__nav a.is-active {
   color: var(--color-gold-soft);
   background: rgba(212, 162, 76, 0.07);
+}
+
+.site-desktop-header__nav a:focus-visible {
+  color: var(--color-gold-soft);
+  outline: 2px solid rgba(212, 162, 76, 0.72);
+  outline-offset: -8px;
 }
 
 .site-desktop-header__nav a::after {
@@ -330,7 +335,6 @@ button {
 }
 
 .site-desktop-header__nav a:hover::after,
-.site-desktop-header__nav a:focus-visible::after,
 .site-desktop-header__nav a.is-active::after {
   opacity: 1;
 }
