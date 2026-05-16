@@ -33,7 +33,7 @@ function LoginShell({ loading }) {
   return (
     <div className="auth-shell">
       <div className="auth-card">
-        <h1 className="auth-card__title">훈련소 입장</h1>
+        <h1 className="auth-card__title">로그인</h1>
         <p className="auth-card__sub">
           {site.brandMark} · {site.shortTitle}
         </p>
@@ -128,7 +128,7 @@ function LoginInner() {
   return (
     <div className="auth-shell">
       <div className="auth-card">
-        <h1 className="auth-card__title">훈련소 입장</h1>
+        <h1 className="auth-card__title">로그인</h1>
         <p className="auth-card__sub">
           {site.brandMark} · {site.shortTitle}
         </p>
@@ -220,7 +220,7 @@ function LoginInner() {
         </div>
 
         <p className="auth-card__foot">
-          아직 회원이 아니신가요? <Link href="/signup">입소 신청 →</Link>
+          아직 회원이 아니신가요? <Link href="/signup">회원가입 →</Link>
         </p>
       </div>
     </div>

@@ -31,7 +31,13 @@ export default function EventCard({ event }) {
     <article className={className} data-category={categorySlug}>
       <div className="event-card__banner" data-category={categorySlug} aria-hidden="true">
         {event.thumbnailSrc ? (
-          <img className="event-card__thumb" src={event.thumbnailSrc} alt="" loading="lazy" />
+          <img
+            className="event-card__thumb"
+            src={event.thumbnailSrc}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
         ) : (
           event.bannerLabel || event.category
         )}

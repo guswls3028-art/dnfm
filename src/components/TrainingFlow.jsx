@@ -31,7 +31,7 @@ export default function TrainingFlow({ steps }) {
           <div>
             <span className="section__kicker">START ROUTE</span>
             <h2 id="training-flow-title" className="section__title">
-              입소 동선
+              질문 동선
             </h2>
           </div>
           <Link className="section__more" href="/guide">

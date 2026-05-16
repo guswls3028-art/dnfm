@@ -137,8 +137,8 @@ export default function HeroVideoStage({ site }) {
 
           <span className="hero-video__kicker">{theme.kicker}</span>
           <h1 id="hero-video-title" className="hero-video__title">
-            {hero.headlineLines.map((line) => (
-              <span key={line}>{line}</span>
+            {hero.headlineLines.map((line, index) => (
+              <span key={line}>{line}{index < hero.headlineLines.length - 1 ? " " : ""}</span>
             ))}
           </h1>
           <p className="hero-video__tagline">{theme.tagline}</p>

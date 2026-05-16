@@ -178,7 +178,7 @@ export default function SignupPage() {
       <section className="page-hero">
         <div className="content-wrap page-hero__inner">
           <div>
-            <h1 className="page-hero__title">훈련소 입소 신청</h1>
+            <h1 className="page-hero__title">회원가입</h1>
             <p className="page-hero__sub">
               아이디 · 비밀번호 · 닉네임만 입력하면 가입 완료. 모험단 인증은 가입 후 선택.
             </p>

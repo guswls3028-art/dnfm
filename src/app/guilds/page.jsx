@@ -91,7 +91,7 @@ export default function GuildsPage() {
               <article className="guild-card guild-card--slot" key={`slot-${i}`} aria-hidden="true">
                 <header>
                   <strong>비어있는 자리</strong>
-                  <small>운영자 입력 예정</small>
+                  <small>확인 후 등록</small>
                 </header>
                 <p>확인된 길드만 이 자리에 표시됩니다.</p>
                 <span className="action-disabled" aria-disabled="true">입력 예정</span>

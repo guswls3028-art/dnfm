@@ -46,7 +46,7 @@ export const heroThemes = [
 
 // 톡방 핵심 철학 — 운영자 직접 명시.
 export const philosophy = {
-  oneLiner: "정보부족으로 인한 뉴비의 불이익 예방 + 자유로운 소통.",
+  oneLiner: "몰라서 손해 보지 않게 돕고, 질문하기 편한 톡방으로 운영합니다.",
   bullets: [
     "이 방은 뉴비 / 복귀 / 초보 / 라이트 유저를 돕고자 개설한 방입니다.",
     "저스펙·무과금·소과금·라이트 유저를 무시하거나 조롱하지 않습니다.",
@@ -154,17 +154,17 @@ export const site = {
   theme: "training",
   hero: {
     kicker: "톡방 운영 허브",
-    headline: "던파 모바일 뉴비 훈련소",
-    headlineLines: ["던파 모바일", "뉴비 훈련소"],
-    subtitle: "처음 온 모험가를 위한 톡방 입구와 질문 저장소.",
+    headline: "뉴비훈련소 질문 저장소",
+    headlineLines: ["뉴비훈련소", "질문 저장소"],
+    subtitle: "톡방에서 놓친 질문을 사이트에 남기고, 답변은 댓글로 회수합니다.",
     bullets: [
-      "정보부족으로 인한 뉴비의 불이익 예방",
-      "과금이 필수처럼 전달되지 않게 조심",
-      "확인된 정보 위주로 답변 정리",
-      "뉴비 질문 환영",
+      "몰라서 손해 보지 않게",
+      "과금 압박 없이 상황부터 확인",
+      "확인된 답변은 댓글과 공지로 정리",
+      "처음 질문도 편하게 환영",
     ],
     body:
-      "톡방에서는 바로 묻고, 놓친 질문과 운영 기준은 게시판에 남겨 다시 찾습니다.",
+      "공식 공지와 이벤트는 원문 링크로 확인하고, 톡방 운영에 필요한 질문·답변·이벤트 기록만 모읍니다.",
     hashtags: [
       "#던파모바일",
       "#던파m",
@@ -178,7 +178,7 @@ export const site = {
       "#소멸의공동",
       "#절망의탑",
     ],
-    callout: "공식 공지·이벤트는 공홈으로 연결하고, DNFM.KR은 톡방 운영에 필요한 질문·답변·이벤트 기록만 관리합니다.",
+    callout: "공식 정보는 공홈 링크로, 질문과 운영 기록은 DNFM.KR로 나눠 관리합니다.",
   },
   heroSlides: [
     {
@@ -307,7 +307,7 @@ export const site = {
     { index: "1", title: "톡방 입장", body: "처음 온 모험가를 위한 입구" },
     { index: "2", title: "질문 저장", body: "답변 못 받은 질문을 남김" },
     { index: "3", title: "답변 정리", body: "운영자가 댓글로 회수" },
-    { index: "4", title: "이벤트장", body: "톡방 자체 이벤트 기록" }
+    { index: "4", title: "이벤트장", body: "톡방 이벤트 기록" }
   ],
   noticesMoreUrl: "https://dnfm.nexon.com/News/Notice",
   communityMoreUrl: "/board",
@@ -333,9 +333,9 @@ export const site = {
       id: "e1",
       badge: null,
       category: "공식",
-      title: "던파모바일 공식 진행 이벤트",
+      title: "공식 이벤트 바로가기",
       period: "상시 확인",
-      body: "현재 열려 있는 보상, 출석, 성장 지원 이벤트는 공식 이벤트 페이지에서 확인합니다.",
+      body: "보상·출석·성장 지원 이벤트는 공식 페이지에서 원문으로 확인합니다.",
       url: "https://dnfm.nexon.com/News/Event",
       thumbnailSrc: "/dnfm-official-thumb.jpg",
       thumbnailAlt: "던파 모바일 공식 썸네일",
@@ -344,14 +344,14 @@ export const site = {
     {
       id: "e2",
       badge: null,
-      category: "뉴비훈련소",
-      title: "뉴비훈련소 톡방 이벤트",
-      period: "운영자 입력 예정",
-      body: "운영자가 실제 공지한 이벤트만 이곳에 올립니다.",
+      category: "톡방",
+      title: "톡방 이벤트 기록소",
+      period: "진행 공지 후 등록",
+      body: "아바타 콘테스트처럼 톡방에서 진행한 이벤트 참가 안내와 결과를 보관합니다.",
       url: "/board?category=notice",
       thumbnailSrc: "/배경사진.jpg",
       thumbnailAlt: "군복을 입은 뉴비훈련소 일러스트",
-      status: "준비중"
+      status: "대기"
     }
   ],
   guideCards: [
@@ -439,11 +439,11 @@ export const site = {
       url: "https://dnfm.nexon.com/Community/Tip"
     },
     {
-      title: "운영자 입력 예정",
+      title: "성장 질문 남기기",
       category: "성장",
-      body: "성장 세부 정보는 운영자가 확인한 내용만 채웁니다.",
-      linkLabel: "톡방 입장",
-      url: "https://open.kakao.com/o/gbsjsZ5g"
+      body: "성장 루트가 막히면 레벨, 직업, 항마력, 막힌 곳을 질문 게시판에 남겨주세요.",
+      linkLabel: "질문하기",
+      url: "/board/new?category=question"
     }
   ],
   linkGroups: [

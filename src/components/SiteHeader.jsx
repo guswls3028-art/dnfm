@@ -237,7 +237,7 @@ export default function SiteHeader({ site }) {
                 href="/signup"
                 onClick={() => setOpen(false)}
               >
-                입소 신청
+                회원가입
               </Link>
               <Link
                 className="site-sidebar__login-link"

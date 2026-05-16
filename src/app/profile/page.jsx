@@ -160,7 +160,7 @@ export default function ProfilePage() {
             </div>
             <div style={{ display: "flex", gap: "var(--sp-2)" }}>
               <Link href="/signup" className="btn btn--primary btn--sm">
-                입소 신청 →
+                회원가입 →
               </Link>
               <Link href="/login?next=/profile" className="btn btn--secondary btn--sm">
                 로그인

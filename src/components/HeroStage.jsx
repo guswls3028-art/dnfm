@@ -60,8 +60,8 @@ export default function HeroStage({ site }) {
 
           <span className="hero__kicker">{hero.kicker}</span>
           <h1 id="hero-title" className="hero__title">
-            {hero.headlineLines.map((line) => (
-              <span key={line}>{line}</span>
+            {hero.headlineLines.map((line, index) => (
+              <span key={line}>{line}{index < hero.headlineLines.length - 1 ? " " : ""}</span>
             ))}
           </h1>
           {hero.subtitle ? <p className="hero__subtitle">{hero.subtitle}</p> : null}

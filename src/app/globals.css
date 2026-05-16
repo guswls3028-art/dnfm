@@ -2306,7 +2306,11 @@ button {
 }
 
 .event-card__banner {
-  height: 96px;
+  position: relative;
+  isolation: isolate;
+  min-height: 132px;
+  height: auto;
+  aspect-ratio: 16 / 7;
   border-radius: var(--radius-sm);
   overflow: hidden;
   background:
@@ -2325,11 +2329,23 @@ button {
 }
 
 .event-card__thumb {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   filter: saturate(1.04) contrast(1.02);
+}
+
+.event-card__banner[data-category="official"] .event-card__thumb {
+  object-position: center 46%;
+}
+
+.event-card__banner[data-category="talk"] .event-card__thumb {
+  object-position: center 28%;
 }
 
 .event-card__banner[data-category="official"] {
@@ -7685,13 +7701,15 @@ main > section {
 
 .event-card__banner {
   min-height: 140px;
-  position: relative;
+  height: auto;
 }
 
 .event-card__banner::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
+  border-radius: inherit;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.28)),
     linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 36%, rgba(0, 0, 0, 0.14));
