@@ -353,7 +353,7 @@ export default function PostDetailPage() {
   if (error || !post) {
     return (
       <>
-        <section className="page-hero">
+        <section className="page-hero page-hero--board">
           <div className="content-wrap page-hero__inner">
             <div>
               <h1 className="page-hero__title">게시글</h1>
@@ -378,9 +378,10 @@ export default function PostDetailPage() {
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--board">
         <div className="content-wrap page-hero__inner">
           <div>
+            <span className="page-hero__kicker">뉴비 훈련소 · 게시판</span>
             <h1 className="page-hero__title">게시글</h1>
             <p className="page-hero__sub">
               <Link href="/board" style={{ color: "var(--color-gold)", fontWeight: 800 }}>

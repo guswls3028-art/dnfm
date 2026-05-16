@@ -184,9 +184,10 @@ function BoardInner() {
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--board">
         <div className="content-wrap page-hero__inner">
           <div>
+            <span className="page-hero__kicker">뉴비 훈련소 · 게시판</span>
             <h1 className="page-hero__title">훈련소 커뮤니티</h1>
             <p className="page-hero__sub">
               질문·팁·잡담을 한 게시판에서. 비회원도 글 쓸 수 있어요.

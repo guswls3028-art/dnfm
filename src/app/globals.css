@@ -7757,3 +7757,564 @@ main > section {
 .guild-policy strong {
   color: var(--color-paper);
 }
+
+/* ============================================================
+   커뮤니티 게시판 — 중세 양피지 공고판 (newb 전용)
+   ------------------------------------------------------------
+   post 상세(.thread-card--post)와 동일 양피지 팔레트로 통일.
+   리스트가 흰 박스로 떠보이던 컨셉 불일치 해소 + 가독성 강화.
+   모든 셀렉터 .page-hero--board / .board-page--newb 스코프 →
+   홈(.section--home-hub)·이벤트·프로필 영향 없음.
+   ============================================================ */
+
+/* ── Hero: 공고 배너 ───────────────────────────────────────── */
+.page-hero--board {
+  position: relative;
+  isolation: isolate;
+  padding: var(--sp-8) 0 var(--sp-7);
+  border-bottom: 1px solid rgba(92, 61, 21, 0.55);
+  background:
+    radial-gradient(ellipse at 16% 0%, rgba(176, 140, 58, 0.20), transparent 52%),
+    radial-gradient(ellipse at 84% 120%, rgba(139, 26, 26, 0.18), transparent 58%),
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, #232a16 0%, #171b0e 100%);
+  background-blend-mode: normal, normal, multiply, normal;
+}
+
+.page-hero--board::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-soft) 22%, var(--color-gold) 50%, var(--color-gold-soft) 78%, transparent);
+  opacity: 0.7;
+}
+
+.page-hero--board::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, transparent, rgba(212, 162, 76, 0.55) 18%, rgba(212, 162, 76, 0.55) 82%, transparent);
+}
+
+.page-hero--board .page-hero__kicker {
+  border-color: rgba(212, 162, 76, 0.55);
+  color: var(--color-gold-soft);
+  background:
+    linear-gradient(180deg, rgba(212, 162, 76, 0.18), rgba(58, 77, 35, 0.10));
+  box-shadow: 0 1px 0 rgba(255, 231, 156, 0.16) inset, 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.page-hero--board .page-hero__title {
+  color: var(--color-gold-soft);
+  text-shadow: 0 2px 0 rgba(17, 20, 13, 0.55), 0 0 22px rgba(212, 162, 76, 0.22);
+}
+
+.page-hero--board .page-hero__sub {
+  color: var(--color-parchment);
+  opacity: 0.9;
+}
+
+/* ── 보드 본체: 낡은 양피지 판 ─────────────────────────────── */
+.board-page--newb .board {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(99, 67, 21, 0.72);
+  border-radius: var(--radius-md);
+  outline: 1px solid rgba(235, 198, 111, 0.18);
+  outline-offset: -8px;
+  background:
+    radial-gradient(circle at 7% 6%, rgba(118, 74, 28, 0.20), transparent 16%),
+    radial-gradient(circle at 93% 9%, rgba(90, 56, 24, 0.16), transparent 18%),
+    radial-gradient(circle at 50% 110%, rgba(84, 52, 20, 0.18), transparent 26%),
+    linear-gradient(90deg, rgba(78, 46, 17, 0.16), transparent 6%, transparent 94%, rgba(78, 46, 17, 0.16)),
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, #efe0ae 0%, #dfc786 48%, #cfad62 100%);
+  background-blend-mode: multiply, multiply, multiply, multiply, multiply, normal;
+  box-shadow:
+    0 30px 64px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 231, 156, 0.16) inset,
+    0 0 42px rgba(72, 38, 13, 0.26) inset;
+}
+
+.board-page--newb .board::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid rgba(79, 50, 16, 0.34);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 4px rgba(98, 62, 19, 0.05) inset;
+}
+
+.board-page--newb .board__head,
+.board-page--newb .board__rows,
+.board-page--newb .pagination {
+  position: relative;
+  z-index: 1;
+}
+
+/* 헤더 = 새김 명패 */
+.board-page--newb .board__head {
+  padding: var(--sp-4) var(--sp-6);
+  border-bottom: 3px double rgba(92, 61, 21, 0.46);
+  background:
+    linear-gradient(90deg, rgba(94, 58, 19, 0.14), transparent 22%, transparent 78%, rgba(94, 58, 19, 0.14)),
+    linear-gradient(180deg, rgba(255, 244, 191, 0.42), rgba(223, 199, 134, 0.28));
+}
+
+.board-page--newb .board__head h2 {
+  font-family: var(--font-display);
+  color: #5a2f12;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 0 rgba(255, 242, 190, 0.7);
+}
+
+.board-page--newb .board__head-meta {
+  color: #7a5220;
+  font-weight: 700;
+}
+
+/* 행 = 양피지 장부 항목 */
+.board-page--newb .board-row {
+  grid-template-columns: 96px minmax(0, 1fr) minmax(220px, auto);
+  min-height: 54px;
+  padding: var(--sp-3) var(--sp-6);
+  border-top: 1px solid rgba(96, 67, 29, 0.22);
+  background: transparent;
+  color: #2f2718;
+}
+
+.board-page--newb .board-row:first-child {
+  border-top: 0;
+}
+
+.board-page--newb .board-row:hover,
+.board-page--newb .board-row:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(176, 140, 58, 0.22), rgba(176, 140, 58, 0.06) 60%, transparent),
+    rgba(120, 75, 24, 0.05);
+  box-shadow: 0 1px 0 rgba(255, 245, 199, 0.5) inset;
+  transform: none;
+}
+
+.board-page--newb .board-row__title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: #2c2112;
+  text-shadow: 0 1px 0 rgba(255, 244, 196, 0.55);
+}
+
+.board-page--newb .board-row__title strong {
+  font-weight: 700;
+}
+
+.board-page--newb .board-row__meta {
+  justify-content: flex-end;
+  color: #6f4b20;
+  font-weight: 700;
+  opacity: 0.92;
+}
+
+.board-page--newb .board-row__meta span + span::before {
+  color: #8a5e26;
+  opacity: 0.7;
+}
+
+.board-page--newb .board-row__comments {
+  color: #8a3a14;
+}
+
+.board-page--newb .board-row__hot {
+  color: var(--color-crimson);
+  text-shadow: 0 1px 0 rgba(255, 244, 196, 0.5);
+}
+
+/* 라벨 = 밀랍/황동 인장 */
+.board-page--newb .board-row__label {
+  min-width: 76px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #f8e7bd;
+  border: 1px solid rgba(92, 51, 17, 0.6);
+  background: linear-gradient(180deg, #7a5a22, #4c3413);
+  box-shadow:
+    0 2px 0 rgba(72, 37, 12, 0.32),
+    0 0 0 2px rgba(124, 83, 31, 0.12),
+    0 1px 0 rgba(255, 231, 156, 0.22) inset;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.board-page--newb .board-row[data-category="notice"] .board-row__label {
+  color: #ffe1c4;
+  border-color: rgba(92, 22, 18, 0.7);
+  background: linear-gradient(180deg, #8b1a1a, #4c0f0f);
+}
+.board-page--newb .board-row[data-category="question"] .board-row__label {
+  color: #eafff4;
+  border-color: rgba(18, 70, 54, 0.7);
+  background: linear-gradient(180deg, #1f6e52, #103f30);
+}
+.board-page--newb .board-row[data-category="tip"] .board-row__label {
+  color: #fff0cf;
+  border-color: rgba(92, 64, 17, 0.7);
+  background: linear-gradient(180deg, #9a7320, #5d3f14);
+}
+.board-page--newb .board-row[data-category="party"] .board-row__label {
+  color: #f1e9ff;
+  border-color: rgba(70, 51, 100, 0.7);
+  background: linear-gradient(180deg, #5a4778, #322044);
+}
+.board-page--newb .board-row[data-category="equip"] .board-row__label {
+  color: #ffeccf;
+  border-color: rgba(112, 70, 22, 0.7);
+  background: linear-gradient(180deg, #a8631a, #5d3712);
+}
+.board-page--newb .board-row[data-category="talk"] .board-row__label {
+  color: #e6f1ff;
+  border-color: rgba(40, 70, 110, 0.7);
+  background: linear-gradient(180deg, #355a82, #1f3550);
+}
+
+/* 고정(필독/공지) = 붉은 밀랍 + 강조 띠 */
+.board-page--newb .board-row--pinned {
+  background:
+    linear-gradient(90deg, rgba(139, 26, 26, 0.12), rgba(139, 26, 26, 0.03) 55%, transparent);
+}
+.board-page--newb .board-row--pinned:hover {
+  background:
+    linear-gradient(90deg, rgba(139, 26, 26, 0.2), rgba(176, 140, 58, 0.08) 60%, transparent);
+}
+.board-page--newb .board-row--pinned .board-row__label {
+  color: #ffe1c4;
+  border-color: rgba(92, 22, 18, 0.75);
+  background: linear-gradient(180deg, #9a1f1f, #4c0f0f);
+  box-shadow:
+    0 2px 0 rgba(60, 12, 12, 0.4),
+    0 0 0 2px rgba(155, 40, 40, 0.18),
+    0 1px 0 rgba(255, 210, 180, 0.22) inset;
+}
+
+/* 탭 = 양피지판 위 황동 핀 */
+.board-page--newb .tabs {
+  border-color: rgba(212, 162, 76, 0.28);
+  background:
+    linear-gradient(180deg, rgba(35, 42, 22, 0.55), rgba(17, 20, 13, 0.5));
+}
+.board-page--newb .tab {
+  color: var(--color-parchment);
+  font-weight: 700;
+}
+.board-page--newb .tab:hover {
+  color: var(--color-gold-soft);
+}
+.board-page--newb .tab.is-active {
+  border-color: var(--color-gold);
+  color: #2e1f0c;
+  background: linear-gradient(135deg, var(--color-gold-soft), var(--color-gold-deep));
+  box-shadow: 0 0 18px rgba(212, 162, 76, 0.3), 0 1px 0 rgba(255, 231, 156, 0.3) inset;
+}
+
+.board-page--newb .board-toolbar {
+  border-color: rgba(212, 162, 76, 0.22);
+  background: rgba(23, 27, 14, 0.5);
+}
+
+/* 모바일: 단일 컬럼 유지 + 양피지 톤 보존 */
+@media (max-width: 720px) {
+  .page-hero--board {
+    padding: var(--sp-7) 0 var(--sp-5);
+  }
+  .board-page--newb .board {
+    outline-offset: -6px;
+  }
+  .board-page--newb .board::before {
+    inset: 8px;
+  }
+  .board-page--newb .board__head {
+    padding: var(--sp-4) var(--sp-4);
+  }
+  .board-page--newb .board-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    background: transparent;
+  }
+  .board-page--newb .board-row + .board-row {
+    border-top-color: rgba(96, 67, 29, 0.28);
+  }
+  .board-page--newb .board-row__meta {
+    justify-content: flex-start;
+  }
+}
+
+/* ============================================================
+   Board Reading Polish — list/detail body readability
+   ============================================================ */
+
+.board-page--newb .board {
+  outline-color: rgba(235, 198, 111, 0.12);
+  background:
+    radial-gradient(circle at 8% 7%, rgba(118, 74, 28, 0.10), transparent 18%),
+    radial-gradient(circle at 92% 10%, rgba(90, 56, 24, 0.08), transparent 20%),
+    linear-gradient(90deg, rgba(78, 46, 17, 0.08), transparent 8%, transparent 92%, rgba(78, 46, 17, 0.08)),
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, #f5ead0 0%, #ead8ae 100%);
+  box-shadow:
+    0 24px 54px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 231, 156, 0.14) inset,
+    0 0 28px rgba(72, 38, 13, 0.14) inset;
+}
+
+.board-page--newb .board::before {
+  border-color: rgba(79, 50, 16, 0.22);
+  box-shadow: none;
+}
+
+.board-page--newb .board__head {
+  padding-block: var(--sp-4);
+  background:
+    linear-gradient(90deg, rgba(94, 58, 19, 0.08), transparent 24%, transparent 76%, rgba(94, 58, 19, 0.08)),
+    linear-gradient(180deg, rgba(255, 249, 229, 0.56), rgba(229, 207, 157, 0.30));
+}
+
+.board-page--newb .board__head h2 {
+  color: #4f2d15;
+  letter-spacing: 0;
+  text-shadow: 0 1px 0 rgba(255, 246, 210, 0.55);
+}
+
+.board-page--newb .board-row {
+  min-height: 62px;
+  padding-block: 14px;
+  background: rgba(255, 251, 239, 0.35);
+}
+
+.board-page--newb .board-row:nth-child(even) {
+  background: rgba(255, 244, 218, 0.25);
+}
+
+.board-page--newb .board-row:hover,
+.board-page--newb .board-row:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(176, 140, 58, 0.16), rgba(255, 248, 230, 0.42) 58%, rgba(255, 248, 230, 0.16)),
+    rgba(255, 250, 236, 0.48);
+}
+
+.board-page--newb .board-row__title {
+  align-items: baseline;
+  color: #241b10;
+  line-height: 1.42;
+  text-shadow: none;
+}
+
+.board-page--newb .board-row__title strong {
+  font-weight: 800;
+}
+
+.board-page--newb .board-row__meta {
+  color: rgba(58, 42, 23, 0.70);
+  font-weight: 650;
+}
+
+.board-page--newb .board-row__label {
+  box-shadow:
+    0 1px 0 rgba(72, 37, 12, 0.26),
+    0 1px 0 rgba(255, 231, 156, 0.18) inset;
+}
+
+.thread-card--post {
+  outline-color: rgba(235, 198, 111, 0.14);
+  background:
+    radial-gradient(circle at 10% 8%, rgba(118, 74, 28, 0.10), transparent 20%),
+    radial-gradient(circle at 92% 16%, rgba(90, 56, 24, 0.08), transparent 22%),
+    linear-gradient(90deg, rgba(78, 46, 17, 0.07), transparent 8%, transparent 92%, rgba(78, 46, 17, 0.07)),
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, #f4ead0 0%, #ead7ad 100%);
+  box-shadow:
+    0 30px 64px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 231, 156, 0.14) inset,
+    0 0 30px rgba(72, 38, 13, 0.16) inset;
+}
+
+.thread-card--post::before {
+  border-color: rgba(79, 50, 16, 0.24);
+  background: linear-gradient(180deg, rgba(255, 245, 204, 0.18), transparent 24%, transparent 76%, rgba(87, 54, 18, 0.08));
+  box-shadow: none;
+}
+
+.thread-card--post::after {
+  opacity: 0.07;
+}
+
+.thread-card--post .thread-label {
+  color: #ffe5ad;
+}
+
+.thread-card--post .post-head {
+  padding: clamp(var(--sp-4), 2.3vw, var(--sp-6)) clamp(var(--sp-4), 3vw, var(--sp-7)) var(--sp-4);
+  border-bottom-color: rgba(92, 61, 21, 0.34);
+  background:
+    linear-gradient(90deg, rgba(94, 58, 19, 0.07), transparent 20%, transparent 80%, rgba(94, 58, 19, 0.07));
+}
+
+.thread-card--post .post-head__title {
+  max-width: 24ch;
+  color: #241b10;
+  font-size: clamp(1.55rem, 2vw, 2.2rem);
+  line-height: 1.28;
+  letter-spacing: 0;
+  text-shadow: 0 1px 0 rgba(255, 246, 210, 0.52);
+}
+
+.thread-card--post .post-head__meta {
+  color: rgba(86, 57, 26, 0.78) !important;
+  font-weight: 750;
+}
+
+.thread-card--post .post-body {
+  width: min(100%, 960px);
+  min-height: 220px;
+  margin-inline: auto;
+  padding: clamp(var(--sp-5), 4vw, var(--sp-8));
+  border-color: rgba(96, 62, 21, 0.24);
+  color: #241b10;
+  background:
+    linear-gradient(90deg, rgba(82, 49, 15, 0.045), transparent 10%, transparent 90%, rgba(82, 49, 15, 0.045)),
+    var(--bg-parchment-texture),
+    linear-gradient(180deg, rgba(255, 250, 232, 0.88), rgba(240, 224, 188, 0.78));
+  background-blend-mode: multiply, multiply, normal;
+  box-shadow:
+    0 1px 0 rgba(255, 245, 199, 0.58),
+    0 8px 18px rgba(76, 42, 13, 0.08) inset;
+}
+
+.thread-card--post .post-body::before {
+  border-color: rgba(82, 51, 15, 0.12);
+}
+
+.thread-card--post .md-body,
+.thread-card--post .post-body > span {
+  display: block;
+  max-width: 72ch;
+  margin-inline: auto;
+  color: #2b2114;
+  font-size: clamp(1.02rem, 0.38vw + 0.94rem, 1.14rem);
+  line-height: 1.84;
+  letter-spacing: 0;
+}
+
+.thread-card--post .md-body p {
+  margin-bottom: 1.12em;
+}
+
+.thread-card--post .md-body p:first-of-type::first-letter {
+  float: none;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-shadow: none;
+}
+
+.thread-card--post .md-body h1,
+.thread-card--post .md-body h2,
+.thread-card--post .md-body h3,
+.thread-card--post .md-body h4 {
+  color: #432915;
+  letter-spacing: 0;
+}
+
+.thread-card--post .md-body strong {
+  color: #21170d;
+  background: linear-gradient(transparent 68%, rgba(212, 162, 76, 0.22) 68%);
+}
+
+.thread-card--post .md-body blockquote {
+  color: #493722;
+  background: rgba(255, 248, 226, 0.56);
+}
+
+.thread-card--comments {
+  background:
+    radial-gradient(ellipse at 86% 0%, rgba(212, 162, 76, 0.07), transparent 52%),
+    linear-gradient(180deg, rgba(17, 20, 13, 0.66), rgba(17, 20, 13, 0.52));
+}
+
+.thread-comment,
+.thread-reply-form,
+.thread-comment-empty {
+  border-color: rgba(212, 162, 76, 0.16);
+  background: rgba(255, 253, 245, 0.045);
+}
+
+.thread-card--comments .comment__body {
+  color: rgba(255, 253, 245, 0.86);
+  line-height: 1.72;
+}
+
+@media (max-width: 720px) {
+  .board-page--newb .board {
+    border-radius: var(--radius-sm);
+  }
+
+  .board-page--newb .board__head {
+    padding: var(--sp-4);
+  }
+
+  .board-page--newb .board-row {
+    min-height: 0;
+    padding: 15px var(--sp-4);
+  }
+
+  .board-page--newb .board-row__title {
+    white-space: normal;
+  }
+
+  .board-page--newb .board-row__meta {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .thread-card--post {
+    padding: var(--sp-3);
+  }
+
+  .thread-card--post::before {
+    inset: 9px;
+  }
+
+  .thread-card--post::after {
+    inset: 16px;
+  }
+
+  .thread-card--post .thread-label {
+    margin-left: var(--sp-2);
+  }
+
+  .thread-card--post .post-head {
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
+  }
+
+  .thread-card--post .post-head__title {
+    max-width: 100%;
+    font-size: clamp(1.34rem, 7vw, 1.72rem);
+    line-height: 1.32;
+  }
+
+  .thread-card--post .post-body {
+    min-height: 180px;
+    padding: var(--sp-5) var(--sp-4);
+  }
+
+  .thread-card--post .md-body,
+  .thread-card--post .post-body > span {
+    font-size: 1rem;
+    line-height: 1.78;
+  }
+}
