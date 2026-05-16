@@ -8300,9 +8300,23 @@ main > section {
 }
 
 .thread-card--comments {
+  margin-top: 0;
+  border-top: 0;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background:
     radial-gradient(ellipse at 86% 0%, rgba(212, 162, 76, 0.07), transparent 52%),
     linear-gradient(180deg, rgba(17, 20, 13, 0.66), rgba(17, 20, 13, 0.52));
+}
+
+.thread-wrap--newb .thread-card--post {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.thread-wrap--newb .thread-card--comments {
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.30),
+    0 1px 0 rgba(212, 162, 76, 0.10) inset;
 }
 
 .thread-comment,
@@ -8312,7 +8326,17 @@ main > section {
   background: rgba(255, 253, 245, 0.045);
 }
 
+.thread-card--comments .thread-comment-empty {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  border-style: dashed;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 245, 0.06), rgba(255, 253, 245, 0.025));
+}
+
 .thread-card--comments .comment__body {
+  margin: 0;
   color: rgba(255, 253, 245, 0.86);
   line-height: 1.72;
 }
@@ -8360,6 +8384,12 @@ main > section {
     padding: var(--sp-4) var(--sp-4) var(--sp-3);
   }
 
+  .thread-card--post .thread-post-tools {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
   .thread-card--post .post-head__title {
     max-width: 100%;
     font-size: clamp(1.34rem, 7vw, 1.72rem);
@@ -8375,5 +8405,34 @@ main > section {
   .thread-card--post .post-body > span {
     font-size: 1rem;
     line-height: 1.78;
+  }
+
+  .thread-card--comments {
+    padding: var(--sp-4) var(--sp-3);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  .thread-card--comments .section__head {
+    padding-bottom: var(--sp-3);
+  }
+
+  .thread-card--comments .thread-comment-empty {
+    min-height: 58px;
+    padding: var(--sp-4);
+  }
+
+  .board-fab {
+    right: var(--sp-3);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--sp-3));
+  }
+
+  .board-fab__btn {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .board-fab__btn--write {
+    display: none;
   }
 }
