@@ -525,13 +525,16 @@ button {
   top: 56px;
   z-index: calc(var(--z-header) - 1);
   display: flex;
-  gap: var(--sp-1);
-  padding: 8px var(--sp-4);
+  gap: 0;
+  min-height: 48px;
+  padding: 0 var(--sp-2);
   overflow-x: auto;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 22%, transparent);
+  border-top: 1px solid rgba(245, 236, 210, 0.06);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-accent, var(--color-gold)) 24%, transparent);
   background:
-    linear-gradient(180deg, rgba(17, 20, 13, 0.94), rgba(17, 20, 13, 0.88)),
-    radial-gradient(ellipse at 18% 50%, color-mix(in srgb, var(--theme-accent, var(--color-gold)) 14%, transparent), transparent 54%);
+    linear-gradient(180deg, rgba(12, 14, 9, 0.96), rgba(12, 14, 9, 0.90)),
+    linear-gradient(90deg, rgba(212, 162, 76, 0.10), transparent 18%, transparent 82%, rgba(212, 162, 76, 0.08));
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
   scrollbar-width: none;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -542,27 +545,51 @@ button {
 }
 
 .site-mobile-tabs a {
+  position: relative;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  justify-content: center;
+  min-width: 72px;
+  min-height: 48px;
   padding: 0 var(--sp-3);
-  border: 1px solid rgba(245, 236, 210, 0.12);
-  border-radius: var(--radius-pill);
-  color: rgba(245, 236, 210, 0.82);
-  font-size: var(--fs-xs);
+  border-left: 1px solid rgba(245, 236, 210, 0.055);
+  color: rgba(245, 236, 210, 0.84);
+  font-size: var(--fs-sm);
   font-weight: 900;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  word-break: keep-all;
+  transition: color 0.16s ease, background 0.16s ease;
+}
+
+.site-mobile-tabs a:last-child {
+  border-right: 1px solid rgba(245, 236, 210, 0.055);
+}
+
+.site-mobile-tabs a::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-3);
+  right: var(--sp-3);
+  bottom: 0;
+  height: 3px;
+  background: var(--theme-accent, var(--color-gold));
+  opacity: 0;
+  transition: opacity 0.16s ease;
 }
 
 .site-mobile-tabs a:hover,
 .site-mobile-tabs a:focus-visible,
 .site-mobile-tabs a.is-active {
-  border-color: var(--theme-accent, var(--color-gold));
   color: var(--theme-accent-soft, var(--color-gold-soft));
-  background: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 12%, transparent);
+  background: color-mix(in srgb, var(--theme-accent, var(--color-gold)) 10%, transparent);
+}
+
+.site-mobile-tabs a:hover::after,
+.site-mobile-tabs a:focus-visible::after,
+.site-mobile-tabs a.is-active::after {
+  opacity: 1;
 }
 
 @media (min-width: 1024px) {
