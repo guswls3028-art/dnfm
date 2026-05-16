@@ -8163,7 +8163,7 @@ main > section {
 }
 
 .thread-card--post .post-head__title {
-  max-width: 24ch;
+  max-width: min(100%, 820px);
   color: #241b10;
   font-size: clamp(1.55rem, 2vw, 2.2rem);
   line-height: 1.28;
@@ -8174,6 +8174,19 @@ main > section {
 .thread-card--post .post-head__meta {
   color: rgba(86, 57, 26, 0.78) !important;
   font-weight: 750;
+}
+
+.thread-card--post .thread-post-tools .btn,
+.thread-card--post .post-actions .btn--ghost {
+  border-color: rgba(96, 62, 21, 0.28);
+  color: #553619;
+  background: rgba(255, 248, 226, 0.34);
+}
+
+.thread-card--post .thread-post-tools .btn:hover:not(:disabled),
+.thread-card--post .post-actions .btn--ghost:hover:not(:disabled) {
+  color: #2f1e0e;
+  background: rgba(255, 244, 205, 0.62);
 }
 
 .thread-card--post .post-body {
@@ -8238,6 +8251,34 @@ main > section {
 .thread-card--post .md-body blockquote {
   color: #493722;
   background: rgba(255, 248, 226, 0.56);
+}
+
+.thread-card--post .author-card {
+  color: #2d2113;
+}
+
+.thread-card--post .author-card__nick,
+.thread-card--post .author-card__main-copy strong,
+.thread-card--post .author-card__value {
+  color: #2d2113;
+}
+
+.thread-card--post .author-card__sub,
+.thread-card--post .author-card__label,
+.thread-card--post .author-card__body--empty,
+.thread-card--post .author-card__main-copy em,
+.thread-card--post .author-card__value em {
+  color: rgba(65, 48, 28, 0.72);
+}
+
+.thread-card--post .author-card__body {
+  border-top-color: rgba(90, 59, 22, 0.20);
+}
+
+.thread-card--post .author-card__avatar,
+.thread-card--post .author-card__portrait {
+  border-color: rgba(90, 59, 22, 0.24);
+  background: rgba(255, 250, 232, 0.38);
 }
 
 .thread-card--comments {
