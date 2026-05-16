@@ -142,6 +142,7 @@ export default function HeroVideoStage({ site }) {
             ))}
           </h1>
           <p className="hero-video__tagline">{theme.tagline}</p>
+          {hero.body ? <p className="hero-video__subtitle">{hero.body}</p> : null}
 
           <div className="hero-video__cta">
             {primaryAction?.url ? (
@@ -166,13 +167,18 @@ export default function HeroVideoStage({ site }) {
             ) : (
               <HeroCta action={primaryAction} primary />
             )}
-            <Link href="/board" className="btn btn--secondary btn--lg hero-video__cta-secondary">
-              훈련소 둘러보기
-            </Link>
-            <Link href="/about" className="btn btn--ghost btn--lg hero-video__cta-secondary">
-              톡방 안내 →
+            <Link href="/board/new?category=question" className="btn btn--secondary btn--lg hero-video__cta-secondary">
+              질문하기
             </Link>
           </div>
+
+          {hero.bullets?.length ? (
+            <ul className="hero-video__principles" aria-label="운영 원칙">
+              {hero.bullets.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : null}
 
           {hero.hashtags?.length ? (
             <ul className="hero-video__hashtags" aria-label="키워드">

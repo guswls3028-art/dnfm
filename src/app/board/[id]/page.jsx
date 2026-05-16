@@ -400,26 +400,13 @@ export default function PostDetailPage() {
             <div className="thread-label">게시물</div>
             <header className="post-head thread-post-head" style={{ minWidth: 0 }}>
               <div
-                className="post-head__top"
-                style={{
-                  display: "flex",
-                  gap: "var(--sp-2)",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  rowGap: "var(--sp-2)",
-                }}
+                className="post-head__top thread-post-top"
               >
                 <span className="badge badge--soft">{post.categoryName}</span>
                 {post.flair ? <span className="badge badge--soft">[{post.flair}]</span> : null}
                 {post.postType === "best" ? <span className="badge badge--solid">BEST</span> : null}
                 <div
-                  style={{
-                    marginLeft: "auto",
-                    display: "flex",
-                    gap: "var(--sp-2)",
-                    flexWrap: "wrap",
-                    justifyContent: "flex-end",
-                  }}
+                  className="thread-post-tools"
                 >
                   {isAdmin ? (
                     <AdminPostMenu
@@ -486,37 +473,18 @@ export default function PostDetailPage() {
             </div>
 
             {post.attachmentR2Keys && post.attachmentR2Keys.length > 0 ? (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                  gap: "var(--sp-2)",
-                  marginTop: "var(--sp-4)",
-                }}
-              >
+              <div className="thread-attachments">
                 {post.attachmentR2Keys.map((key, i) => (
                   <a
                     key={`${key}-${i}`}
                     href={buildApiUrl(`/uploads/r2/${encodeURIComponent(key)}`)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{
-                      display: "block",
-                      border: "1px solid var(--muted, #8a7e60)",
-                      borderRadius: 6,
-                      overflow: "hidden",
-                      background: "rgba(0,0,0,0.1)",
-                    }}
+                    className="thread-attachment"
                   >
                     <img
                       src={buildApiUrl(`/uploads/r2/${encodeURIComponent(key)}`)}
                       alt=""
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "block",
-                        objectFit: "cover",
-                      }}
                       loading="lazy"
                     />
                   </a>

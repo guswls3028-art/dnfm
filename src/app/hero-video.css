@@ -259,6 +259,40 @@ html[data-hero-theme="campfire"] {
   background: rgba(8, 6, 14, 0.7);
 }
 
+.hero-video__principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: var(--sp-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-video__principles li {
+  position: relative;
+  min-width: 0;
+  padding: 8px 10px 8px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  background: rgba(8, 6, 14, 0.36);
+  color: rgba(245, 236, 210, 0.86);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.hero-video__principles li::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--theme-accent);
+  box-shadow: 0 0 10px var(--theme-accent);
+}
+
 .hero-video__hashtags {
   display: flex;
   flex-wrap: wrap;
@@ -555,16 +589,14 @@ html[data-hero-theme="campfire"] {
     display: none;
   }
 
-  /* CTA — 모바일에선 카톡방 입장 1개만, 카카오 아이콘 + 텍스트 */
+  /* CTA — 모바일에서도 카톡방 입장 + 질문하기를 함께 노출 */
   .hero-video__cta {
     display: flex;
     flex-direction: column;
     gap: var(--sp-2);
     margin-top: var(--sp-3);
   }
-  .hero-video__cta-secondary {
-    display: none;
-  }
+  .hero-video__cta .btn,
   .hero-video__cta-kakao {
     width: 100%;
     height: 52px;
@@ -572,6 +604,9 @@ html[data-hero-theme="campfire"] {
     font-weight: 800;
     gap: var(--sp-2);
     letter-spacing: 0.01em;
+  }
+  .hero-video__principles {
+    grid-template-columns: 1fr;
   }
 }
 

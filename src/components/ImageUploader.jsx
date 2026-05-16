@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { uploadFile } from "@/lib/upload";
 import { buildApiUrl } from "@/lib/api-client";
 
@@ -25,13 +25,27 @@ import { buildApiUrl } from "@/lib/api-client";
 const ALLOWED_MIME = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const MAX_SIZE = 10 * 1024 * 1024;
 
+function clipboardImages(event) {
+  const items = Array.from(event.clipboardData?.items || []);
+  const fromItems = items
+    .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
+    .map((item) => item.getAsFile())
+    .filter(Boolean);
+  if (fromItems.length > 0) return fromItems;
+  return Array.from(event.clipboardData?.files || []).filter((file) =>
+    file.type.startsWith("image/"),
+  );
+}
+
 export default function ImageUploader({ value = [], onChange, max = 5 }) {
   const [busy, setBusy] = useState(false);
   const [errs, setErrs] = useState([]);
+  const [info, setInfo] = useState("");
 
-  async function onPick(e) {
-    const files = Array.from(e.target.files || []);
-    e.target.value = ""; // 다시 같은 파일 선택 가능하게 reset
+  const queueFiles = useCallback(
+    async (incoming, sourceLabel = "선택한") => {
+      if (busy) return;
+      const files = Array.from(incoming || []);
     if (files.length === 0) return;
     const remaining = max - value.length;
     if (remaining <= 0) {
@@ -39,29 +53,57 @@ export default function ImageUploader({ value = [], onChange, max = 5 }) {
       return;
     }
     const toUpload = files.slice(0, remaining);
-    setBusy(true);
-    setErrs([]);
-    const newErrs = [];
-    const newKeys = [];
-    for (const f of toUpload) {
-      if (!ALLOWED_MIME.has(f.type)) {
-        newErrs.push(`${f.name}: 지원하지 않는 형식 (jpg/png/webp/gif만)`);
-        continue;
+      setBusy(true);
+      setErrs([]);
+      setInfo("");
+      const newErrs = [];
+      const newKeys = [];
+      for (const f of toUpload) {
+        if (!ALLOWED_MIME.has(f.type)) {
+          newErrs.push(`${f.name || "이미지"}: 지원하지 않는 형식 (jpg/png/webp/gif만)`);
+          continue;
+        }
+        if (f.size > MAX_SIZE) {
+          newErrs.push(`${f.name || "이미지"}: 10MB 초과`);
+          continue;
+        }
+        try {
+          const { r2Key } = await uploadFile(f, { purpose: "post_attachment" });
+          newKeys.push(r2Key);
+        } catch (err) {
+          newErrs.push(`${f.name || "이미지"}: 업로드 실패 (${err?.message || "오류"})`);
+        }
       }
-      if (f.size > MAX_SIZE) {
-        newErrs.push(`${f.name}: 10MB 초과`);
-        continue;
+      setBusy(false);
+      if (newKeys.length > 0) {
+        onChange([...value, ...newKeys]);
+        setInfo(`${sourceLabel} 이미지 ${newKeys.length}장을 첨부했습니다.`);
       }
-      try {
-        const { r2Key } = await uploadFile(f, { purpose: "post_attachment" });
-        newKeys.push(r2Key);
-      } catch (err) {
-        newErrs.push(`${f.name}: 업로드 실패 (${err?.message || "오류"})`);
-      }
+      if (newErrs.length > 0) setErrs(newErrs);
+    },
+    [busy, max, onChange, value],
+  );
+
+  useEffect(() => {
+    function onPaste(event) {
+      const images = clipboardImages(event);
+      if (images.length === 0) return;
+      event.preventDefault();
+      queueFiles(images, "붙여넣은");
     }
-    setBusy(false);
-    if (newKeys.length > 0) onChange([...value, ...newKeys]);
-    if (newErrs.length > 0) setErrs(newErrs);
+    document.addEventListener("paste", onPaste);
+    return () => document.removeEventListener("paste", onPaste);
+  }, [queueFiles]);
+
+  async function onPick(e) {
+    const files = Array.from(e.target.files || []);
+    e.target.value = ""; // 다시 같은 파일 선택 가능하게 reset
+    await queueFiles(files, "선택한");
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    queueFiles(Array.from(e.dataTransfer?.files || []), "끌어온");
   }
 
   function remove(idx) {
@@ -71,75 +113,47 @@ export default function ImageUploader({ value = [], onChange, max = 5 }) {
   }
 
   return (
-    <div style={{ display: "grid", gap: "var(--sp-2)" }}>
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--sp-2)",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
+    <div
+      className="image-uploader image-uploader--newb"
+      onDrop={onDrop}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <label
+        className={`image-uploader__dropzone${busy ? " is-busy" : ""}`}
+        style={{ cursor: busy ? "wait" : "pointer" }}
       >
-        <label
-          className="btn btn--secondary btn--sm"
-          style={{ cursor: busy ? "wait" : "pointer" }}
-        >
-          {busy ? "업로드 중…" : "📷 이미지 추가"}
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            multiple
-            disabled={busy || value.length >= max}
-            onChange={onPick}
-            style={{ display: "none" }}
-          />
-        </label>
-        <span style={{ fontSize: "var(--fs-sm)", color: "var(--muted)" }}>
+        <span className="image-uploader__icon">+</span>
+        <span className="image-uploader__copy">
+          <strong>{busy ? "업로드 중…" : "이미지 추가"}</strong>
+          <small>파일 선택, 드래그, Ctrl+V 붙여넣기</small>
+        </span>
+        <span className="image-uploader__count">
           {value.length}/{max} · jpg/png/webp/gif · 10MB 이하
         </span>
-      </div>
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          multiple
+          disabled={busy || value.length >= max}
+          onChange={onPick}
+          style={{ display: "none" }}
+        />
+      </label>
 
       {value.length > 0 ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-            gap: "var(--sp-2)",
-          }}
-        >
+        <div className="image-uploader__grid">
           {value.map((key, i) => (
             <div
               key={`${key}-${i}`}
-              style={{
-                position: "relative",
-                aspectRatio: "1",
-                border: "1px solid var(--muted, #8a7e60)",
-                borderRadius: 6,
-                overflow: "hidden",
-                background: "rgba(0,0,0,0.1)",
-              }}
+              className="image-uploader__thumb"
             >
               <img
                 src={buildApiUrl(`/uploads/r2/${encodeURIComponent(key)}`)}
                 alt=""
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
               <button
                 type="button"
                 onClick={() => remove(i)}
-                style={{
-                  position: "absolute",
-                  top: 4,
-                  right: 4,
-                  background: "rgba(0,0,0,0.7)",
-                  color: "#fff",
-                  border: "none",
-                  width: 24,
-                  height: 24,
-                  borderRadius: 12,
-                  cursor: "pointer",
-                  fontSize: 14,
-                }}
                 aria-label="첨부 삭제"
               >
                 ✕
@@ -148,6 +162,8 @@ export default function ImageUploader({ value = [], onChange, max = 5 }) {
           ))}
         </div>
       ) : null}
+
+      {info ? <p className="image-uploader__info" role="status">{info}</p> : null}
 
       {errs.length > 0 ? (
         <ul

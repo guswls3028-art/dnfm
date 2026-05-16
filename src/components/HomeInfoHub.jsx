@@ -58,8 +58,8 @@ export default function HomeInfoHub({ site }) {
           <aside className="official-rail" aria-labelledby="official-rail-title">
             <div className="home-cta-panel" aria-label="주요 행동">
               <div className="home-cta-panel__head">
-                <span>캠프파이어 집결</span>
-                <strong>바로 움직이기</strong>
+                <span>캠프파이어 접수처</span>
+                <strong>질문 먼저 남기기</strong>
               </div>
               {site.homeCtas.map((action, index) => (
                 <SmartLink
@@ -75,8 +75,8 @@ export default function HomeInfoHub({ site }) {
             </div>
 
             <div className="official-rail__head">
-              <span className="section__kicker">OFFICIAL COURIER</span>
-              <h3 id="official-rail-title">공식 전령</h3>
+              <span className="section__kicker">OFFICIAL LINKS</span>
+              <h3 id="official-rail-title">공식 링크 보관함</h3>
             </div>
             <div className="official-rail__grid">
               {site.officialChannels.map((item) => (

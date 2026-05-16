@@ -48,24 +48,69 @@ export const heroThemes = [
 export const philosophy = {
   oneLiner: "정보부족으로 인한 뉴비의 불이익 예방 + 자유로운 소통.",
   bullets: [
-    "모르는 내용을 물어보는 것만으로도 괜찮은 톡방입니다.",
-    "뉴비가 진짜 몰라서 묻는 상황에서 과금이 필수처럼 전달되지 않도록 조심합니다.",
-    "처음에는 같이 게임하는 사람끼리 도움을 주고받는 공간으로 시작했고, 지금은 공공장소처럼 운영합니다.",
-    "세부 가이드와 수치는 운영자가 확인한 뒤 채웁니다.",
+    "이 방은 뉴비 / 복귀 / 초보 / 라이트 유저를 돕고자 개설한 방입니다.",
+    "저스펙·무과금·소과금·라이트 유저를 무시하거나 조롱하지 않습니다.",
+    "상위 콘텐츠 진입을 위한 성장 과정은 도와드리지만, 콘텐츠를 대신 깨드리는 방은 아닙니다.",
+    "각자의 과금 수준, 플레이 속도, 목표를 존중해주세요.",
+    "싸우지 말고 사이좋게 지내주세요. 가장 중요한 규칙입니다.",
   ],
 };
 
-// 톡방 인원 분포 — 운영자가 직접 채울 때까지 비움.
+export const aboutHighlights = [
+  {
+    value: "질문",
+    label: "몰라서 묻는 말이 출발점",
+    body: "처음 온 사람이 장비, 성장, 파티 기준을 편하게 물어볼 수 있게 둡니다.",
+  },
+  {
+    value: "공식",
+    label: "원문은 공식 링크로 확인",
+    body: "패치·공지·이벤트는 원문을 우선하고, 톡방에서는 지금 할 일만 짧게 정리합니다.",
+  },
+  {
+    value: "기록",
+    label: "흘러간 답변은 사이트에 저장",
+    body: "반복 질문과 운영 기준은 게시판·가이드로 회수해 다음 뉴비가 다시 찾게 합니다.",
+  },
+];
+
+export const operatingLoop = [
+  {
+    title: "묻기",
+    body: "레벨, 직업, 막힌 콘텐츠, 장비 상태를 같이 적으면 답변이 빨라집니다.",
+  },
+  {
+    title: "확인하기",
+    body: "확실하지 않은 세부 수치나 컷은 운영자가 확인한 뒤 사이트에 반영합니다.",
+  },
+  {
+    title: "남기기",
+    body: "반복되는 질문은 게시판 댓글, 가이드 후보, 톡방 공지로 정리합니다.",
+  },
+];
+
+// 톡방 인원 분포 — 2026-05-08 대화 기준 추정치.
 export const demographics = {
-  asOf: "운영자 입력 예정",
-  bars: [],
+  asOf: "2026-05-08 대화 기준 추정",
+  bars: [
+    { label: "생뉴비", pct: 37, accent: "gold" },
+    { label: "뉴비 & 복귀", pct: 22, accent: "amber" },
+    { label: "초보졸업", pct: 17, accent: "mint" },
+    { label: "중수/실전러", pct: 13, accent: "blue" },
+    { label: "준고인물", pct: 8, accent: "violet" },
+    { label: "고인물", pct: 4, accent: "crimson" },
+  ],
 };
 
-// 톡방 기본 규칙 — 확인된 운영 철학만 유지. 세부 규칙은 운영자가 채움.
+// 톡방 기본 규칙 — 운영자 확인 기준.
 export const rules = [
-  { title: "질문 가능", body: "모르면 질문만 해도 됩니다." },
-  { title: "과금 필수처럼 말하지 않기", body: "뉴비가 모르는 상태에서 과금이 필수처럼 전달되지 않게 조심합니다." },
-  { title: "세부 정보는 확인 후 반영", body: "직업·장비·컷 정보는 운영자가 확인한 것만 사이트에 올립니다." },
+  { title: "싸우지 않기", body: "제일 중요한 규칙입니다." },
+  { title: "서로 존중하기", body: "스펙·과금·숙련도·게임이해도·플레이 방식으로 사람을 무시하지 않습니다." },
+  { title: "계정 거래 관련 질문 금지", body: "이 방은 뉴비 가이드 방입니다. 게임 정책위반 관련은 금지." },
+  { title: "게임과 무관한 광고/홍보 금지", body: "스팸성 홍보는 제재될 수 있습니다." },
+  { title: "타톡방/방송/길드 등 홍보는 자유", body: "단, 과도한 반복 홍보나 분쟁 유도는 삼가주세요." },
+  { title: "들낙 자유", body: "필요할 때 들어오고, 필요 없어지면 나가셔도 됩니다." },
+  { title: "질문 환영", body: "단순한 질문도 괜찮습니다. 부끄러워하지 말고 아무거나 질문해도 됩니다." },
 ];
 
 // 닉네임 가이드 — 닉네임은 자유. 가입 시 본캐 캐릭명/모험단명 함께 입력.
@@ -105,20 +150,21 @@ export const site = {
   shortTitle: "뉴비 훈련소",
   brandMark: "DNFM.KR",
   eyebrow: "dnfm.kr",
-  subtitle: "가이드, 이벤트, 질문 흐름을 한곳에 모으는 카톡방 운영 허브",
+  subtitle: "뉴비훈련소 톡방 입구 · 질문 저장소 · 운영 기록소",
   theme: "training",
   hero: {
-    kicker: "여유로운 톡방 · 환영합니다",
-    headline: "길 잃은 뉴비에게 도움을 주는 방",
-    headlineLines: ["길 잃은 뉴비에게", "도움을 주는 방"],
-    subtitle: "빡빡하지 않은 곳 — 잠깐 들렀다 가셔도 됩니다",
+    kicker: "톡방 운영 허브",
+    headline: "질문이 묻히지 않게 모아두는 곳",
+    headlineLines: ["질문이 묻히지 않게", "모아두는 곳"],
+    subtitle: "공식 정보는 공홈으로, 질문과 운영 기록은 여기로.",
     bullets: [
-      "뉴비 / 복귀 모두 환영",
-      "뉴비 도와주고 싶은 고인물도 환영",
-      "위 아래 없는 수평적 공간",
+      "정보부족으로 인한 뉴비의 불이익 예방",
+      "과금이 필수처럼 전달되지 않게 조심",
+      "확인된 정보 위주로 답변 정리",
+      "뉴비 질문 환영",
     ],
     body:
-      "톡방 입장 링크, 공식 공지, 가이드, 길드 안내. 부담 없이 들렀다 가셔도 됩니다.",
+      "카톡방에서 흘러가는 질문을 사이트에 남기고, 운영자가 답변과 기준을 댓글로 정리하는 보조 도구입니다.",
     hashtags: [
       "#던파모바일",
       "#던파m",
@@ -132,24 +178,24 @@ export const site = {
       "#소멸의공동",
       "#절망의탑",
     ],
-    callout: "공식 링크는 던파모바일 공식 홈 기준. 톡방·가이드는 운영자가 직접 관리합니다.",
+    callout: "공식 공지·이벤트는 공홈으로 연결하고, DNFM.KR은 톡방 운영에 필요한 질문·답변·이벤트 기록만 관리합니다.",
   },
   heroSlides: [
     {
       id: "hero-onboard",
-      kicker: "입소 안내",
-      title: "처음 시작은 공식 기준 확인부터",
-      body: "던파 모바일 최신 공지와 톡방 확인 내용을 기준으로 안내합니다. 막히면 바로 질문.",
+      kicker: "질문 저장소",
+      title: "톡방 질문이 묻히기 전에 남겨두기",
+      body: "회원·인증회원·비회원 모두 질문 게시판에 남길 수 있습니다. 운영자가 댓글로 정리합니다.",
       accent: "amber",
-      cta: { label: "가이드 보기", href: "/guide" }
+      cta: { label: "질문하기", href: "/board/new?category=question" }
     },
     {
-      id: "hero-news",
-      kicker: "새소식",
-      title: "공지와 업데이트는 따로 모아보기",
-      body: "운영자가 확인한 글과 공식 링크를 먼저 보여줍니다.",
+      id: "hero-charter",
+      kicker: "운영 헌장",
+      title: "공식 정보는 링크, 톡방 판단은 짧게",
+      body: "공홈을 복붙하지 않고 뉴비 기준으로 지금 무엇을 하면 되는지만 정리합니다.",
       accent: "crimson",
-      cta: { label: "새소식 보기", href: "/news" }
+      cta: { label: "톡방 안내", href: "/about" }
     }
   ],
   // 정자 위에 걸어둔 게시판 같은 카드 슬라이더 fallback.
@@ -190,37 +236,36 @@ export const site = {
   ],
   homeCtas: [
     { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g", note: "바로 질문하고 답 받기" },
-    { label: "질문 쓰기", href: "/board/new?category=question", note: "직업·장비·파티 질문" },
-    { label: "공지 확인", href: "/board?category=notice", note: "운영자가 올린 글" },
-    { label: "가이드 보기", href: "/guide", note: "반복 질문 모음" }
+    { label: "질문하기", href: "/board/new?category=question", note: "회원·비회원 모두 가능" },
+    { label: "질문 저장소", href: "/board?category=question", note: "운영자가 댓글로 정리" }
   ],
   officialChannels: [
     {
       id: "notice",
       tag: "공지",
       label: "공지사항",
-      body: "점검, 오류, 보상, 임시 안내",
+      body: "공식 원문 확인용 링크",
       href: "https://dnfm.nexon.com/News/Notice"
     },
     {
       id: "update",
       tag: "패치",
       label: "패치노트 / 업데이트",
-      body: "신규 콘텐츠와 밸런스 변경",
+      body: "패치 원문 확인용 링크",
       href: "https://dnfm.nexon.com/News/Update"
     },
     {
       id: "devnote",
       tag: "개노",
       label: "개발자 노트",
-      body: "패치 의도, 방향성, Q&A",
+      body: "운영 방향 원문 링크",
       href: "https://dnfm.nexon.com/News/DevNote"
     },
     {
       id: "event",
       tag: "보상",
       label: "진행 이벤트",
-      body: "출석, 성장 지원, 쿠폰성 보상",
+      body: "보상 기간 원문 링크",
       href: "https://dnfm.nexon.com/News/Event"
     }
   ],
@@ -236,50 +281,50 @@ export const site = {
     {
       step: "01",
       tone: "gold",
-      title: "공식 기준 먼저 확인",
-      body: "직업·성장·콘텐츠 정보는 던파 모바일 공식 공지와 현재 패치 기준으로 확인합니다.",
-      primary: { label: "가이드 보기", href: "/guide" },
-      secondary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" }
+      title: "카톡방 입장",
+      body: "실시간 질문은 톡방에서. 사이트는 질문이 흘러가서 사라지는 문제를 보완합니다.",
+      primary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" },
+      secondary: { label: "톡방 안내", href: "/about" }
     },
     {
       step: "02",
       tone: "mint",
-      title: "내 상황을 같이 적기",
-      body: "질문할 때 레벨, 직업, 막힌 콘텐츠, 장비 상태를 함께 적으면 답변이 빨라집니다.",
-      primary: { label: "가이드 보기", href: "/guide" },
-      secondary: { label: "질문 남기기", href: "/board/new?category=question" }
+      title: "질문 저장",
+      body: "레벨, 직업, 항마력, 막힌 곳을 양식으로 남기면 운영자가 답변하기 쉬워집니다.",
+      primary: { label: "질문하기", href: "/board/new?category=question" },
+      secondary: { label: "질문 게시판", href: "/board?category=question" }
     },
     {
       step: "03",
       tone: "crimson",
-      title: "막히면 톡방에서 묻기",
-      body: "채팅에 /가이드ㅡ시작 입력하면 시작 루트 카드 자동. 또는 그냥 질문.",
-      primary: { label: "카톡방 입장", href: "https://open.kakao.com/o/gbsjsZ5g" },
-      secondary: { label: "질문 남기기", href: "/board/new?category=question" }
+      title: "답변 회수",
+      body: "운영자가 댓글로 답변하고, 반복 질문은 가이드 후보나 톡방 공지로 정리합니다.",
+      primary: { label: "질문 보기", href: "/board?category=question" },
+      secondary: { label: "가이드 보드", href: "/guide" }
     }
   ],
   eventSlides: [
-    { index: "1", title: "입소 안내", body: "처음 온 모험가를 위한 성장 순서" },
-    { index: "2", title: "공식 공지", body: "점검, 업데이트, 보상 링크" },
-    { index: "3", title: "질문 루트", body: "직업, 장비, 파티 질문 정리" },
-    { index: "4", title: "가이드 보드", body: "반복 질문을 한 장으로 회수" }
+    { index: "1", title: "톡방 입장", body: "처음 온 모험가를 위한 입구" },
+    { index: "2", title: "질문 저장", body: "답변 못 받은 질문을 남김" },
+    { index: "3", title: "답변 정리", body: "운영자가 댓글로 회수" },
+    { index: "4", title: "이벤트장", body: "톡방 자체 이벤트 기록" }
   ],
   noticesMoreUrl: "https://dnfm.nexon.com/News/Notice",
   communityMoreUrl: "/board",
   featureCards: [
     {
-      title: "처음 시작 루트",
-      body: "공식 공지와 톡방 확인 내용을 기준으로 시작 루트를 정리합니다. 세부 정보는 운영자가 채웁니다.",
+      title: "질문 저장소",
+      body: "톡방에서 흘러간 질문을 사이트에 남기고, 운영자가 댓글로 답변을 회수합니다.",
       accent: "gold"
     },
     {
-      title: "오늘의 던파모바일",
-      body: "이벤트, 점검, 보상 기간을 톡방 공지에 맞게 빠르게 확인합니다.",
+      title: "뉴비 번역소",
+      body: "공식 원문은 링크만 두고, 뉴비가 지금 할 일을 짧게 정리합니다.",
       accent: "red"
     },
     {
-      title: "공식 정보 연결",
-      body: "출처가 필요한 내용은 공식 홈페이지와 추천 가이드로 바로 연결합니다.",
+      title: "운영 피로도 줄이기",
+      body: "반복 질문, 이벤트 참가, 공지 링크를 톡방 밖에 보관합니다.",
       accent: "ink"
     }
   ],

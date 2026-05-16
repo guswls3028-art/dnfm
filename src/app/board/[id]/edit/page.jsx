@@ -7,6 +7,7 @@ import { ApiError, posts as postsApi } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { isSiteAdmin } from "@/lib/permissions";
 import ImageUploader from "@/components/ImageUploader";
+import PostComposerEditor from "@/components/PostComposerEditor";
 
 /**
  * 글 수정 — 작성자 본인 / 비회원(비번) / admin.
@@ -218,18 +219,21 @@ export default function PostEditPage() {
                 />
               </div>
 
-              <div className="field">
-                <label className="field__label" htmlFor="edit-body">
-                  본문
-                </label>
-                <textarea
-                  id="edit-body"
-                  className="textarea"
-                  rows={12}
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                />
-              </div>
+              <PostComposerEditor
+                id="edit-body"
+                label="본문"
+                value={body}
+                onChange={setBody}
+                textareaClassName="textarea composer__body"
+                rows={14}
+                placeholder="본문을 수정해주세요."
+                templates={[
+                  {
+                    label: "장비 양식",
+                    text: "캐릭터/직업:\n현재 장비:\n목표 콘텐츠:\n보유 재화/재료:\n고민 중인 선택지:",
+                  },
+                ]}
+              />
 
               {isAuthed || isOwnMember || isAdmin ? (
                 <div className="field">
