@@ -337,16 +337,20 @@ export const site = {
       period: "상시 확인",
       body: "현재 열려 있는 보상, 출석, 성장 지원 이벤트는 공식 이벤트 페이지에서 확인합니다.",
       url: "https://dnfm.nexon.com/News/Event",
+      thumbnailSrc: "/dnfm-official-thumb.jpg",
+      thumbnailAlt: "던파 모바일 공식 썸네일",
       status: "진행중"
     },
     {
       id: "e2",
       badge: null,
-      category: "운영",
-      title: "톡방 자체 이벤트",
+      category: "뉴비훈련소",
+      title: "뉴비훈련소 톡방 이벤트",
       period: "운영자 입력 예정",
       body: "운영자가 실제 공지한 이벤트만 이곳에 올립니다.",
       url: "/board?category=notice",
+      thumbnailSrc: "/배경사진.jpg",
+      thumbnailAlt: "군복을 입은 뉴비훈련소 일러스트",
       status: "준비중"
     }
   ],

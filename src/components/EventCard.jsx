@@ -24,13 +24,17 @@ export default function EventCard({ event }) {
 
   const categorySlug =
     event.category === "공식" ? "official"
-    : event.category === "톡방" || event.category === "운영" ? "talk"
+    : event.category === "톡방" || event.category === "운영" || event.category === "뉴비훈련소" ? "talk"
     : "other";
 
   return (
     <article className={className} data-category={categorySlug}>
       <div className="event-card__banner" data-category={categorySlug} aria-hidden="true">
-        {event.bannerLabel || event.category}
+        {event.thumbnailSrc ? (
+          <img className="event-card__thumb" src={event.thumbnailSrc} alt="" loading="lazy" />
+        ) : (
+          event.bannerLabel || event.category
+        )}
       </div>
       {head}
       <h3 className="event-card__title">{event.title}</h3>
