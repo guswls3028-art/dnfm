@@ -35,7 +35,7 @@ export default function BoardFab({ href = "/board/new" }) {
           aria-label="맨 위로"
           title="맨 위로"
         >
-          ↑
+          <span className="glyph">↑</span>
         </button>
       ) : null}
       <Link
@@ -44,7 +44,7 @@ export default function BoardFab({ href = "/board/new" }) {
         aria-label="글쓰기"
         title="글쓰기"
       >
-        ✏
+        <span className="glyph">✏</span>
       </Link>
     </div>
   );

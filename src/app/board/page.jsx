@@ -242,7 +242,7 @@ function BoardInner() {
                   className="btn btn--ghost btn--sm"
                   onClick={() => pushQuery({ q: "", page: 1 })}
                 >
-                  지움
+                  지우기
                 </button>
               ) : null}
             </form>

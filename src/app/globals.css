@@ -6482,6 +6482,109 @@ main > section {
   color: var(--color-gold);
 }
 
+.guide-portal {
+  display: grid;
+  gap: var(--sp-5);
+}
+
+.guide-portal__group {
+  position: relative;
+  padding: var(--sp-5);
+  border: 1px solid rgba(212, 162, 76, 0.24);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, rgba(37, 44, 31, 0.92), rgba(18, 22, 18, 0.96)),
+    radial-gradient(circle at 12% 0%, rgba(212, 162, 76, 0.18), transparent 34%);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.guide-portal__group::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--color-gold);
+}
+
+.guide-portal__group[data-accent="mint"]::before { background: var(--color-mint); }
+.guide-portal__group[data-accent="blue"]::before { background: var(--color-blue); }
+.guide-portal__group[data-accent="red"]::before { background: var(--color-red); }
+
+.guide-portal__head {
+  display: grid;
+  grid-template-columns: minmax(92px, auto) 1fr;
+  gap: var(--sp-4);
+  align-items: start;
+  margin-bottom: var(--sp-4);
+}
+
+.guide-portal__role {
+  display: inline-flex;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(212, 162, 76, 0.42);
+  border-radius: var(--radius-full);
+  color: var(--color-gold-soft);
+  background: rgba(212, 162, 76, 0.12);
+  font-family: var(--font-display);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.guide-portal__group[data-accent="mint"] .guide-portal__role {
+  border-color: rgba(116, 184, 157, 0.42);
+  color: var(--color-mint);
+  background: rgba(116, 184, 157, 0.12);
+}
+
+.guide-portal__group[data-accent="blue"] .guide-portal__role {
+  border-color: rgba(113, 150, 198, 0.42);
+  color: var(--color-blue);
+  background: rgba(113, 150, 198, 0.12);
+}
+
+.guide-portal__group[data-accent="red"] .guide-portal__role {
+  border-color: rgba(192, 76, 65, 0.46);
+  color: var(--color-red);
+  background: rgba(192, 76, 65, 0.12);
+}
+
+.guide-portal__head h3 {
+  margin: 0;
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+}
+
+.guide-portal__head p {
+  margin: 6px 0 0;
+  color: var(--color-paper-soft);
+  font-size: var(--fs-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.guide-portal__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--sp-3);
+}
+
+.guide-portal__items .guide-card {
+  min-height: 100%;
+  padding: var(--sp-4);
+  border-color: rgba(212, 162, 76, 0.18);
+  background: rgba(9, 13, 12, 0.52);
+}
+
+.guide-portal__items .guide-card__title {
+  font-size: var(--fs-md);
+}
+
+.guide-portal__items .guide-card__body {
+  font-size: var(--fs-xs);
+}
+
 .guide-pending-note {
   display: flex;
   align-items: center;
@@ -6517,6 +6620,16 @@ main > section {
 
 /* narrow viewport 대응 */
 @media (max-width: 720px) {
+  .guide-portal__group {
+    padding: var(--sp-4);
+  }
+  .guide-portal__head {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
+  .guide-portal__role {
+    justify-self: start;
+  }
   .hero__host-chip {
     padding: 4px var(--sp-3) 4px 4px;
   }
@@ -8435,4 +8548,57 @@ main > section {
   .board-fab__btn--write {
     display: none;
   }
+}
+
+/* ============================================================
+   Community detail polish — 2026-05-16
+   Additive; placed last so equal-specificity rules win the
+   cascade over the sealed board style generations above.
+   NOTE: 5+ duplicate `.board-row:hover` blocks remain upstream
+   (lines ~2199 / ~5682 / ~6844 / ~7064 / ~8025 / ~8232) — that
+   is hygiene debt, intentionally NOT ripped out on a sealed v1
+   page to avoid visual regression. This block only strengthens
+   the effective (last-wins) result.
+   ============================================================ */
+
+/* #1 — perceptible row hover. The winning upstream hover lifts
+   the parchment by only ~0.13 alpha, which reads as no feedback
+   on a clickable list. Add a warm wash + a gold left rail. */
+.board-page--newb .board-row {
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+
+.board-page--newb .board-row:hover,
+.board-page--newb .board-row:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(176, 128, 42, 0.20), rgba(255, 248, 226, 0.55) 60%, rgba(255, 248, 226, 0.30));
+  box-shadow: inset 3px 0 0 rgba(176, 128, 42, 0.85);
+}
+
+.board-page--newb .board-row--pinned:hover,
+.board-page--newb .board-row--pinned:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(139, 26, 26, 0.22), rgba(255, 240, 224, 0.50) 58%, rgba(255, 240, 224, 0.28));
+  box-shadow: inset 3px 0 0 rgba(139, 26, 26, 0.85);
+}
+
+/* #3 — equal-width digits so 조회 / 추천 counts stop jittering
+   row-to-row. (Full per-column grid alignment of the variable
+   author/time cells is a markup restructure, deferred — author
+   strings range from "회원" to "카톡:방장(43.202)".) */
+.board-page--newb .board-row__meta {
+  font-variant-numeric: tabular-nums;
+}
+
+/* #6 — glyph normalization. The site uses text/emoji glyphs by
+   design (no icon library anywhere); the only real defect is
+   per-glyph box/baseline wobble. Normalize without changing the
+   aesthetic or forcing monochrome emoji presentation. */
+.glyph {
+  display: inline-block;
+  min-width: 1em;
+  font-style: normal;
+  line-height: 1;
+  text-align: center;
+  vertical-align: -0.04em;
 }

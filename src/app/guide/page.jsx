@@ -1,6 +1,6 @@
 import Link from "next/link";
 import GuideCard from "@/components/GuideCard";
-import { guideCommand, site } from "@/lib/content";
+import { guideCommand, guidePortalGroups, site } from "@/lib/content";
 
 export const metadata = {
   title: "가이드",
@@ -48,7 +48,7 @@ export default function GuidePage() {
             <li className="quickstart__step" data-step="3">
               <span className="quickstart__num">03</span>
               <strong>막히면 톡방에서 묻기</strong>
-              <p>채팅에 <code>/가이드ㅡ시작</code> 입력하면 시작 루트 카드 자동. 또는 그냥 질문.</p>
+              <p>채팅에 <code>/가이드</code>, <code>/시로코</code>, <code>/블레이드</code>처럼 입력하면 관련 포탈이 뜹니다.</p>
               <a className="btn btn--primary btn--sm" href="https://open.kakao.com/o/gbsjsZ5g" target="_blank" rel="noreferrer">
                 카톡방 입장 →
               </a>
@@ -71,6 +71,46 @@ export default function GuidePage() {
             <code className="guide-cmd__code">{guideCommand.trigger}</code>
             <p className="guide-cmd__note">{guideCommand.note}</p>
             <small className="guide-cmd__author">작성: {guideCommand.author}</small>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="portal-title">
+        <div className="content-wrap">
+          <header className="section__head">
+            <div>
+              <span className="section__kicker">PORTAL</span>
+              <h2 id="portal-title" className="section__title">
+                역할별 가이드 포탈
+              </h2>
+            </div>
+            <Link className="section__more" href="/board/new?category=question">
+              없는 질문 남기기 →
+            </Link>
+          </header>
+
+          <div className="guide-portal">
+            {guidePortalGroups.map((group) => (
+              <section
+                key={group.id}
+                className="guide-portal__group"
+                data-accent={group.accent}
+                aria-labelledby={`guide-portal-${group.id}`}
+              >
+                <div className="guide-portal__head">
+                  <span className="guide-portal__role">{group.role}</span>
+                  <div>
+                    <h3 id={`guide-portal-${group.id}`}>{group.title}</h3>
+                    <p>{group.summary}</p>
+                  </div>
+                </div>
+                <div className="guide-portal__items">
+                  {group.items.map((guide) => (
+                    <GuideCard key={guide.id} guide={guide} />
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </div>
       </section>

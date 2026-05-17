@@ -85,16 +85,16 @@ export default function HomePage() {
               <p className="guide-cmd__note">{guideCommand.note}</p>
               <ul className="guide-cmd__examples">
                 <li>
-                  <span className="guide-cmd__example-key">/가이드ㅡ시작</span>
-                  <span>처음 시작 루트</span>
+                  <span className="guide-cmd__example-key">/가이드</span>
+                  <span>역할별 가이드 목록</span>
                 </li>
                 <li>
-                  <span className="guide-cmd__example-key">/가이드 모음</span>
-                  <span>가이드 목록</span>
+                  <span className="guide-cmd__example-key">/시로코 레이드 공략</span>
+                  <span>시로코 종합 가이드</span>
                 </li>
                 <li>
-                  <span className="guide-cmd__example-key">/가이드ㅡ기본ㅡ시즌가이드</span>
-                  <span>톡방 공지 기준</span>
+                  <span className="guide-cmd__example-key">/블레이드 와플 공략</span>
+                  <span>직업 공략 포탈</span>
                 </li>
               </ul>
               <small className="guide-cmd__author">작성: {guideCommand.author}</small>

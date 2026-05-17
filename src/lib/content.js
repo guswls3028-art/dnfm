@@ -135,10 +135,185 @@ export const nicknameGuide = {
 
 // 가이드 명령어 — 톡방 채팅창에서.
 export const guideCommand = {
-  trigger: "/가이드ㅡ시작",
-  author: "@맑남",
-  note: "톡방 채팅창에 입력하면 시작 루트 카드가 자동으로 뜹니다.",
+  trigger: "/가이드",
+  author: "@방장 · @잭터 · @맑남",
+  note: "톡방 채팅창에 /가이드, /블레이드, /시로코, /테라처럼 입력하면 관련 포탈을 바로 찾습니다.",
 };
+
+export const guidePortalGroups = [
+  {
+    id: "official",
+    role: "공식",
+    title: "공홈 공지·패치 포탈",
+    summary: "공지, 업데이트, 개발자 노트처럼 최신 원문 확인이 필요한 정보는 공식 링크로 바로 연결합니다.",
+    accent: "red",
+    items: [
+      {
+        id: "official-notice",
+        category: "공식",
+        title: "공식 공지사항",
+        shortTitle: "공지",
+        author: "공식",
+        body: "점검, 오류, 안내, 공식 공지를 확인하는 던파 모바일 공홈 링크.",
+        linkLabel: "공지사항",
+        url: "https://dnfm.nexon.com/News/Notice",
+        keywords: ["공지", "공지사항", "점검공지", "오류공지", "공홈공지", "공식공지"],
+      },
+      {
+        id: "official-update",
+        category: "공식",
+        title: "공식 업데이트",
+        shortTitle: "업데이트",
+        author: "공식",
+        body: "패치 내용, 신규 콘텐츠, 변경사항을 확인하는 던파 모바일 공식 업데이트 링크.",
+        linkLabel: "업데이트",
+        url: "https://dnfm.nexon.com/News/Update",
+        keywords: ["업데이트", "패치", "패치노트", "업뎃", "업데이트노트"],
+      },
+      {
+        id: "official-devnote",
+        category: "공식",
+        title: "공식 개발자 노트",
+        shortTitle: "개노",
+        author: "공식",
+        body: "개발 방향, 패치 의도, 운영 코멘트를 확인하는 던파 모바일 공식 개발자 노트 링크.",
+        linkLabel: "개발자 노트",
+        url: "https://dnfm.nexon.com/News/Devnote",
+        keywords: ["개노", "개발자노트", "devnote", "디렉터노트", "운영자노트"],
+      },
+    ],
+  },
+  {
+    id: "host",
+    role: "방장",
+    title: "방장 작성 가이드",
+    summary: "직업 운용, 세팅 판단, 과금·테라 루트처럼 톡방에서 반복되는 질문을 정리한 글입니다.",
+    accent: "gold",
+    items: [
+      {
+        id: "blade-standard",
+        category: "직업",
+        title: "블레이드 정석 가이드",
+        shortTitle: "블레이드 30/33와플",
+        author: "방장",
+        body: "30/33와플 기준 블레이드 운용, 세팅, 스킬룬, 스킬트리, 콤보와 체크포인트까지 한 번에 보는 직업 공략.",
+        linkLabel: "블레이드 공략",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3428289",
+        keywords: ["블레이드", "블레", "와플", "30와플", "33와플", "스킬트리", "콤보", "직업공략"],
+      },
+      {
+        id: "element-status",
+        category: "세팅",
+        title: "속강·상변 속성부여 정리",
+        shortTitle: "속강·상변",
+        author: "방장",
+        body: "상변 피해와 속성강화 적용 구조를 정리한 글. 스킬 자체 속성만 있는 직업은 속성부여가 필요한지 판단할 때 봅니다.",
+        linkLabel: "속강/상변 정리",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3340326",
+        keywords: ["속강", "상변", "속성부여", "무기카드", "화상", "중독", "자속성", "상변뎀"],
+      },
+      {
+        id: "spending-guide",
+        category: "과금",
+        title: "과금 어떻게 해야할까",
+        shortTitle: "무소과금~고과금",
+        author: "방장",
+        body: "오라·칭호·크리쳐·아티팩트·계약 등 과금 우선순위와 무소과금/중과금 기준 선택지를 정리한 과금 판단 글.",
+        linkLabel: "과금 가이드",
+        url: "https://dnfm.nexon.com/Community/Tip/View/2996348",
+        keywords: ["과금", "무과금", "소과금", "중과금", "고과금", "패키지", "오칭크", "아티팩트", "계약"],
+      },
+      {
+        id: "free-terra-package",
+        category: "재화",
+        title: "무과금 테라 모으는 법",
+        shortTitle: "무과금 테라",
+        author: "방장",
+        body: "일일·주간 고정 테라 수급과 패키지 구매까지 걸리는 기간을 계산한 무과금/라이트 유저용 테라 루트.",
+        linkLabel: "무과금 테라 루트",
+        url: "https://dnfm.nexon.com/Community/Tip/View/2996567",
+        keywords: ["무과금테라", "테라모으기", "테라", "패키지구매", "일일테라", "주간테라", "라이트"],
+      },
+    ],
+  },
+  {
+    id: "jactor",
+    role: "잭터",
+    title: "잭터 운영·레이드 포탈",
+    summary: "슈시아 길드 운영 안내와 시로코 레이드 실전 진행 자료를 묶었습니다.",
+    accent: "mint",
+    items: [
+      {
+        id: "guild-sushia",
+        category: "길드",
+        title: "잭터님의 즉시가입길드",
+        shortTitle: "즉시가입 길드",
+        author: "잭터",
+        body: "잭터님이 안내하는 슈시아 즉시가입 길드. 53~54렙 길드 7개, 자율 운영, 밥차 만렙과 길드버프 제공 안내.",
+        linkLabel: "즉시가입 길드",
+        url: "https://dnfm.nexon.com/Community/Guild/View/3446236",
+        keywords: ["길드", "슈시아", "즉시가입", "잭터길드", "밥차", "길드버프", "뉴비훈련소길드"],
+      },
+      {
+        id: "siroco-total",
+        category: "레이드",
+        title: "시로코 레이드 종합 가이드",
+        shortTitle: "시로코 종합",
+        author: "잭터",
+        body: "6인 동선, 관문별 방어 버프, 저항마 구간, 3인 진행, 경미참 운영과 패턴 영상 링크까지 모은 종합 자료.",
+        linkLabel: "시로코 종합",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3423263",
+        keywords: ["시로코", "시로코레이드", "레이드", "저항마", "3인", "경미참", "동선", "망울", "패턴"],
+      },
+      {
+        id: "siroco-raid-buff",
+        category: "레이드",
+        title: "시로코 공대버프 활용법",
+        shortTitle: "공대버프",
+        author: "잭터",
+        body: "오즈마 호출과 이젤리아 호출의 숨겨진 버프, 각성기·그로기 타이밍 연계를 짧게 확인하는 보조 자료.",
+        linkLabel: "공대버프 정리",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3423032",
+        keywords: ["공대버프", "오즈마호출", "이젤리아", "그로기", "각성기", "시로코버프"],
+      },
+    ],
+  },
+  {
+    id: "clear-man",
+    role: "맑남",
+    title: "맑남 재화·성장 포탈",
+    summary: "초보와 복귀가 자주 묻는 재화 획득처와 장비·속성 세팅 자료를 공식 커뮤니티 공략으로 연결합니다.",
+    accent: "blue",
+    items: [
+      {
+        id: "currency-sources",
+        category: "재화",
+        title: "주요 재화 획득처 정리",
+        shortTitle: "재화 획득처",
+        author: "맑남",
+        body: "골드, 테라, 라코, 촉매제, 연마석, 젤바 초대장을 일간·주간·월간 루틴 기준으로 확인하는 재화 지도.",
+        linkLabel: "재화 획득처",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3385102",
+        keywords: ["재화", "골드", "테라", "라코", "촉매제", "연마석", "초대장", "젤바초대장", "획득처"],
+      },
+      {
+        id: "gear-attribute-options",
+        category: "세팅",
+        title: "딜러/시너지 장비 추천 옵션·자체 속성 정리",
+        shortTitle: "장비 추천/속성",
+        author: "맑남",
+        body: "딜러/시너지 장비 추천 옵션과 자체 속성 직업을 함께 보는 세팅 참고 글.",
+        linkLabel: "장비/속성 정리",
+        url: "https://dnfm.nexon.com/Community/Tip/View/3329968",
+        keywords: ["장비추천", "속성", "속강", "자체속성", "속성부여", "딜러장비", "시너지장비", "추천옵션", "상변"],
+      },
+    ],
+  },
+];
+
+export const guidePortalItems = guidePortalGroups.flatMap((group) =>
+  group.items.map((item) => ({ ...item, groupId: group.id, role: group.role, accent: group.accent })),
+);
 
 // 뉴비 친화 길드 — 운영자가 직접 채움.
 export const friendlyGuilds = [];
@@ -355,22 +530,7 @@ export const site = {
     }
   ],
   guideCards: [
-    {
-      id: "g1",
-      category: "시작",
-      title: "처음 시작 루트",
-      body: "던파 모바일 최신 기준으로 확인한 시작 루트만 정리합니다. 막히면 톡방에서 묻기.",
-      linkLabel: "톡방 입장 후 명령어로 보기",
-      url: "https://open.kakao.com/o/gbsjsZ5g"
-    },
-    {
-      id: "g2",
-      category: "명령어",
-      title: "가이드 명령어",
-      body: "시작 루트는 /가이드ㅡ시작. 톡방 공지에는 /가이드ㅡ* 형식의 가이드 안내가 있습니다.",
-      linkLabel: "가이드 페이지",
-      url: "/guide"
-    }
+    ...guidePortalItems.slice(0, 4),
   ],
   stats: [
     { value: "01", label: "입장 후 먼저 볼 것", detail: "초반 성장 순서" },
@@ -401,15 +561,9 @@ export const site = {
     "레벨·직업·막힌 콘텐츠 정리",
     "막히면 /가이드ㅡ시작 또는 톡방 질문"
   ],
-  guideFilters: ["전체", "시작", "성장", "장비", "파티", "공식"],
+  guideFilters: ["전체", "직업", "세팅", "과금", "재화", "레이드", "길드", "공식"],
   guides: [
-    {
-      title: "처음 시작 루트",
-      category: "시작",
-      body: "던파 모바일 최신 기준으로 확인한 시작 루트만 정리합니다. 막히면 톡방에서 묻기.",
-      linkLabel: "톡방 입장",
-      url: "https://open.kakao.com/o/gbsjsZ5g"
-    },
+    ...guidePortalItems,
     {
       title: "신규 모험가 공식 가이드",
       category: "공식",

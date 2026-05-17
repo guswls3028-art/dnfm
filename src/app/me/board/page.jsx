@@ -35,7 +35,7 @@ export default function MyBoardPage() {
 function Inner() {
   const sp = useSearchParams();
   const tab = sp.get("tab") || "posts";
-  const { user, isAuthed, isLoading } = useCurrentUser();
+  const { user, isAuthed, isLoading, error: authError, refresh } = useCurrentUser();
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -66,6 +66,27 @@ function Inner() {
   useEffect(() => {
     load();
   }, [load]);
+
+  if (!isLoading && authError && !isAuthed) {
+    return (
+      <section className="section">
+        <div className="content-wrap">
+          <h1 className="page-hero__title">로그인 상태 확인 실패</h1>
+          <p className="page-hero__sub">
+            잠시 후 다시 확인하거나 로그인 페이지로 이동해주세요.
+          </p>
+          <div style={{ display: "flex", gap: "var(--sp-2)", flexWrap: "wrap" }}>
+            <button type="button" className="btn btn--primary" onClick={refresh}>
+              다시 확인
+            </button>
+            <Link href="/login?next=/me/board" className="btn btn--secondary">
+              로그인 →
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!isLoading && !isAuthed) {
     return (
