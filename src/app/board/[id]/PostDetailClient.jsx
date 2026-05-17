@@ -17,6 +17,7 @@ import AuthorCard from "@/components/AuthorCard";
 import BoardFab from "@/components/BoardFab";
 import ReportButton from "@/components/ReportButton";
 import MarkdownBody from "@/components/MarkdownBody";
+import BoardActionIcon from "@/components/BoardActionIcon";
 
 /**
  * 게시글 상세.
@@ -443,18 +444,20 @@ export default function PostDetailClient({
                   {canDeletePostAsAuthor ? (
                     <Link
                       href={`/board/${encodeURIComponent(post.id)}/edit`}
-                      className="btn btn--ghost btn--sm"
+                      className="btn btn--ghost btn--sm thread-tool"
                     >
-                      <span className="glyph">✏</span> 수정
+                      <BoardActionIcon name="edit" />
+                      수정
                     </Link>
                   ) : null}
                   {canDeletePostAsAuthor ? (
                     <button
                       type="button"
-                      className="btn btn--ghost btn--sm"
+                      className="btn btn--ghost btn--sm thread-tool"
                       onClick={handleDeletePost}
                     >
-                      <span className="glyph">🗑</span> 삭제
+                      <BoardActionIcon name="trash" />
+                      삭제
                     </button>
                   ) : null}
                 </div>
@@ -468,9 +471,7 @@ export default function PostDetailClient({
                 }}
               >
                 {post.pinned ? (
-                  <span className="glyph" style={{ marginRight: "0.28em" }}>
-                    📌
-                  </span>
+                  <BoardActionIcon name="pin" className="post-pin-icon" />
                 ) : null}
                 {post.title}
               </h1>
@@ -538,7 +539,8 @@ export default function PostDetailClient({
                   "처리 중…"
                 ) : (
                   <>
-                    <span className="glyph">👍</span> 추천 {post.recommendCount}
+                    <BoardActionIcon name="recommend" />
+                    추천 {post.recommendCount}
                   </>
                 )}
               </button>
@@ -611,7 +613,8 @@ export default function PostDetailClient({
                         }}
                       >
                         <strong style={{ fontSize: "var(--fs-sm)" }}>
-                          <span className="glyph">↳</span> {top.authorName} 에게 답글
+                          <BoardActionIcon name="reply" className="thread-comment-reply-mark" />
+                          {top.authorName} 에게 답글
                         </strong>
                         {!isAuthed ? (
                           <div
@@ -797,11 +800,13 @@ export default function PostDetailClient({
                       <span style={{ flex: 1, minWidth: 0, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {np.title || "(제목 없음)"}
                       </span>
-                      <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
-                        💬 {np.commentCount ?? 0}
+                      <span className="next-posts__stat" style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
+                        <BoardActionIcon name="message" />
+                        {np.commentCount ?? 0}
                       </span>
-                      <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
-                        👁 {np.viewCount ?? 0}
+                      <span className="next-posts__stat" style={{ color: "var(--muted)", fontSize: "var(--fs-xs)", flexShrink: 0 }}>
+                        <BoardActionIcon name="eye" />
+                        {np.viewCount ?? 0}
                       </span>
                     </Link>
                   </li>
@@ -869,52 +874,52 @@ function CommentRow({
           : undefined
       }
     >
-      <div
-        className="comment__meta thread-comment-meta"
-        style={{ display: "flex", gap: "var(--sp-2)", alignItems: "center" }}
-      >
-        {isReply ? (
-          <span className="glyph" style={{ color: "var(--muted)" }}>
-            ↳
+      <div className="thread-comment-header">
+        <div className="comment__meta thread-comment-meta">
+          {isReply ? (
+            <BoardActionIcon name="reply" className="thread-comment-reply-mark" />
+          ) : null}
+          <strong>{c.authorName}</strong>
+          <span className="thread-comment-time">
+            {formatTime(c.createdAt)}
           </span>
-        ) : null}
-        <strong>{c.authorName}</strong>
-        <span style={{ color: "var(--muted)", fontSize: "var(--fs-xs)" }}>
-          {formatTime(c.createdAt)}
-        </span>
-        <span className="thread-comment-actions" style={{ marginLeft: "auto", display: "flex", gap: "var(--sp-1)" }}>
-          <ReportButton targetType="comment" targetId={c.id} small />
+        </div>
+        <div className="thread-comment-actions" aria-label="댓글 도구">
+          <ReportButton targetType="comment" targetId={c.id} small compact />
           {!isReply && !isEditing ? (
             <button
               type="button"
-              className="btn btn--ghost btn--xs"
+              className="btn btn--ghost btn--xs thread-tool thread-tool--icon"
               onClick={() => startReply(c)}
               title="답글"
+              aria-label="답글"
             >
-              <span className="glyph">↳</span>
+              <BoardActionIcon name="reply" />
             </button>
           ) : null}
           {canEditDelete && !isEditing ? (
             <button
               type="button"
-              className="btn btn--ghost btn--xs"
+              className="btn btn--ghost btn--xs thread-tool thread-tool--icon"
               onClick={() => startEditComment(c)}
               title="댓글 수정"
+              aria-label="댓글 수정"
             >
-              <span className="glyph">✏</span>
+              <BoardActionIcon name="edit" />
             </button>
           ) : null}
           {canEditDelete ? (
             <button
               type="button"
-              className="btn btn--ghost btn--xs"
+              className="btn btn--ghost btn--xs thread-tool thread-tool--icon"
               onClick={() => handleDeleteComment(c)}
               title="댓글 삭제"
+              aria-label="댓글 삭제"
             >
-              <span className="glyph">🗑</span>
+              <BoardActionIcon name="trash" />
             </button>
           ) : null}
-        </span>
+        </div>
       </div>
       {isEditing ? (
         <div style={{ display: "grid", gap: "var(--sp-2)" }}>

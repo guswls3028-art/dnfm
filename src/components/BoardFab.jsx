@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import BoardActionIcon from "@/components/BoardActionIcon";
 
 /**
  * 모바일 우측 하단 floating action — 글쓰기 + 맨 위로.
  * desktop 에서도 표시 (헤더 글쓰기 버튼과 중복이지만 긴 글 스크롤 시 유용).
  *
- * 공홈 ref: dnfm.nexon.com 상세 페이지 우측 하단 (✏️ + ↑).
+ * 공홈 ref: dnfm.nexon.com 상세 페이지 우측 하단.
  */
 export default function BoardFab({ href = "/board/new" }) {
   const [showTop, setShowTop] = useState(false);
@@ -35,7 +36,7 @@ export default function BoardFab({ href = "/board/new" }) {
           aria-label="맨 위로"
           title="맨 위로"
         >
-          <span className="glyph">↑</span>
+          <BoardActionIcon name="recommend" />
         </button>
       ) : null}
       <Link
@@ -44,7 +45,7 @@ export default function BoardFab({ href = "/board/new" }) {
         aria-label="글쓰기"
         title="글쓰기"
       >
-        <span className="glyph">✏</span>
+        <BoardActionIcon name="edit" />
       </Link>
     </div>
   );

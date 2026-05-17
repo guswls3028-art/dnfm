@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { reports as reportsApi, ApiError } from "@/lib/api-client";
+import BoardActionIcon from "@/components/BoardActionIcon";
 
 const REASONS = [
   { value: "spam", label: "도배/광고" },
@@ -24,7 +25,7 @@ const REASONS = [
  *   - targetId: string
  *   - small?: boolean
  */
-export default function ReportButton({ targetType, targetId, small }) {
+export default function ReportButton({ targetType, targetId, small, compact = false }) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState(REASONS[0].value);
   const [detail, setDetail] = useState("");
@@ -63,11 +64,17 @@ export default function ReportButton({ targetType, targetId, small }) {
     <>
       <button
         type="button"
-        className={small ? "btn btn--ghost btn--xs" : "btn btn--ghost btn--sm"}
+        className={[
+          small ? "btn btn--ghost btn--xs" : "btn btn--ghost btn--sm",
+          "thread-tool report-button",
+          compact ? "thread-tool--icon" : "",
+        ].filter(Boolean).join(" ")}
         onClick={() => setOpen(true)}
         title="신고하기"
+        aria-label={compact ? "신고하기" : undefined}
       >
-        🚩 신고
+        <BoardActionIcon name="report" />
+        {compact ? <span className="sr-only">신고</span> : "신고"}
       </button>
       {open ? (
         <div

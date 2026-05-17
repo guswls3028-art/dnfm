@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
+import BoardActionIcon from "@/components/BoardActionIcon";
 
 /**
  * AdminPostMenu — board/[id] 헤더의 운영 드롭다운.
@@ -118,7 +119,9 @@ export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
         title="운영 도구"
         disabled={busy}
       >
-        🛡️ 운영 ▾
+        <BoardActionIcon name="shield" />
+        운영
+        <BoardActionIcon name="chevronDown" className="admin-menu__chevron" />
       </button>
       {open ? (
         <div className="admin-menu__panel" role="menu">
@@ -129,7 +132,8 @@ export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
             onClick={togglePinned}
             disabled={busy}
           >
-            {pinned ? "📌 고정 해제" : "📌 상단 고정"}
+            <BoardActionIcon name="pin" />
+            {pinned ? "고정 해제" : "상단 고정"}
           </button>
           <button
             type="button"
@@ -138,7 +142,8 @@ export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
             onClick={toggleLocked}
             disabled={busy}
           >
-            {locked ? "🔓 잠금 해제" : "🔒 잠금 (댓글 차단)"}
+            <BoardActionIcon name={locked ? "unlock" : "lock"} />
+            {locked ? "잠금 해제" : "잠금 (댓글 차단)"}
           </button>
           <button
             type="button"
@@ -147,7 +152,8 @@ export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
             onClick={deletePost}
             disabled={busy}
           >
-            🗑 글 삭제
+            <BoardActionIcon name="trash" />
+            글 삭제
           </button>
         </div>
       ) : null}
