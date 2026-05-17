@@ -84,7 +84,9 @@ export default function AdminReportsPage() {
       const out = await Promise.all(
         STATUS_TABS.map((s) =>
           reportsApi.list({ status: s.value, pageSize: 1 }).then(
-            (r) => [s.value, typeof r?.total === "number" ? r.total : (Array.isArray(r?.items) ? r.items.length : 0)],
+            // total 은 서버 권위값(reports API 항상 반환). 누락 시 pageSize=1 의
+            // items.length 는 오해를 부르는 1 이므로 0(미상) 으로 정직 표기.
+            (r) => [s.value, typeof r?.total === "number" ? r.total : 0],
             () => [s.value, 0]
           )
         )
