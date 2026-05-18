@@ -11,6 +11,10 @@ function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
 }
 
+function getActionUrl(action) {
+  return action?.url || action?.href || null;
+}
+
 function readStoredTheme() {
   if (typeof window === "undefined") return DEFAULT_THEME;
   try {
@@ -35,17 +39,36 @@ function HeroCta({ action, primary }) {
     );
   }
   const cls = primary ? "btn btn--primary btn--lg" : "btn btn--secondary btn--lg";
-  if (isExternal(action.url || action.href)) {
+  const href = getActionUrl(action);
+  if (isExternal(href)) {
     return (
-      <a className={cls} href={action.url || action.href} target="_blank" rel="noreferrer">
+      <a className={cls} href={href} target="_blank" rel="noreferrer">
         {action.label}
       </a>
     );
   }
   return (
-    <Link className={cls} href={action.url || action.href}>
+    <Link className={cls} href={href}>
       {action.label}
     </Link>
+  );
+}
+
+function SlideNavContent({ item, index }) {
+  return (
+    <>
+      <span>{index + 1}</span>
+      <strong>{item.navTitle || item.title}</strong>
+    </>
+  );
+}
+
+function SlideMenuContent({ item, index }) {
+  return (
+    <>
+      <span>{String(index + 1).padStart(2, "0")}</span>
+      <strong>{item.title}</strong>
+    </>
   );
 }
 
@@ -114,9 +137,25 @@ export default function HeroVideoStage({ site }) {
   const heroKicker = activeSlide.kicker || theme.kicker;
   const heroTagline = activeSlide.tagline || theme.tagline;
   const heroBody = activeSlide.body || hero.body;
-  const secondaryAction = activeSlide.cta?.href || activeSlide.cta?.url
-    ? activeSlide.cta
+  const activeSlideAction = getActionUrl(activeSlide.cta) ? activeSlide.cta : null;
+  const shouldPrioritizeSlideAction = Boolean(activeSlide.primaryCta && activeSlideAction);
+  const primaryHeroAction = shouldPrioritizeSlideAction ? activeSlideAction : primaryAction;
+  const secondaryAction = shouldPrioritizeSlideAction
+    ? primaryAction
+    : activeSlideAction
+      ? activeSlideAction
+      : { label: "질문하기", href: "/board/new?category=question" };
+  const hasSecondaryAction = getActionUrl(secondaryAction);
+  const normalizedSecondaryAction = hasSecondaryAction
+    ? secondaryAction
     : { label: "질문하기", href: "/board/new?category=question" };
+  const slideDirectHref = (item) => item?.navHref || null;
+  const isExternalSlideHref = (item) => isExternal(slideDirectHref(item));
+  const slideLinkTargetProps = (item) => (
+    isExternalSlideHref(item)
+      ? { target: "_blank", rel: "noreferrer" }
+      : {}
+  );
   const handlePrev = () => {
     setPaused(true);
     syncSlide(activeSlideIndex - 1);
@@ -190,10 +229,10 @@ export default function HeroVideoStage({ site }) {
           {heroBody ? <p className="hero-video__subtitle">{heroBody}</p> : null}
 
           <div className="hero-video__cta">
-            {primaryAction?.url ? (
+            {primaryHeroAction?.url ? (
               <a
                 className="btn btn--primary btn--lg hero-video__cta-kakao"
-                href={primaryAction.url}
+                href={primaryHeroAction.url}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -207,12 +246,12 @@ export default function HeroVideoStage({ site }) {
                 >
                   <path d="M12 3C6.48 3 2 6.58 2 11c0 2.86 1.88 5.36 4.7 6.78-.2.7-.74 2.6-.84 3-.13.5.18.5.39.36.16-.1 2.55-1.74 3.58-2.45.7.1 1.43.16 2.17.16 5.52 0 10-3.58 10-8s-4.48-8-10-8z" />
                 </svg>
-                <span>{primaryAction.label}</span>
+                <span>{primaryHeroAction.label}</span>
               </a>
             ) : (
-              <HeroCta action={primaryAction} primary />
+              <HeroCta action={primaryHeroAction} primary />
             )}
-            <HeroCta action={secondaryAction} />
+            <HeroCta action={normalizedSecondaryAction} />
           </div>
 
           {hero.bullets?.length ? (
@@ -297,15 +336,25 @@ export default function HeroVideoStage({ site }) {
         {slideMenuOpen ? (
           <div className="hero-video__slide-menu" aria-label="전체 배너 목록">
             {slideItems.map((item, index) => (
-              <button
-                key={`menu-${item.id || item.index || item.title}`}
-                type="button"
-                className={index === activeSlideIndex ? "is-active" : ""}
-                onClick={() => handleSelectSlide(index)}
-              >
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <strong>{item.title}</strong>
-              </button>
+              slideDirectHref(item) ? (
+                <a
+                  key={`menu-${item.id || item.index || item.title}`}
+                  className={index === activeSlideIndex ? "is-active" : ""}
+                  href={slideDirectHref(item)}
+                  {...slideLinkTargetProps(item)}
+                >
+                  <SlideMenuContent item={item} index={index} />
+                </a>
+              ) : (
+                <button
+                  key={`menu-${item.id || item.index || item.title}`}
+                  type="button"
+                  className={index === activeSlideIndex ? "is-active" : ""}
+                  onClick={() => handleSelectSlide(index)}
+                >
+                  <SlideMenuContent item={item} index={index} />
+                </button>
+              )
             ))}
           </div>
         ) : null}
@@ -315,10 +364,15 @@ export default function HeroVideoStage({ site }) {
               key={item.id || item.index || item.title}
               className={index === activeSlideIndex ? "is-active" : ""}
             >
-              <button type="button" onClick={() => handleSelectSlide(index)}>
-                <span>{index + 1}</span>
-                <strong>{item.navTitle || item.title}</strong>
-              </button>
+              {slideDirectHref(item) ? (
+                <a href={slideDirectHref(item)} {...slideLinkTargetProps(item)}>
+                  <SlideNavContent item={item} index={index} />
+                </a>
+              ) : (
+                <button type="button" onClick={() => handleSelectSlide(index)}>
+                  <SlideNavContent item={item} index={index} />
+                </button>
+              )}
             </li>
           ))}
         </ol>

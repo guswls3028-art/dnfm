@@ -369,6 +369,23 @@ export const site = {
       cta: { label: "질문하기", href: "/board/new?category=question" }
     },
     {
+      id: "hero-hurock-avatar-contest",
+      kicker: "진행중 이벤트",
+      headlineLines: ["허락 아바타", "콘테스트"],
+      title: "허락 아바타 콘테스트 1회",
+      tagline: "6월 1일 ~ 6월 13일(토) 19시 전",
+      body: "5개 부문 코디 자랑 이벤트. 참가 모집중이며, 허락 사이트에서 안내와 참가를 확인합니다.",
+      navTitle: "허락 아바타 콘테스트 진행중",
+      navHref: "https://hurock.dnfm.kr/contests/1582e41c-1ce5-4532-9642-6ea93f537f4a",
+      themeId: "campfire",
+      accent: "crimson",
+      primaryCta: true,
+      cta: {
+        label: "허락 이벤트 보기",
+        href: "https://hurock.dnfm.kr/contests/1582e41c-1ce5-4532-9642-6ea93f537f4a"
+      }
+    },
+    {
       id: "hero-charter",
       kicker: "운영 헌장",
       headlineLines: ["공식 정보는 링크", "톡방 판단은 짧게"],
@@ -391,21 +408,6 @@ export const site = {
       themeId: "campfire",
       accent: "mint",
       cta: { label: "질문하기", href: "/board/new?category=question" }
-    },
-    {
-      id: "hero-hurock-avatar-contest",
-      kicker: "진행중 이벤트",
-      headlineLines: ["허락 아바타", "콘테스트"],
-      title: "허락 아바타 콘테스트 1회",
-      tagline: "6월 1일 ~ 6월 13일(토) 19시 전",
-      body: "5개 부문 코디 자랑 이벤트. 참가 모집중이며, 허락 사이트에서 안내와 참가를 확인합니다.",
-      navTitle: "허락 아바타 콘테스트 진행중",
-      themeId: "campfire",
-      accent: "crimson",
-      cta: {
-        label: "허락 이벤트 보기",
-        href: "https://hurock.dnfm.kr/contests/1582e41c-1ce5-4532-9642-6ea93f537f4a"
-      }
     },
     {
       id: "hero-community-event",

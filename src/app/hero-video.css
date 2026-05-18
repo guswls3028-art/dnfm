@@ -499,7 +499,8 @@ html[data-hero-theme="campfire"] {
   backdrop-filter: blur(12px);
 }
 
-.hero-video__slide-menu button {
+.hero-video__slide-menu button,
+.hero-video__slide-menu a {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
   align-items: center;
@@ -513,11 +514,15 @@ html[data-hero-theme="campfire"] {
   border-radius: var(--radius-sm);
   background: transparent;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .hero-video__slide-menu button:hover,
 .hero-video__slide-menu button:focus-visible,
-.hero-video__slide-menu button.is-active {
+.hero-video__slide-menu button.is-active,
+.hero-video__slide-menu a:hover,
+.hero-video__slide-menu a:focus-visible,
+.hero-video__slide-menu a.is-active {
   color: var(--theme-accent-soft);
   border-color: rgba(212, 162, 76, 0.34);
   background: rgba(212, 162, 76, 0.12);
@@ -553,7 +558,8 @@ html[data-hero-theme="campfire"] {
   border-right: 1px solid rgba(245, 236, 210, 0.10);
 }
 
-.hero-video__carousel-list button {
+.hero-video__carousel-list button,
+.hero-video__carousel-list a {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
@@ -567,6 +573,7 @@ html[data-hero-theme="campfire"] {
   background: transparent;
   cursor: pointer;
   transition: background 0.16s ease, color 0.16s ease;
+  text-decoration: none;
 }
 
 .hero-video__carousel-list li.is-active {
@@ -575,13 +582,16 @@ html[data-hero-theme="campfire"] {
 }
 
 .hero-video__carousel-list button:hover,
-.hero-video__carousel-list button:focus-visible {
+.hero-video__carousel-list button:focus-visible,
+.hero-video__carousel-list a:hover,
+.hero-video__carousel-list a:focus-visible {
   color: var(--theme-accent-soft);
   background: rgba(212, 162, 76, 0.10);
   outline: none;
 }
 
-.hero-video__carousel-list li.is-active button {
+.hero-video__carousel-list li.is-active button,
+.hero-video__carousel-list li.is-active a {
   color: var(--theme-accent-soft);
 }
 
