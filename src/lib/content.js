@@ -359,18 +359,62 @@ export const site = {
     {
       id: "hero-onboard",
       kicker: "질문 저장소",
+      headlineLines: ["질문은", "묻히기 전에"],
       title: "톡방 질문이 묻히기 전에 남겨두기",
+      tagline: "놓친 질문을 댓글 답변으로 회수",
       body: "회원·인증회원·비회원 모두 질문 게시판에 남길 수 있습니다. 운영자가 댓글로 정리합니다.",
+      navTitle: "톡방 질문이 묻히기 전에 남기기",
+      themeId: "moonlight",
       accent: "amber",
       cta: { label: "질문하기", href: "/board/new?category=question" }
     },
     {
       id: "hero-charter",
       kicker: "운영 헌장",
+      headlineLines: ["공식 정보는 링크", "톡방 판단은 짧게"],
       title: "공식 정보는 링크, 톡방 판단은 짧게",
+      tagline: "공홈 복붙 대신 뉴비 기준 정리",
       body: "공홈을 복붙하지 않고 뉴비 기준으로 지금 무엇을 하면 되는지만 정리합니다.",
+      navTitle: "공식 정보는 링크, 톡방 판단은 짧게",
+      themeId: "elvenguard",
       accent: "crimson",
       cta: { label: "톡방 안내", href: "/about" }
+    },
+    {
+      id: "hero-openchat",
+      kicker: "오픈채팅",
+      headlineLines: ["카톡방 입장", "질문부터 편하게"],
+      title: "카톡방 입장, 질문부터 편하게",
+      tagline: "처음 질문도 환영",
+      body: "상황을 길게 설명하지 않아도 됩니다. 막힌 곳과 목표만 남기면 같이 확인합니다.",
+      navTitle: "카톡방 입장 후 바로 질문",
+      themeId: "campfire",
+      accent: "mint",
+      cta: { label: "질문하기", href: "/board/new?category=question" }
+    },
+    {
+      id: "hero-community-event",
+      kicker: "이벤트장",
+      headlineLines: ["톡방 이벤트", "참가와 기록"],
+      title: "톡방 이벤트 참가와 기록",
+      tagline: "공지, 신청, 결과를 한곳에",
+      body: "아바타 콘테스트 같은 톡방 이벤트는 신청과 결과를 사이트에 보관합니다.",
+      navTitle: "톡방 이벤트 참가와 기록",
+      themeId: "moonlight",
+      accent: "gold",
+      cta: { label: "이벤트 보기", href: "/events" }
+    },
+    {
+      id: "hero-guild-mentor",
+      kicker: "매칭",
+      headlineLines: ["길드와 멘토", "동의 기반으로"],
+      title: "길드와 멘토는 동의 기반으로",
+      tagline: "도움 가능 분야만 가볍게 연결",
+      body: "길드, 파티, 세팅 도움은 공개 랭킹이 아니라 동의한 사람과 분야 중심으로 연결합니다.",
+      navTitle: "길드와 멘토는 동의 기반으로",
+      themeId: "elvenguard",
+      accent: "olive",
+      cta: { label: "길드 보기", href: "/guilds" }
     }
   ],
   // 정자 위에 걸어둔 게시판 같은 카드 슬라이더 fallback.

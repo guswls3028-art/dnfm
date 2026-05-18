@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { host, heroThemes } from "@/lib/content";
 
@@ -51,9 +51,24 @@ function HeroCta({ action, primary }) {
 
 export default function HeroVideoStage({ site }) {
   const [themeId, setThemeId] = useState(DEFAULT_THEME);
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [slideMenuOpen, setSlideMenuOpen] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const videoRef = useRef(null);
+  const slideItems = site.heroSlides?.length ? site.heroSlides : site.eventSlides;
+  const slideCount = slideItems.length;
+
+  const syncSlide = useCallback((index, { syncTheme = true } = {}) => {
+    if (!slideCount) return;
+    const nextIndex = (index + slideCount) % slideCount;
+    const nextSlide = slideItems[nextIndex];
+    setActiveSlideIndex(nextIndex);
+    if (syncTheme && nextSlide?.themeId && heroThemes.some((t) => t.id === nextSlide.themeId)) {
+      setThemeId(nextSlide.themeId);
+    }
+  }, [slideCount, slideItems]);
 
   useEffect(() => {
     setHydrated(true);
@@ -81,10 +96,40 @@ export default function HeroVideoStage({ site }) {
     }
   }, [themeId, reduced]);
 
+  useEffect(() => {
+    if (reduced || paused || slideCount < 2) return undefined;
+    const timer = window.setInterval(() => {
+      syncSlide(activeSlideIndex + 1);
+    }, 7000);
+    return () => window.clearInterval(timer);
+  }, [activeSlideIndex, paused, reduced, slideCount, syncSlide]);
+
   const theme = heroThemes.find((t) => t.id === themeId) ?? heroThemes[0];
   const hero = site.hero;
   const primaryAction = site.actions?.find((a) => a.label === "카톡방 입장") ?? site.actions?.[0];
-  const slideItems = site.heroSlides?.length ? site.heroSlides : site.eventSlides;
+  const activeSlide = slideItems[activeSlideIndex] ?? slideItems[0] ?? {};
+  const headlineLines = activeSlide.headlineLines?.length
+    ? activeSlide.headlineLines
+    : hero.headlineLines;
+  const heroKicker = activeSlide.kicker || theme.kicker;
+  const heroTagline = activeSlide.tagline || theme.tagline;
+  const heroBody = activeSlide.body || hero.body;
+  const secondaryAction = activeSlide.cta?.href || activeSlide.cta?.url
+    ? activeSlide.cta
+    : { label: "질문하기", href: "/board/new?category=question" };
+  const handlePrev = () => {
+    setPaused(true);
+    syncSlide(activeSlideIndex - 1);
+  };
+  const handleNext = () => {
+    setPaused(true);
+    syncSlide(activeSlideIndex + 1);
+  };
+  const handleSelectSlide = (index) => {
+    setPaused(true);
+    syncSlide(index);
+    setSlideMenuOpen(false);
+  };
 
   return (
     <section
@@ -135,14 +180,14 @@ export default function HeroVideoStage({ site }) {
             <span className="hero-video__host-role">{host.role}</span>
           </div>
 
-          <span className="hero-video__kicker">{theme.kicker}</span>
+          <span className="hero-video__kicker">{heroKicker}</span>
           <h1 id="hero-video-title" className="hero-video__title">
-            {hero.headlineLines.map((line, index) => (
-              <span key={line}>{line}{index < hero.headlineLines.length - 1 ? " " : ""}</span>
+            {headlineLines.map((line, index) => (
+              <span key={line}>{line}{index < headlineLines.length - 1 ? " " : ""}</span>
             ))}
           </h1>
-          <p className="hero-video__tagline">{theme.tagline}</p>
-          {hero.body ? <p className="hero-video__subtitle">{hero.body}</p> : null}
+          <p className="hero-video__tagline">{heroTagline}</p>
+          {heroBody ? <p className="hero-video__subtitle">{heroBody}</p> : null}
 
           <div className="hero-video__cta">
             {primaryAction?.url ? (
@@ -167,9 +212,7 @@ export default function HeroVideoStage({ site }) {
             ) : (
               <HeroCta action={primaryAction} primary />
             )}
-            <Link href="/board/new?category=question" className="btn btn--secondary btn--lg hero-video__cta-secondary">
-              질문하기
-            </Link>
+            <HeroCta action={secondaryAction} />
           </div>
 
           {hero.bullets?.length ? (
@@ -230,21 +273,52 @@ export default function HeroVideoStage({ site }) {
         </fieldset>
       </div>
 
-      <div className="hero-video__carousel" aria-label="주요 배너">
-        <div className="hero-video__carousel-controls" aria-hidden="true">
-          <button type="button" tabIndex={-1}>‹</button>
-          <button type="button" tabIndex={-1}>›</button>
-          <button type="button" tabIndex={-1}>Ⅱ</button>
-          <button type="button" tabIndex={-1}>☰</button>
+      <div className={`hero-video__carousel${slideMenuOpen ? " is-menu-open" : ""}`} aria-label="히어로 배너">
+        <div className="hero-video__carousel-controls">
+          <button type="button" aria-label="이전 배너" onClick={handlePrev}>‹</button>
+          <button type="button" aria-label="다음 배너" onClick={handleNext}>›</button>
+          <button
+            type="button"
+            aria-label={paused ? "배너 자동 넘김 재생" : "배너 자동 넘김 정지"}
+            aria-pressed={paused}
+            onClick={() => setPaused((v) => !v)}
+          >
+            {paused ? "▶" : "Ⅱ"}
+          </button>
+          <button
+            type="button"
+            aria-label="배너 목록"
+            aria-expanded={slideMenuOpen}
+            onClick={() => setSlideMenuOpen((v) => !v)}
+          >
+            ☰
+          </button>
         </div>
+        {slideMenuOpen ? (
+          <div className="hero-video__slide-menu" aria-label="전체 배너 목록">
+            {slideItems.map((item, index) => (
+              <button
+                key={`menu-${item.id || item.index || item.title}`}
+                type="button"
+                className={index === activeSlideIndex ? "is-active" : ""}
+                onClick={() => handleSelectSlide(index)}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{item.title}</strong>
+              </button>
+            ))}
+          </div>
+        ) : null}
         <ol className="hero-video__carousel-list">
           {slideItems.slice(0, 5).map((item, index) => (
             <li
               key={item.id || item.index || item.title}
-              className={index === 0 ? "is-active" : ""}
+              className={index === activeSlideIndex ? "is-active" : ""}
             >
-              <span>{index + 1}</span>
-              <strong>{item.title}</strong>
+              <button type="button" onClick={() => handleSelectSlide(index)}>
+                <span>{index + 1}</span>
+                <strong>{item.navTitle || item.title}</strong>
+              </button>
             </li>
           ))}
         </ol>
