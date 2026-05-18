@@ -66,7 +66,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/ec2 -o StrictHostKeyChecking=no \
             ec2-user@${EC2_HOST} \
-            'pm2 restart dnfm-newb --update-env --no-color && sleep 3 && pm2 status dnfm-newb --no-color | head -7'
+            'cd /var/www/dnfm-newb && env HOSTNAME=127.0.0.1 PORT=3000 NODE_ENV=production pm2 reload ecosystem.config.cjs --update-env --no-color && sleep 3 && pm2 status dnfm-newb --no-color | head -7'
 
       - name: Smoke test
         env:
