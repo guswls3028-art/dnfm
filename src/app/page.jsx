@@ -123,18 +123,18 @@ export default function HomePage() {
             </header>
             <div className="guild-grid guild-grid--home">
               {friendlyGuilds.map((g) => (
-                <article className="guild-card" key={g.name}>
+                <a className="guild-card" key={g.name} href={g.url} target="_blank" rel="noreferrer" aria-label={`${g.name} 공식 길드 페이지`}>
                   <header>
                     <strong>{g.name}</strong>
                     <small>길마 · {g.leader}</small>
                   </header>
                   <p>{g.description}</p>
-                  <a className="btn btn--secondary" href={g.url} target="_blank" rel="noreferrer">
+                  <span className="btn btn--secondary" aria-hidden="true">
                     공식 길드 페이지 →
-                  </a>
-                </article>
+                  </span>
+                </a>
               ))}
-              <article className="guild-card guild-card--invite">
+              <Link className="guild-card guild-card--invite" href="/guilds" aria-label="뉴비 친화 길드 페이지">
                 <header>
                   <strong>길드 정보 입력 예정</strong>
                   <small>운영자가 확인한 길드만 표시</small>
@@ -142,10 +142,10 @@ export default function HomePage() {
                 <p>
                   길드명, 길마, 가입 조건, 공식 페이지 링크는 운영자가 확인한 뒤 채웁니다.
                 </p>
-                <Link className="btn btn--primary btn--sm" href="/guilds">
+                <span className="btn btn--primary btn--sm" aria-hidden="true">
                   길드 페이지 →
-                </Link>
-              </article>
+                </span>
+              </Link>
             </div>
           </div>
         </div>

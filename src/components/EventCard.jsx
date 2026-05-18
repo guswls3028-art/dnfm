@@ -27,8 +27,8 @@ export default function EventCard({ event }) {
     : event.category === "톡방" || event.category === "운영" || event.category === "뉴비훈련소" ? "talk"
     : "other";
 
-  return (
-    <article className={className} data-category={categorySlug}>
+  const content = (
+    <>
       <div className="event-card__banner" data-category={categorySlug} aria-hidden="true">
         {event.thumbnailSrc ? (
           <img
@@ -49,21 +49,38 @@ export default function EventCard({ event }) {
       <div className="event-card__foot">
         <span className="badge badge--outline">{event.status}</span>
         {event.url ? (
-          isExternal(event.url) ? (
-            <a className="card__action" href={event.url} target="_blank" rel="noreferrer">
-              자세히 →
-            </a>
-          ) : (
-            <Link className="card__action" href={event.url}>
-              자세히 →
-            </Link>
-          )
+          <span className="card__action" aria-hidden="true">
+            자세히 →
+          </span>
         ) : (
           <span className="action-disabled" aria-disabled="true">
             상세 없음
           </span>
         )}
       </div>
-    </article>
+    </>
+  );
+
+  if (!event.url) {
+    return (
+      <article className={className} data-category={categorySlug}>
+        {content}
+      </article>
+    );
+  }
+
+  const label = `${event.title} 자세히 보기`;
+  if (isExternal(event.url)) {
+    return (
+      <a className={className} data-category={categorySlug} href={event.url} target="_blank" rel="noreferrer" aria-label={label}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link className={className} data-category={categorySlug} href={event.url} aria-label={label}>
+      {content}
+    </Link>
   );
 }

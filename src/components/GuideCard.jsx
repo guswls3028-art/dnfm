@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 function isExternal(url) {
   return Boolean(url) && /^https?:/.test(url);
 }
@@ -65,15 +67,9 @@ function CategoryIcon({ category }) {
 export default function GuideCard({ guide }) {
   const hasUrl = Boolean(guide.url);
   const action = hasUrl ? (
-    isExternal(guide.url) ? (
-      <a className="btn btn--secondary btn--sm" href={guide.url} target="_blank" rel="noreferrer">
-        {guide.linkLabel || "바로가기"} →
-      </a>
-    ) : (
-      <a className="btn btn--secondary btn--sm" href={guide.url}>
-        {guide.linkLabel || "바로가기"} →
-      </a>
-    )
+    <span className="btn btn--secondary btn--sm" aria-hidden="true">
+      {guide.linkLabel || "바로가기"} →
+    </span>
   ) : (
     <span className="guide-card__pending" aria-disabled="true">
       <span className="guide-card__pending-dot" aria-hidden="true" />
@@ -81,11 +77,8 @@ export default function GuideCard({ guide }) {
     </span>
   );
 
-  return (
-    <article
-      className={`guide-card${hasUrl ? "" : " guide-card--pending"}`}
-      data-category={guide.category}
-    >
+  const content = (
+    <>
       <div className="guide-card__top">
         <span className="guide-card__icon" aria-hidden="true">
           <CategoryIcon category={guide.category} />
@@ -95,6 +88,31 @@ export default function GuideCard({ guide }) {
       <h3 className="guide-card__title">{guide.title}</h3>
       <p className="guide-card__body">{guide.body}</p>
       <div className="guide-card__action">{action}</div>
-    </article>
+    </>
+  );
+
+  const className = `guide-card${hasUrl ? "" : " guide-card--pending"}`;
+
+  if (!hasUrl) {
+    return (
+      <article className={className} data-category={guide.category}>
+        {content}
+      </article>
+    );
+  }
+
+  const label = `${guide.title} ${guide.linkLabel || "바로가기"}`;
+  if (isExternal(guide.url)) {
+    return (
+      <a className={className} data-category={guide.category} href={guide.url} target="_blank" rel="noreferrer" aria-label={label}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link className={className} data-category={guide.category} href={guide.url} aria-label={label}>
+      {content}
+    </Link>
   );
 }

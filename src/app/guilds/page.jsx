@@ -48,24 +48,25 @@ export default function GuildsPage() {
 
           <div className="guild-grid">
             {friendlyGuilds.map((g) => (
-              <article className="guild-card" key={g.name}>
+              <a className="guild-card" key={g.name} href={g.url} target="_blank" rel="noreferrer" aria-label={`${g.name} 공식 길드 페이지`}>
                 <header>
                   <strong>{g.name}</strong>
                   <small>길마 · {g.leader}</small>
                 </header>
                 <p>{g.description}</p>
-                <a
-                  className="btn btn--secondary"
-                  href={g.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <span className="btn btn--secondary" aria-hidden="true">
                   공식 길드 페이지 →
-                </a>
-              </article>
+                </span>
+              </a>
             ))}
 
-            <article className="guild-card guild-card--invite">
+            <a
+              className="guild-card guild-card--invite"
+              href="https://open.kakao.com/o/gbsjsZ5g"
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${host.nickname} 운영자에게 길드 신청`}
+            >
               <header>
                 <strong>길드 정보 입력 예정</strong>
                 <small>운영자 확인 후 등록</small>
@@ -77,15 +78,10 @@ export default function GuildsPage() {
                 <li>확인되지 않은 길드 조건은 표시하지 않습니다.</li>
                 <li>신청/수정은 톡방에서 운영자에게 전달합니다.</li>
               </ul>
-              <a
-                className="btn btn--primary btn--sm"
-                href="https://open.kakao.com/o/gbsjsZ5g"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <span className="btn btn--primary btn--sm" aria-hidden="true">
                 {host.nickname} 운영자에게 신청 →
-              </a>
-            </article>
+              </span>
+            </a>
 
             {Array.from({ length: 3 }).map((_, i) => (
               <article className="guild-card guild-card--slot" key={`slot-${i}`} aria-hidden="true">
