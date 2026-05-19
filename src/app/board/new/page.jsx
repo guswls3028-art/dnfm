@@ -5,6 +5,8 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
 import { useCurrentUser } from "@/lib/use-current-user";
+import { isSiteAdmin } from "@/lib/permissions";
+import { buildBoardHref, buildBoardNewHref } from "@/lib/board-categories";
 import { site } from "@/lib/content";
 import ImageUploader from "@/components/ImageUploader";
 import PostComposerEditor from "@/components/PostComposerEditor";
@@ -88,6 +90,7 @@ function NewPostInner() {
   const searchParams = useSearchParams();
   const presetSlug = searchParams.get("category");
   const { isAuthed, isLoading, user } = useCurrentUser();
+  const userIsAdmin = isSiteAdmin(user, "newb");
 
   const fallbackCats = useMemo(
     () =>
@@ -160,7 +163,7 @@ function NewPostInner() {
         const items = Array.isArray(data) ? data : data?.items || [];
         if (!alive || items.length === 0) return;
         const writable = items
-          .filter((c) => c.writeRoleMin !== "admin")
+          .filter((c) => c.writeRoleMin !== "admin" || userIsAdmin)
           .map((c) => ({
             slug: c.slug,
             name: c.name,
@@ -180,7 +183,7 @@ function NewPostInner() {
     return () => {
       alive = false;
     };
-  }, [presetSlug]);
+  }, [presetSlug, userIsAdmin]);
 
   useEffect(() => {
     if (!isAuthed || profileDefaultsApplied) return;
@@ -199,6 +202,8 @@ function NewPostInner() {
     () => categories.find((c) => c.slug === categorySlug) || null,
     [categories, categorySlug],
   );
+  const selectedCategoryHref = buildBoardHref({ categorySlug });
+  const currentWriteHref = buildBoardNewHref(categorySlug);
   const guestAllowedHere = Boolean(selected?.allowAnonymous);
   const mustLogin = !isAuthed && !guestAllowedHere;
 
@@ -240,7 +245,7 @@ function NewPostInner() {
       const data = await apiFetch("/sites/newb/posts", { method: "POST", json: payload });
       const newId = data?.post?.id || data?.id || data?.postId;
       if (newId) router.push(`/board/${encodeURIComponent(newId)}`);
-      else router.push("/board");
+      else router.push(selectedCategoryHref);
       router.refresh();
     } catch (err) {
       const msg =
@@ -252,7 +257,7 @@ function NewPostInner() {
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--board">
         <div className="content-wrap page-hero__inner">
           <div>
             <span className="page-hero__kicker">NEW POST</span>
@@ -263,8 +268,8 @@ function NewPostInner() {
                 : "비회원도 글을 남길 수 있어요. 닉네임은 비워두면 'ㅇㅇ'이 됩니다."}
             </p>
           </div>
-          <Link href="/board" className="btn btn--secondary btn--sm">
-            ← 게시판
+          <Link href={selectedCategoryHref} className="btn btn--secondary btn--sm">
+            ← {selected?.name || "게시판"}
           </Link>
         </div>
       </section>
@@ -326,7 +331,7 @@ function NewPostInner() {
               {mustLogin ? (
                 <p className="auth-msg auth-msg--info" role="note">
                   이 카테고리는 회원만 작성 가능합니다.{" "}
-                  <Link href="/login?next=/board/new">로그인 →</Link>
+                  <Link href={`/login?next=${encodeURIComponent(currentWriteHref)}`}>로그인 →</Link>
                 </p>
               ) : null}
 
@@ -563,7 +568,7 @@ function NewPostInner() {
                     <strong>이미지 첨부는 회원만</strong>
                     <span>
                       비회원도 글은 자유롭게. 사진 첨부가 필요하면{" "}
-                      <Link href={`/login?next=${encodeURIComponent("/board/new")}`}>
+                      <Link href={`/login?next=${encodeURIComponent(currentWriteHref)}`}>
                         로그인 →
                       </Link>
                     </span>
@@ -578,7 +583,7 @@ function NewPostInner() {
               ) : null}
 
               <div className="composer__actions">
-                <Link href="/board" className="btn btn--ghost">
+                <Link href={selectedCategoryHref} className="btn btn--ghost">
                   취소
                 </Link>
                 <button

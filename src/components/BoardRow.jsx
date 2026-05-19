@@ -4,11 +4,15 @@ import { formatRelativeKo } from "@/lib/format-time";
 function guessCat(label) {
   switch (label) {
     case "공지": return "notice";
+    case "공지·이벤트": return "notice";
     case "질문": return "question";
     case "팁": return "tip";
+    case "팁/정보": return "tip";
     case "파티": return "party";
+    case "파티/모집": return "party";
     case "장비": return "equip";
     case "잡담": return "talk";
+    case "자유게시판": return "talk";
     default: return "other";
   }
 }

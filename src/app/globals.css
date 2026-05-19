@@ -8769,7 +8769,7 @@ main > section {
   }
 
   .board-fab__btn--write {
-    display: none;
+    display: inline-flex;
   }
 }
 
@@ -9025,6 +9025,34 @@ main > section {
   align-items: center;
   gap: 4px;
   font-variant-numeric: tabular-nums;
+}
+
+.board-detail-backlink {
+  display: inline-block;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 162, 76, 0.58);
+  color: var(--color-gold-soft);
+  font-size: var(--fs-sm);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.board-detail-backlink:hover,
+.board-detail-backlink:focus-visible {
+  color: var(--color-paper);
+  border-bottom-color: var(--color-gold-soft);
+}
+
+.board-detail-category-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.board-detail-category-link:hover .badge,
+.board-detail-category-link:focus-visible .badge {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(212, 162, 76, 0.4);
 }
 
 @media (max-width: 720px) {

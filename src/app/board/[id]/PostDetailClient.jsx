@@ -18,6 +18,11 @@ import BoardFab from "@/components/BoardFab";
 import ReportButton from "@/components/ReportButton";
 import MarkdownBody from "@/components/MarkdownBody";
 import BoardActionIcon from "@/components/BoardActionIcon";
+import {
+  buildBoardHref,
+  buildBoardNewHref,
+  resolveBoardCategoryLabel,
+} from "@/lib/board-categories";
 
 /**
  * 게시글 상세.
@@ -38,8 +43,8 @@ function normalizePost(p) {
   if (!p) return null;
   return {
     id: p.id || p.postId,
-    categoryName: p.categoryName || p.categoryLabel || p.label || p.category || "글",
-    categorySlug: p.categorySlug || null,
+    categoryName: resolveBoardCategoryLabel(p),
+    categorySlug: p.categorySlug || p.categoryId || null,
     title: p.title || "(제목 없음)",
     body: p.body || p.content || "",
     bodyFormat: p.bodyFormat || "markdown",
@@ -249,6 +254,11 @@ export default function PostDetailClient({
     return false;
   }, [post, user, isAdmin]);
 
+  const categoryHref = post
+    ? buildBoardHref({ categorySlug: post.categorySlug })
+    : "/board";
+  const writeHref = post ? buildBoardNewHref(post.categorySlug) : "/board/new";
+
   async function handleDeletePost() {
     if (!post) return;
     const isOwnMember = post.authorId && user?.id === post.authorId;
@@ -261,7 +271,7 @@ export default function PostDetailClient({
     if (!window.confirm("정말 삭제할까요?")) return;
     try {
       await postsApi.remove(post.id, { guestPassword });
-      router.push("/board");
+      router.push(categoryHref);
     } catch (err) {
       setActionMsg({ ok: false, text: err?.message || "삭제 실패" });
     }
@@ -407,12 +417,12 @@ export default function PostDetailClient({
             <span className="page-hero__kicker">뉴비 훈련소 · 게시판</span>
             <h1 className="page-hero__title">게시글</h1>
             <p className="page-hero__sub">
-              <Link href="/board" style={{ color: "var(--color-gold)", fontWeight: 800 }}>
-                ← 게시판 목록
+              <Link href={categoryHref} className="board-detail-backlink">
+                ← {post.categoryName} 목록
               </Link>
             </p>
           </div>
-          <Link href="/board/new" className="btn btn--secondary btn--sm">
+          <Link href={writeHref} className="btn btn--secondary btn--sm">
             글쓰기
           </Link>
         </div>
@@ -426,7 +436,9 @@ export default function PostDetailClient({
               <div
                 className="post-head__top thread-post-top"
               >
-                <span className="badge badge--soft">{post.categoryName}</span>
+                <Link href={categoryHref} className="board-detail-category-link">
+                  <span className="badge badge--soft">{post.categoryName}</span>
+                </Link>
                 {post.flair ? <span className="badge badge--soft">[{post.flair}]</span> : null}
                 {post.postType === "best" ? <span className="badge badge--solid">BEST</span> : null}
                 <div
@@ -437,6 +449,7 @@ export default function PostDetailClient({
                       postId={post.id}
                       pinned={post.pinned}
                       locked={post.locked}
+                      returnHref={categoryHref}
                       onChange={load}
                     />
                   ) : null}
@@ -544,7 +557,7 @@ export default function PostDetailClient({
                   </>
                 )}
               </button>
-              <Link href="/board" className="btn btn--ghost btn--sm">
+              <Link href={categoryHref} className="btn btn--ghost btn--sm">
                 목록으로
               </Link>
               {actionMsg ? (
@@ -772,7 +785,7 @@ export default function PostDetailClient({
                     다음 글 이어보기
                   </h2>
                 </div>
-                <Link href={`/board?category=${encodeURIComponent(post.categorySlug || "")}`} className="btn btn--ghost btn--sm">
+                <Link href={categoryHref} className="btn btn--ghost btn--sm">
                   {post.categoryName} 전체
                 </Link>
               </header>
@@ -795,7 +808,7 @@ export default function PostDetailClient({
                       }}
                     >
                       <span className="badge badge--soft" style={{ flexShrink: 0 }}>
-                        {np.categoryName || post.categoryName}
+                        {resolveBoardCategoryLabel(np, post.categoryName)}
                       </span>
                       <span style={{ flex: 1, minWidth: 0, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {np.title || "(제목 없음)"}
@@ -817,7 +830,7 @@ export default function PostDetailClient({
         </div>
       </section>
 
-      <BoardFab />
+      <BoardFab href={writeHref} />
     </>
   );
 

@@ -7,9 +7,16 @@ import BoardFab from "@/components/BoardFab";
 import BoardRow from "@/components/BoardRow";
 import Pagination from "@/components/Pagination";
 import { apiFetch, ApiError, posts as postsApi } from "@/lib/api-client";
+import {
+  BOARD_ALL_CATEGORY,
+  buildBoardHref,
+  buildBoardNewHref,
+  resolveBoardCategoryLabel,
+} from "@/lib/board-categories";
 import { site } from "@/lib/content";
 
 const PAGE_SIZE = 20;
+const ALL = BOARD_ALL_CATEGORY;
 
 const SORTS = [
   { value: "recent", label: "최신순" },
@@ -24,7 +31,7 @@ function normalizePost(p) {
     : `${p.authorNickname || "ㅇㅇ"}${p.anonymousMarker ? `(${p.anonymousMarker})` : ""}`;
   return {
     id: p.id || p.postId,
-    label: p.categoryName || p.categoryLabel || p.label || "글",
+    label: resolveBoardCategoryLabel(p),
     categoryId: p.categorySlug || p.categoryId || "talk",
     title: p.title || "(제목 없음)",
     author,
@@ -62,7 +69,7 @@ function BoardLoading() {
 function BoardInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const activeCat = params.get("category") || "all";
+  const activeCat = params.get("category") || ALL;
   const pageParam = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
   const sortParam = params.get("sort") || "recent";
   const qParam = params.get("q") || "";
@@ -108,7 +115,7 @@ function BoardInner() {
       pageSize: String(PAGE_SIZE),
       sort: sortParam,
     });
-    if (activeCat !== "all") qs.set("categorySlug", activeCat);
+    if (activeCat !== ALL) qs.set("categorySlug", activeCat);
     if (qParam) qs.set("q", qParam);
 
     (async () => {
@@ -154,28 +161,19 @@ function BoardInner() {
     "전체";
 
   function pushQuery(next) {
-    const qs = new URLSearchParams();
-    const cat = next.category ?? activeCat;
-    const sort = next.sort ?? sortParam;
-    const q = next.q ?? qParam;
-    const page = next.page ?? 1;
-    if (cat !== "all") qs.set("category", cat);
-    if (sort !== "recent") qs.set("sort", sort);
-    if (q) qs.set("q", q);
-    if (page > 1) qs.set("page", String(page));
-    const s = qs.toString();
-    router.push(s ? `/board?${s}` : "/board");
+    router.push(
+      buildBoardHref({
+        categorySlug: next.category ?? activeCat,
+        sort: next.sort ?? sortParam,
+        q: next.q ?? qParam,
+        page: next.page ?? 1,
+      }),
+    );
   }
 
-  const buildPageHref = (n) => {
-    const qs = new URLSearchParams();
-    if (activeCat !== "all") qs.set("category", activeCat);
-    if (sortParam !== "recent") qs.set("sort", sortParam);
-    if (qParam) qs.set("q", qParam);
-    if (n > 1) qs.set("page", String(n));
-    const s = qs.toString();
-    return s ? `/board?${s}` : "/board";
-  };
+  const buildPageHref = (n) =>
+    buildBoardHref({ categorySlug: activeCat, sort: sortParam, q: qParam, page: n });
+  const writeHref = buildBoardNewHref(activeCat);
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -193,7 +191,7 @@ function BoardInner() {
               질문·팁·잡담을 한 게시판에서. 비회원도 글 쓸 수 있어요.
             </p>
           </div>
-          <Link href="/board/new" className="btn btn--primary">
+          <Link href={writeHref} className="btn btn--primary">
             글쓰기
           </Link>
         </div>
@@ -303,7 +301,7 @@ function BoardInner() {
                     </strong>
                   </span>
                   <span className="board-row__meta">
-                    <Link href="/board/new">첫 글 쓰기 →</Link>
+                    <Link href={writeHref}>첫 글 쓰기 →</Link>
                   </span>
                 </div>
               ) : (
@@ -321,7 +319,7 @@ function BoardInner() {
         </div>
       </section>
 
-      <BoardFab />
+      <BoardFab href={writeHref} />
     </>
   );
 }

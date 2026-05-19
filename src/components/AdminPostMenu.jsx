@@ -12,6 +12,7 @@ import BoardActionIcon from "@/components/BoardActionIcon";
  *   postId  : 글 ID
  *   pinned  : 현재 pinned 여부
  *   locked  : 현재 locked 여부 (잠긴 글 = 댓글 차단)
+ *   returnHref: 삭제 후 돌아갈 게시판 링크
  *   onChange: 토글/삭제 후 호출 (parent 가 reload)
  *
  * Backend:
@@ -20,7 +21,7 @@ import BoardActionIcon from "@/components/BoardActionIcon";
  *
  * 삭제는 confirm 필수.
  */
-export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
+export default function AdminPostMenu({ postId, pinned, locked, returnHref = "/board", onChange }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -99,7 +100,7 @@ export default function AdminPostMenu({ postId, pinned, locked, onChange }) {
     setMsg(null);
     try {
       await postsApi.remove(postId);
-      router.push("/board");
+      router.push(returnHref);
     } catch (err) {
       const m =
         err instanceof ApiError ? `${err.message} (${err.status})` : err?.message;

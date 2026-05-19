@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BoardRow from "@/components/BoardRow";
+import { resolveBoardCategoryLabel } from "@/lib/board-categories";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { apiFetch, ApiError, auth, oauth } from "@/lib/api-client";
 import VerifiedBadge from "@/components/VerifiedBadge";
@@ -62,7 +63,8 @@ export default function ProfilePage() {
         setMyPosts(
           list.map((p) => ({
             id: p.id || p.postId,
-            label: p.categoryName || p.categoryLabel || p.label || "글",
+            label: resolveBoardCategoryLabel(p),
+            categorySlug: p.categorySlug || p.categoryId,
             title: p.title || "(제목 없음)",
             time: p.timeAgo || p.time || p.createdAt || "",
             comments:

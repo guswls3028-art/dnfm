@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import BoardRow from "@/components/BoardRow";
 import { posts as postsApi } from "@/lib/api-client";
+import { resolveBoardCategoryLabel } from "@/lib/board-categories";
 
 function normalize(p) {
   // backend list 응답에서 회원 글 = author: {id, displayName, dnfProfile}, 비회원 글 = author: null + authorNickname + anonymousMarker.
@@ -13,7 +14,8 @@ function normalize(p) {
     : null;
   return {
     id: p.id || p.postId,
-    label: p.categoryLabel || p.label || (p.category ? p.category : "글"),
+    label: resolveBoardCategoryLabel(p),
+    categorySlug: p.categorySlug || p.categoryId,
     title: p.title || "(제목 없음)",
     author: p.authorName || memberName || anonName || p.user?.displayName || "익명",
     // BoardRow 가 ISO/epoch 면 자동 포맷, 사람 친화 문자열이면 그대로 통과 (format-time.js).
